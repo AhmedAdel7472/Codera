@@ -1,0 +1,48 @@
+/* ألوان إجبارية لأزرار وكروت CodeRa */
+.btn-builder {
+  background-color: #6366F1 !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.35) !important;
+}
+.btn-builder:hover {
+  background-color: #4F46E5 !important;
+}
+.text-builder {
+  color: #6366F1 !important;
+}
+
+.btn-mentor {
+  background-color: #0D9488 !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 25px rgba(13, 148, 136, 0.35) !important;
+}
+.btn-mentor:hover {
+  background-color: #0F766E !important;
+}
+.text-mentor {
+  color: #0D9488 !important;
+}
+
+@import "tailwindcss";
+
+@plugin "tailwindcss-animate";
+
+@theme {
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Plus Jakarta Sans", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply font-sans antialiased text-[#1C2840] bg-[#0E1528];
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif tracking-tight;
+  }
+}

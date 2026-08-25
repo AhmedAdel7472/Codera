@@ -1,0 +1,2511 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>CodeRa The Inclusive Tech Ecosystem</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Cairo', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#4F46E5', // Indigo
+                        secondary: '#10B981', // Emerald
+                        darkBg: '#f8fafc', // Soft Slate 50 
+                        cardBg: '#ffffff', // White
+                        textMain: '#0f172a', // Slate 900
+                        textMuted: '#64748b', // Slate 500
+                        footerBg: '#0b1120',
+                        footerCard: '#151e2e',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html {
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            overflow-x: hidden;
+        }
+
+        body.exam-mode {
+            overflow: hidden !important;
+        }
+
+        /* Sleek single scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .pyramid-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 40px 20px;
+        }
+
+        .pyramid-step {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #4F46E5, #3b82f6);
+            color: white;
+            font-weight: 600;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+            padding: 15px 20px;
+        }
+
+        .pyramid-step:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.2), 0 4px 6px -2px rgba(79, 70, 229, 0.1);
+            background: linear-gradient(135deg, #3b82f6, #4F46E5);
+        }
+
+        .step-5 {
+            width: 40%;
+            max-width: 300px;
+            z-index: 5;
+            background: linear-gradient(135deg, #10B981, #059669);
+        }
+
+        .step-4 {
+            width: 55%;
+            max-width: 450px;
+            z-index: 4;
+        }
+
+        .step-3 {
+            width: 70%;
+            max-width: 600px;
+            z-index: 3;
+        }
+
+        .step-2 {
+            width: 85%;
+            max-width: 750px;
+            z-index: 2;
+        }
+
+        .step-1 {
+            width: 100%;
+            max-width: 900px;
+            z-index: 1;
+        }
+
+        @media (max-width: 640px) {
+            .step-5 {
+                width: 60%;
+            }
+
+            .step-4 {
+                width: 70%;
+            }
+
+            .step-3 {
+                width: 80%;
+            }
+
+            .step-2 {
+                width: 90%;
+            }
+
+            .step-1 {
+                width: 100%;
+            }
+        }
+
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.1), transparent);
+            margin: 3rem 0;
+        }
+
+        html[dir="rtl"] .rtl-flip {
+            transform: scaleX(-1);
+        }
+
+        /* Checkbox custom style for interests */
+        .interest-checkbox:checked+label {
+            background-color: #eff6ff;
+            border-color: #3b82f6;
+            color: #1d4ed8;
+        }
+
+        /* Exam overlay  hidden by default, becomes fullscreen fixed on activation */
+        #childTestPage {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            overflow-y: auto;
+            display: none;
+        }
+
+        #childTestPage.exam-active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes floatStep {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-7px);
+            }
+        }
+
+        .journey-animated-step {
+            animation: floatStep 3.2s ease-in-out infinite;
+            display: inline-block;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .step-anim-1 {
+            animation-delay: 0s;
+        }
+
+        .step-anim-2 {
+            animation-delay: 0.4s;
+        }
+
+        .step-anim-3 {
+            animation-delay: 0.8s;
+        }
+
+        .step-anim-4 {
+            animation-delay: 1.2s;
+        }
+
+        .step-anim-5 {
+            animation-delay: 1.6s;
+        }
+
+        .step-anim-6 {
+            animation-delay: 2.0s;
+        }
+
+        .step-anim-7 {
+            animation-delay: 2.4s;
+        }
+
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 10mm 12mm;
+            }
+            header, main:not(.main-container), footer, #modalOverlay, #chatbotToggleBtn, #chatbotWindow, #toast-notification, .report-action-btns, .ceo-actions-group, #back-to-home-btn, #ceo-export-pdf-btn, #floating-export-pdf-btn, #print-report-btn, #download-pdf-btn, #download-csv-btn, #ceo-dashboard-btn, #back-to-report-btn, #ceo-home-btn, .exit-overlay, .app-header {
+                display: none !important;
+            }
+            html, body {
+                background: #ffffff !important;
+                color: #0f172a !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                height: auto !important;
+                min-height: 0 !important;
+                overflow: visible !important;
+                font-size: 10pt !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            #childTestPage {
+                position: static !important;
+                display: block !important;
+                width: 100% !important;
+                height: auto !important;
+                min-height: auto !important;
+                overflow: visible !important;
+                background: #ffffff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                inset: auto !important;
+                z-index: auto !important;
+            }
+            .main-container {
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+            }
+            .glass-card {
+                border: 1px solid #cbd5e1 !important;
+                box-shadow: none !important;
+                border-radius: 12px !important;
+                padding: 16px !important;
+                margin: 0 auto !important;
+                max-width: 100% !important;
+                background: #ffffff !important;
+                page-break-inside: auto !important;
+            }
+            table {
+                page-break-inside: auto !important;
+                border-collapse: collapse !important;
+                width: 100% !important;
+                font-size: 8.5pt !important;
+            }
+            tr {
+                page-break-inside: avoid !important;
+            }
+            thead {
+                display: table-header-group !important;
+            }
+            .report-grid, .placement-badge-card, .flag-alert {
+                page-break-inside: avoid !important;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="/src/styles/app.css">`n</head>
+
+<body class="antialiased selection:bg-primary selection:text-white bg-darkBg text-textMain transition-all duration-300"
+    dir="ltr">
+
+    <header
+        class="fixed w-full top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+
+                <div class="flex-shrink-0 flex items-center cursor-pointer"
+                    onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                    <img src="/logo.svg" alt="CodeRa Logo"
+                        class="h-14 w-auto object-contain filter drop-shadow-sm hover:scale-105 transition-all duration-300">
+                </div>
+
+                <div class="hidden md:flex items-center space-x-4">
+                    <button id="langToggleBtn"
+                        class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-slate-600 hover:text-primary hover:bg-slate-100 hover:shadow-sm transition-all duration-300 font-medium text-xs">
+                        <i class="fa-solid fa-globe"></i>
+                        <span id="langToggleText"></span>
+                    </button>
+
+                    <!-- 1. Parent Portal Button -->
+                    <button type="button" onclick="openParentDashboard()"
+                        class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-full shadow-sm hover:shadow transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer">
+                        <i class="fa-solid fa-hands-holding-child text-indigo-500"></i>
+                        <span>Parent Portal</span>
+                    </button>
+
+                    <!-- 2. Child Portal Button -->
+                    <button type="button" onclick="openChildPortal()"
+                        class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-emerald-600 hover:text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-full shadow-sm hover:shadow transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer">
+                        <i class="fa-solid fa-gamepad text-emerald-500"></i>
+                        <span>Child Portal</span>
+                    </button>
+
+                    <!-- 3. Pro Assessor Portal Button -->
+                    <button type="button" onclick="openCEODashboard()"
+                        class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-purple-600 hover:text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-full shadow-sm hover:shadow transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer">
+                        <i class="fa-solid fa-user-doctor text-purple-500"></i>
+                        <span>Pro Portal</span>
+                    </button>
+
+                    <div class="flex items-center space-x-3 ms-2">
+                        <button id="navSignInBtn" data-i18n="signIn"
+                            class="px-4 py-1.5 text-xs font-semibold text-slate-600 hover:text-primary transition-all duration-300 transform hover:-translate-y-1">
+                            Sign In
+                        </button>
+                        <button id="navSignUpBtn" data-i18n="signUp"
+                            class="px-4 py-1.5 text-xs font-semibold text-white bg-primary hover:bg-primary/90 rounded-full shadow-md hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 transform hover:-translate-y-1">
+                            Sign Up
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Modals Overlay -->
+    <div id="modalOverlay"
+        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex justify-center items-center opacity-0 transition-opacity duration-300">
+
+
+        <div id="signUpModal"
+            class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 p-6 hidden transform scale-95 transition-transform duration-300 relative max-h-[90vh] overflow-y-auto">
+            <button class="closeModal absolute top-4 end-4 text-slate-400 hover:text-slate-600 transition-colors">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h2 data-i18n="createAccTitle" class="text-2xl font-bold text-slate-900 mb-6 text-center">Create an Account
+            </h2>
+            <form id="signUpForm" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label data-i18n="fName" class="block text-sm font-medium text-slate-700 mb-1">First
+                            Name</label>
+                        <input type="text" data-i18n-placeholder="fNamePlace"
+                            class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
+                            placeholder="First Name">
+                    </div>
+                    <div>
+                        <label data-i18n="lName" class="block text-sm font-medium text-slate-700 mb-1">Last Name</label>
+                        <input type="text" data-i18n-placeholder="lNamePlace"
+                            class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
+                            placeholder="Last Name">
+                    </div>
+                </div>
+                <div>
+                    <label data-i18n="emailLabel" class="block text-sm font-medium text-slate-700 mb-1">Email
+                        Address</label>
+                    <input type="email" data-i18n-placeholder="emailPlace"
+                        class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
+                        placeholder="you@example.com">
+                </div>
+                <div>
+                    <label data-i18n="phoneLabel" class="block text-sm font-medium text-slate-700 mb-1">Phone
+                        Number</label>
+                    <input type="tel" data-i18n-placeholder="phonePlace"
+                        class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
+                        placeholder="+20 100 000 0000">
+                </div>
+                <div>
+                    <label data-i18n="passLabel" class="block text-sm font-medium text-slate-700 mb-1">Password</label>
+                    <input type="password" data-i18n-placeholder="passPlace"
+                        class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
+                        placeholder="">
+                </div>
+                <div>
+                    <label data-i18n="confPassLabel" class="block text-sm font-medium text-slate-700 mb-1">Confirm
+                        Password</label>
+                    <input type="password" data-i18n-placeholder="confPassPlace"
+                        class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
+                        placeholder="">
+                </div>
+                <button type="submit" data-i18n="signUpBtnText"
+                    class="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-2.5 rounded-lg transition-colors mt-4 transform hover:-translate-y-0.5 duration-300">Sign
+                    Up</button>
+            </form>
+            <div class="mt-5 text-center text-sm text-slate-600 pt-4 border-t border-slate-100">
+                <span data-i18n="alreadyHave">Already have an account?</span>
+                <button type="button" id="switchToSignIn" data-i18n="signIn"
+                    class="text-primary font-semibold hover:underline ms-1">Sign In</button>
+            </div>
+        </div>
+
+
+        <div id="signInModal"
+            class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 p-6 hidden transform scale-95 transition-transform duration-300 relative">
+            <button class="closeModal absolute top-4 end-4 text-slate-400 hover:text-slate-600 transition-colors">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h2 data-i18n="signInTitle" class="text-2xl font-bold text-slate-900 mb-6 text-center">Welcome Back</h2>
+            <form id="signInForm" class="space-y-4">
+                <div>
+                    <label data-i18n="emailLabel" class="block text-sm font-medium text-slate-700 mb-1">Email
+                        Address</label>
+                    <input type="email" data-i18n-placeholder="emailPlace"
+                        class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
+                        placeholder="you@example.com">
+                </div>
+                <div>
+                    <label data-i18n="passLabel" class="block text-sm font-medium text-slate-700 mb-1">Password</label>
+                    <input type="password" data-i18n-placeholder="passPlace"
+                        class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
+                        placeholder="">
+                </div>
+                <div class="flex justify-end">
+                    <a href="#" data-i18n="forgotPass" class="text-xs text-primary hover:underline">Forgot password?</a>
+                </div>
+                <button type="submit" data-i18n="loginBtn"
+                    class="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-2.5 rounded-lg transition-colors mt-4 transform hover:-translate-y-0.5 duration-300">Sign
+                    In</button>
+            </form>
+            <div class="mt-5 text-center text-sm text-slate-600 pt-4 border-t border-slate-100">
+                <span data-i18n="dontHave">Don't have an account?</span>
+                <button type="button" id="switchToSignUp" data-i18n="signUpBtnText"
+                    class="text-primary font-semibold hover:underline ms-1">Sign Up</button>
+            </div>
+        </div>
+
+
+        <div id="trackModal"
+            class="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-4 overflow-hidden hidden transform scale-95 transition-transform duration-300 relative">
+            <button
+                class="closeModal absolute top-4 end-4 text-white/80 hover:text-white transition-colors z-10 bg-black/20 rounded-full w-8 h-8 flex items-center justify-center">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+
+            <div id="trackModalHeader"
+                class="pt-8 pb-6 px-6 text-center text-slate-900 relative border-b border-indigo-100 overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-indigo-100 via-purple-50 to-amber-50 opacity-100"
+                    id="trackModalBg"></div>
+                <div class="relative z-10">
+                    <div id="trackModalIcon"
+                        class="w-16 h-16 rounded-full bg-white flex items-center justify-center mx-auto mb-3 text-3xl shadow-md border-2 border-indigo-200 text-indigo-700">
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <h2 id="trackModalTitle" class="text-2xl font-black text-indigo-950 tracking-tight">Track Title</h2>
+                </div>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-6">
+
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 flex items-start gap-3">
+                        <i class="fa-solid fa-clock text-primary mt-1"></i>
+                        <div>
+                            <p data-i18n="durationLabel"
+                                class="text-xs text-slate-500 font-semibold uppercase tracking-wider mb-1">Duration</p>
+                            <p id="trackModalDuration" class="text-slate-800 font-bold text-sm">4 Months</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 flex items-start gap-3">
+                        <i class="fa-solid fa-calendar-check text-primary mt-1"></i>
+                        <div>
+                            <p data-i18n="sessionsLabel"
+                                class="text-xs text-slate-500 font-semibold uppercase tracking-wider mb-1">Sessions</p>
+                            <p id="trackModalSessions" class="text-slate-800 font-bold text-sm">32 Sessions</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h3 data-i18n="finalProjectLabel"
+                        class="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-flag-checkered text-orange-500"></i> Final Project
+                    </h3>
+                    <div class="bg-orange-50/50 border border-orange-100 p-4 rounded-xl text-slate-700 text-sm font-medium"
+                        id="trackModalProject">
+                        Project details go here.
+                    </div>
+                </div>
+
+                <hr class="border-slate-100 my-4">
+
+
+                <div class="mb-6">
+                    <h3 data-i18n="promoTitle" class="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-up-right-dots text-emerald-500"></i> Promotion System
+                    </h3>
+                    <p data-i18n="promoDesc" class="text-xs text-slate-500 mb-3">Transition is not automatic. Students
+                        must meet the following criteria to advance:</p>
+                    <ul class="space-y-2">
+                        <li class="flex items-start gap-2 text-sm text-slate-700">
+                            <i class="fa-solid fa-check text-emerald-500 mt-1 text-xs"></i>
+                            <span data-i18n="promoReq1">Achieve 80-85% of learning goals.</span>
+                        </li>
+                        <li class="flex items-start gap-2 text-sm text-slate-700">
+                            <i class="fa-solid fa-check text-emerald-500 mt-1 text-xs"></i>
+                            <span data-i18n="promoReq2">Complete the Final Project.</span>
+                        </li>
+                        <li class="flex items-start gap-2 text-sm text-slate-700">
+                            <i class="fa-solid fa-check text-emerald-500 mt-1 text-xs"></i>
+                            <span data-i18n="promoReq3">Pass the Tech Readiness Assessment.</span>
+                        </li>
+                        <li class="flex items-start gap-2 text-sm text-slate-700">
+                            <i class="fa-solid fa-check text-emerald-500 mt-1 text-xs"></i>
+                            <span data-i18n="promoReq4">Trainer Recommendation.</span>
+                        </li>
+                    </ul>
+                </div>
+
+
+                <button type="button" id="joinTrackBtn"
+                    class="w-full bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-400 hover:from-amber-400 hover:to-yellow-500 text-amber-950 font-black py-4 rounded-2xl transition-all shadow-lg shadow-amber-300/40 hover:shadow-xl transform hover:-translate-y-0.5 duration-300 flex justify-center items-center gap-3 text-base border-2 border-amber-400 cursor-pointer">
+                    <span data-i18n="joinNow" class="font-black text-amber-950">انضم الآن فوراً 🚀</span>
+                    <i class="fa-solid fa-arrow-right rtl-flip text-sm text-amber-950"></i>
+                </button>
+            </div>
+        </div>
+
+
+        <div id="roleSelectionModal"
+            class="bg-white rounded-2xl shadow-xl w-full max-w-sm mx-4 p-8 hidden transform scale-95 transition-transform duration-300 relative">
+            <button class="closeModal absolute top-4 end-4 text-slate-400 hover:text-slate-600 transition-colors">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center mb-8">
+                <div
+                    class="w-16 h-16 rounded-full bg-indigo-50 flex items-center justify-center mx-auto mb-4 text-primary text-2xl">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <h2 data-i18n="selectRoleTitle" class="text-2xl font-bold text-slate-900">Who are you?</h2>
+                <p data-i18n="selectRoleDesc" class="text-slate-500 text-sm mt-2">Select your profile to continue
+                    registration.</p>
+            </div>
+
+            <div class="space-y-3">
+                <button id="btnRoleParent"
+                    class="w-full flex items-center p-4 border border-slate-200 rounded-xl hover:border-primary hover:bg-indigo-50 transition-colors group">
+                    <div
+                        class="w-10 h-10 rounded-full bg-slate-100 group-hover:bg-primary group-hover:text-white flex items-center justify-center text-slate-500 transition-colors">
+                        <i class="fa-solid fa-hands-holding-child"></i>
+                    </div>
+                    <div class="ms-4 text-start">
+                        <h3 data-i18n="roleParent"
+                            class="font-bold text-slate-900 group-hover:text-primary transition-colors">Parent</h3>
+                    </div>
+                </button>
+
+                <button id="btnRoleChild"
+                    class="w-full flex items-center p-4 border border-slate-200 rounded-xl hover:border-primary hover:bg-indigo-50 transition-colors group">
+                    <div
+                        class="w-10 h-10 rounded-full bg-slate-100 group-hover:bg-primary group-hover:text-white flex items-center justify-center text-slate-500 transition-colors">
+                        <i class="fa-solid fa-child"></i>
+                    </div>
+                    <div class="ms-4 text-start">
+                        <h3 data-i18n="roleChild"
+                            class="font-bold text-slate-900 group-hover:text-primary transition-colors">Child</h3>
+                    </div>
+                </button>
+
+                <button id="btnRoleInstitution"
+                    class="w-full flex items-center p-4 border border-slate-200 rounded-xl hover:border-primary hover:bg-indigo-50 transition-colors group">
+                    <div
+                        class="w-10 h-10 rounded-full bg-slate-100 group-hover:bg-primary group-hover:text-white flex items-center justify-center text-slate-500 transition-colors">
+                        <i class="fa-solid fa-building"></i>
+                    </div>
+                    <div class="ms-4 text-start">
+                        <h3 data-i18n="roleInstitution"
+                            class="font-bold text-slate-900 group-hover:text-primary transition-colors">Institution</h3>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+
+        <div id="parentFormModal"
+            class="bg-white rounded-2xl shadow-xl w-full max-w-2xl mx-4 hidden transform scale-95 transition-transform duration-300 relative max-h-[90vh] flex flex-col">
+
+            <div
+                class="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50 rounded-t-2xl sticky top-0 z-10">
+                <div>
+                    <h2 data-i18n="parentFormMainTitle" class="text-xl font-bold text-slate-900">Parent Registration &
+                        Profile</h2>
+                    <p data-i18n="stage1Time" class="text-xs text-primary font-semibold mt-1">Estimated time: 3 minutes
+                    </p>
+                </div>
+                <button
+                    class="closeModal text-slate-400 hover:text-slate-600 transition-colors bg-white w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center shadow-sm">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto">
+                <form id="parentRegistrationForm" onsubmit="event.preventDefault();" class="space-y-8">
+
+
+                    <div>
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="bg-primary text-white text-xs font-bold px-2 py-1 rounded">1</span>
+                            <h3 data-i18n="stage1Title"
+                                class="text-lg font-bold text-slate-800 border-b-2 border-primary/20 pb-1">Stage 1:
+                                Student & Family Profile</h3>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label data-i18n="lblChildName"
+                                    class="block text-sm font-medium text-slate-700 mb-1">Child's Name *</label>
+                                <input type="text" id="parentChildName" required
+                                    placeholder="e.g. Alex Rivers"
+                                    class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-primary outline-none">
+                            </div>
+                            <div>
+                                <label data-i18n="lblAge"
+                                    class="block text-sm font-medium text-slate-700 mb-1">Age *</label>
+                                <input type="number" id="parentChildAge" min="5" max="25" value="14" required
+                                    class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-primary outline-none">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label data-i18n="lblDiagnosis"
+                                    class="block text-sm font-medium text-slate-700 mb-1">Diagnosis / Special Education Needs (SEN)</label>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2">
+                                    <select id="parentDiagnosisSelect" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-primary outline-none bg-white">
+                                        <option value="None / Typical Learner">None / Typical Learner</option>
+                                        <option value="ADHD (Attention Deficit Hyperactivity)">ADHD (Attention Deficit Hyperactivity)</option>
+                                        <option value="Autism Spectrum (ASD)">Autism Spectrum (ASD)</option>
+                                        <option value="Dyslexia / Learning Difference">Dyslexia / Learning Difference</option>
+                                        <option value="Speech & Language Delay">Speech & Language Delay</option>
+                                        <option value="Gifted & Talented">Gifted & Talented</option>
+                                        <option value="Other">Other / Specific Educational Plan</option>
+                                    </select>
+                                    <input type="text" id="parentDiagnosisNotes"
+                                        placeholder="Additional diagnosis notes or accommodation..."
+                                        class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-primary outline-none">
+                                </div>
+
+                                <!-- Son Diagnosis Attachment Box -->
+                                <div class="mt-2">
+                                    <label class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                                        <i class="fa-solid fa-paperclip text-primary"></i>
+                                        <span>Attach Son's Medical / Educational Diagnosis Document (Optional)</span>
+                                    </label>
+                                    <div id="diagnosisDropArea" class="border-2 border-dashed border-indigo-200 hover:border-primary rounded-xl p-3.5 text-center cursor-pointer transition-all bg-indigo-50/40 hover:bg-indigo-50/80">
+                                        <input type="file" id="parentSonDiagnosisFile" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" class="hidden">
+                                        <div id="diagnosisFilePrompt" class="flex items-center justify-center gap-3">
+                                            <div class="w-8 h-8 rounded-full bg-white text-primary flex items-center justify-center text-sm shadow-sm">
+                                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                            </div>
+                                            <div class="text-start">
+                                                <p class="text-xs font-bold text-slate-800">Click to upload or drag & drop diagnosis file</p>
+                                                <p class="text-[11px] text-slate-500">PDF, JPG, PNG (Max 10MB)</p>
+                                            </div>
+                                        </div>
+                                        <div id="diagnosisFilePreview" class="hidden flex items-center justify-between bg-white border border-indigo-200 rounded-lg p-2 px-3 shadow-sm">
+                                            <div class="flex items-center gap-2.5 text-start">
+                                                <i class="fa-solid fa-file-pdf text-red-500 text-lg"></i>
+                                                <div>
+                                                    <div class="text-xs font-bold text-slate-800" id="diagnosisAttachedFileName">diagnosis.pdf</div>
+                                                    <div class="text-[10px] text-emerald-600 font-semibold" id="diagnosisAttachedFileSize">Attached successfully</div>
+                                                </div>
+                                            </div>
+                                            <button type="button" id="removeDiagnosisBtn" class="text-slate-400 hover:text-red-500 p-1 text-xs transition-colors" title="Remove file">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label data-i18n="lblLang"
+                                    class="block text-sm font-medium text-slate-700 mb-1">Primary Language</label>
+                                <input type="text" id="parentChildLang" value="English / Arabic"
+                                    class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-primary outline-none">
+                            </div>
+                            <div>
+                                <label data-i18n="lblGrade"
+                                    class="block text-sm font-medium text-slate-700 mb-1">Grade / Level</label>
+                                <input type="text" id="parentChildGrade" placeholder="e.g. Grade 8 / Year 9"
+                                    class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-primary outline-none">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label data-i18n="lblDevices"
+                                    class="block text-sm font-medium text-slate-700 mb-1">Devices Used</label>
+                                <input type="text" id="parentChildDevices"
+                                    class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-primary outline-none"
+                                    placeholder="e.g., iPad, Laptop, Chromebook...">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label data-i18n="lblTechExp"
+                                    class="block text-sm font-medium text-slate-700 mb-1">Previous Tech
+                                    Experience</label>
+                                <textarea id="parentChildTechExp" rows="2"
+                                    class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-primary outline-none resize-none"
+                                    placeholder="e.g. Basic tablet games, Scratch blocks, robotics club..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-100">
+
+
+                    <div>
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="bg-secondary text-white text-xs font-bold px-2 py-1 rounded">2</span>
+                            <h3 data-i18n="stage2Title"
+                                class="text-lg font-bold text-slate-800 border-b-2 border-secondary/20 pb-1">Stage 2:
+                                Daily Living & Sensory Profile</h3>
+                        </div>
+
+
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 mb-6">
+                            <h4 data-i18n="secDailyLiving"
+                                class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-house-user text-primary"></i> Daily Living
+                            </h4>
+                            <div class="space-y-3">
+                                <label
+                                    class="flex items-center justify-between p-3 bg-white rounded-lg border border-slate-200 shadow-sm cursor-pointer hover:border-primary transition-colors">
+                                    <span data-i18n="qTablet" class="text-sm font-medium text-slate-700">Uses a
+                                        tablet?</span>
+                                    <input type="checkbox" id="chk-tablet" checked
+                                        class="w-5 h-5 text-primary rounded border-slate-300 focus:ring-primary">
+                                </label>
+                                <label
+                                    class="flex items-center justify-between p-3 bg-white rounded-lg border border-slate-200 shadow-sm cursor-pointer hover:border-primary transition-colors">
+                                    <span data-i18n="qComputer" class="text-sm font-medium text-slate-700">Uses a
+                                        computer?</span>
+                                    <input type="checkbox" id="chk-computer" checked
+                                        class="w-5 h-5 text-primary rounded border-slate-300 focus:ring-primary">
+                                </label>
+                                <label
+                                    class="flex items-center justify-between p-3 bg-white rounded-lg border border-slate-200 shadow-sm cursor-pointer hover:border-primary transition-colors">
+                                    <span data-i18n="qMouse" class="text-sm font-medium text-slate-700">Can use a
+                                        mouse?</span>
+                                    <input type="checkbox" id="chk-mouse" checked
+                                        class="w-5 h-5 text-primary rounded border-slate-300 focus:ring-primary">
+                                </label>
+                                <label
+                                    class="flex items-center justify-between p-3 bg-white rounded-lg border border-slate-200 shadow-sm cursor-pointer hover:border-primary transition-colors">
+                                    <span data-i18n="qInstructions" class="text-sm font-medium text-slate-700">Can
+                                        follow multi-step instructions?</span>
+                                    <input type="checkbox" id="chk-instructions" checked
+                                        class="w-5 h-5 text-primary rounded border-slate-300 focus:ring-primary">
+                                </label>
+                                <label
+                                    class="flex items-center justify-between p-3 bg-white rounded-lg border border-slate-200 shadow-sm cursor-pointer hover:border-primary transition-colors">
+                                    <span data-i18n="qIndependent" class="text-sm font-medium text-slate-700">Works
+                                        independently?</span>
+                                    <input type="checkbox" id="chk-independent"
+                                        class="w-5 h-5 text-primary rounded border-slate-300 focus:ring-primary">
+                                </label>
+                            </div>
+                        </div>
+
+
+                        <div>
+                            <h4 data-i18n="secInterests" class="font-bold text-slate-800 mb-2 flex items-center gap-2">
+                                <i class="fa-solid fa-heart text-red-500"></i> Interests & Passions
+                            </h4>
+                            <p data-i18n="qLikes" class="text-sm text-slate-500 mb-4">What do they like? (Select all
+                                that apply)</p>
+
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                <!-- Checkbox Cards -->
+                                <div class="relative">
+                                    <input type="checkbox" id="int-lego" value="LEGO" class="peer sr-only interest-checkbox">
+                                    <label for="int-lego"
+                                        class="flex flex-col items-center justify-center p-3 border-2 border-slate-100 rounded-xl cursor-pointer bg-white peer-checked:border-primary peer-checked:bg-indigo-50/50 hover:bg-slate-50 transition-all text-slate-600 font-medium text-sm">
+                                        <i class="fa-solid fa-cubes text-xl mb-2 text-orange-400"></i>
+                                        LEGO
+                                    </label>
+                                </div>
+                                <div class="relative">
+                                    <input type="checkbox" id="int-robots" value="Robots" checked class="peer sr-only interest-checkbox">
+                                    <label for="int-robots"
+                                        class="flex flex-col items-center justify-center p-3 border-2 border-slate-100 rounded-xl cursor-pointer bg-white peer-checked:border-primary peer-checked:bg-indigo-50/50 hover:bg-slate-50 transition-all text-slate-600 font-medium text-sm">
+                                        <i class="fa-solid fa-robot text-xl mb-2 text-slate-400"></i>
+                                        Robots
+                                    </label>
+                                </div>
+                                <div class="relative">
+                                    <input type="checkbox" id="int-drawing" value="Drawing" class="peer sr-only interest-checkbox">
+                                    <label for="int-drawing"
+                                        class="flex flex-col items-center justify-center p-3 border-2 border-slate-100 rounded-xl cursor-pointer bg-white peer-checked:border-primary peer-checked:bg-indigo-50/50 hover:bg-slate-50 transition-all text-slate-600 font-medium text-sm">
+                                        <i class="fa-solid fa-palette text-xl mb-2 text-pink-400"></i>
+                                        Drawing
+                                    </label>
+                                </div>
+                                <div class="relative">
+                                    <input type="checkbox" id="int-games" value="Gaming" checked class="peer sr-only interest-checkbox">
+                                    <label for="int-games"
+                                        class="flex flex-col items-center justify-center p-3 border-2 border-slate-100 rounded-xl cursor-pointer bg-white peer-checked:border-primary peer-checked:bg-indigo-50/50 hover:bg-slate-50 transition-all text-slate-600 font-medium text-sm">
+                                        <i class="fa-solid fa-gamepad text-xl mb-2 text-purple-400"></i>
+                                        Games
+                                    </label>
+                                </div>
+                                <div class="relative">
+                                    <input type="checkbox" id="int-math" value="Math & Logic" class="peer sr-only interest-checkbox">
+                                    <label for="int-math"
+                                        class="flex flex-col items-center justify-center p-3 border-2 border-slate-100 rounded-xl cursor-pointer bg-white peer-checked:border-primary peer-checked:bg-indigo-50/50 hover:bg-slate-50 transition-all text-slate-600 font-medium text-sm">
+                                        <i class="fa-solid fa-calculator text-xl mb-2 text-blue-400"></i>
+                                        Math
+                                    </label>
+                                </div>
+                                <div class="relative">
+                                    <input type="checkbox" id="int-computers" value="Computers" checked class="peer sr-only interest-checkbox">
+                                    <label for="int-computers"
+                                        class="flex flex-col items-center justify-center p-3 border-2 border-slate-100 rounded-xl cursor-pointer bg-white peer-checked:border-primary peer-checked:bg-indigo-50/50 hover:bg-slate-50 transition-all text-slate-600 font-medium text-sm">
+                                        <i class="fa-solid fa-desktop text-xl mb-2 text-emerald-400"></i>
+                                        Computers
+                                    </label>
+                                </div>
+                                <div class="relative">
+                                    <input type="checkbox" id="int-music" value="Music" class="peer sr-only interest-checkbox">
+                                    <label for="int-music"
+                                        class="flex flex-col items-center justify-center p-3 border-2 border-slate-100 rounded-xl cursor-pointer bg-white peer-checked:border-primary peer-checked:bg-indigo-50/50 hover:bg-slate-50 transition-all text-slate-600 font-medium text-sm">
+                                        <i class="fa-solid fa-music text-xl mb-2 text-yellow-500"></i>
+                                        Music
+                                    </label>
+                                </div>
+                                <div class="relative">
+                                    <input type="checkbox" id="int-science" value="Science" class="peer sr-only interest-checkbox">
+                                    <label for="int-science"
+                                        class="flex flex-col items-center justify-center p-3 border-2 border-slate-100 rounded-xl cursor-pointer bg-white peer-checked:border-primary peer-checked:bg-indigo-50/50 hover:bg-slate-50 transition-all text-slate-600 font-medium text-sm">
+                                        <i class="fa-solid fa-flask text-xl mb-2 text-cyan-400"></i>
+                                        Science
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="p-4 border-t border-slate-100 bg-white rounded-b-2xl">
+                <button type="button" id="parentFormSubmitBtn"
+                    data-i18n="btnSubmitApp"
+                    class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3.5 rounded-xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 duration-300 flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span>Save Profile & Continue</span>
+                </button>
+            </div>
+        </div>
+
+
+        <div id="childWithYouModal"
+            class="bg-white rounded-2xl shadow-xl w-full max-w-sm mx-4 p-8 hidden transform scale-95 transition-transform duration-300 relative">
+            <button class="closeModal absolute top-4 end-4 text-slate-400 hover:text-slate-600 transition-colors">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center">
+                <div
+                    class="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-4 text-green-500 text-2xl">
+                    <i class="fa-solid fa-child-reaching"></i>
+                </div>
+                <h2 data-i18n="childWithYouTitle" class="text-xl font-bold text-slate-900 mb-2">Profile Saved!
+                </h2>
+                <p data-i18n="childWithYouDesc" class="text-slate-500 text-sm mb-6">Is your child with you right now? We
+                    can start the placement assessment immediately.</p>
+                <div class="space-y-3">
+                    <button type="button" id="startTestFromParentBtn" onclick="startChildTest()" data-i18n="childWithYouYes"
+                        class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 duration-300 flex items-center justify-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-play"></i>
+                        Yes, start the assessment now
+                    </button>
+                    <button type="button" onclick="closeModal()" data-i18n="childWithYouNo"
+                        class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 rounded-xl transition-all duration-300 cursor-pointer">
+                        Not right now, go back home
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="childConfirmModal"
+            class="bg-white rounded-2xl shadow-xl w-full max-w-sm mx-4 p-8 hidden transform scale-95 transition-transform duration-300 relative">
+            <button class="closeModal absolute top-4 end-4 text-slate-400 hover:text-slate-600 transition-colors">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center">
+                <div
+                    class="w-16 h-16 rounded-full bg-orange-50 flex items-center justify-center mx-auto mb-4 text-orange-500 text-2xl">
+                    <i class="fa-solid fa-circle-question"></i>
+                </div>
+                <h2 data-i18n="childConfirmTitle" class="text-xl font-bold text-slate-900 mb-6">Are you sure you want to
+                    take the test?</h2>
+                <button type="button" onclick="startChildTest()" data-i18n="confirmBtn"
+                    class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 duration-300 cursor-pointer">
+                    Confirm & Start
+                </button>
+            </div>
+        </div>
+
+
+        <div id="institutionFormModal"
+            class="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-4 p-7 hidden transform scale-95 transition-transform duration-300 relative max-h-[90vh] overflow-y-auto">
+            <button class="closeModal absolute top-4 end-4 text-slate-400 hover:text-slate-600 transition-colors bg-white w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center shadow-sm">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center mb-5">
+                <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-primary flex items-center justify-center mx-auto mb-3 text-2xl shadow-sm border border-indigo-100">
+                    <i class="fa-solid fa-school-flag"></i>
+                </div>
+                <h2 data-i18n="instFormTitle" class="text-2xl font-bold text-slate-900">Institution & School Partnership</h2>
+                <p class="text-slate-500 text-xs mt-1">Leave your contact details and project requirements</p>
+            </div>
+
+            <form id="institutionPartnershipForm" onsubmit="event.preventDefault();" class="space-y-4">
+                <div
+                    class="bg-gradient-to-r from-indigo-50 to-cyan-50 border border-indigo-100 rounded-xl p-3 text-center flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-phone text-primary"></i>
+                    <span class="text-xs font-medium text-slate-700" data-i18n="instContact">Direct Hotline: </span>
+                    <a href="tel:01115489561" class="text-primary font-bold text-sm" dir="ltr">01115489561</a>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Institution / School Name *</label>
+                    <input type="text" id="instOrgName" required placeholder="e.g. Modern Future International Academy" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Contact Person Name</label>
+                        <input type="text" id="instContactPerson" placeholder="e.g. Dr. Sarah Johnson" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1">
+                            <i class="fa-solid fa-phone text-primary"></i>
+                            <span>Phone Number (Required) *</span>
+                        </label>
+                        <input type="tel" id="instContactPhone" required placeholder="e.g. 01115489561 or +20..." class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors font-medium">
+                    </div>
+                </div>
+                <div>
+                    <label data-i18n="instFormLabel" class="block text-xs font-bold text-slate-700 mb-1">Your Request Details & Service Needs *</label>
+                    <textarea id="instRequestDetails" required rows="3"
+                        class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors resize-none"
+                        placeholder="Write student numbers, SEN curriculum requirements, teacher training, or assessment licensing details..."></textarea>
+                </div>
+                <button type="submit" id="instSubmitBtn" data-i18n="btnSubmitApp"
+                    class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3.5 rounded-xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 duration-300 mt-2 flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>Submit Institution Request</span>
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+    <main class="pt-32 pb-20">
+
+        <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-20">
+
+            <div class="flex justify-center mb-6">
+                <span
+                    class="inline-flex items-center gap-2.5 bg-gradient-to-r from-amber-50 via-indigo-50 to-emerald-50 border-2 border-indigo-200/80 text-indigo-700 px-6 py-2.5 rounded-full text-sm font-extrabold shadow-md shadow-indigo-100/50 transform hover:scale-105 transition-all">
+                    <span>🎮</span>
+                    <span data-i18n="heroBadge">Designed for Every Learner &mdash; Parents, Children &amp; SEN Students Welcome</span>
+                    <span>⭐️</span>
+                </span>
+            </div>
+            <h1 data-i18n="whoWeAre"
+                class="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-500 mb-6 drop-shadow-sm tracking-tight">
+                Welcome To CodeRa
+            </h1>
+            <p data-i18n="subtitle" class="text-xl md:text-2xl text-slate-600 font-bold mb-8">
+                Discover the vision behind CodeRa and how we are transforming education.
+            </p>
+
+            <!-- Looply-Style 3 Main Portals Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 text-center">
+                <!-- Portal 1: Parent Portal -->
+                <div onclick="openParentDashboard()"
+                    class="bg-gradient-to-br from-indigo-50/90 via-white to-purple-50/60 border-2 border-indigo-200 hover:border-indigo-500 rounded-3xl p-7 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 cursor-pointer group flex flex-col justify-between">
+                    <div>
+                        <div class="w-16 h-16 rounded-2xl bg-indigo-600 text-white mx-auto mb-4 flex items-center justify-center text-3xl shadow-lg shadow-indigo-500/25 group-hover:scale-110 transition-transform">
+                            👨‍👩‍👧‍👦
+                        </div>
+                        <span class="inline-block px-3 py-1 bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 font-extrabold text-[11px] rounded-full uppercase tracking-wider mb-2">
+                            Family & Student Care
+                        </span>
+                        <h3 class="font-black text-slate-900 text-xl mb-2">Parent Portal</h3>
+                        <p class="text-xs font-semibold text-slate-500 leading-relaxed mb-6">
+                            Manage student profiles, view diagnostic results, upload screening videos, and book tailored placement programs.
+                        </p>
+                    </div>
+                    <button type="button" onclick="openParentDashboard()" class="w-full py-3 rounded-2xl bg-indigo-600 group-hover:bg-indigo-700 text-white font-extrabold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer">
+                        <span>Enter Parent Portal</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Portal 2: Child Portal -->
+                <div onclick="openChildPortal()"
+                    class="bg-gradient-to-br from-emerald-50/90 via-white to-teal-50/60 border-2 border-emerald-200 hover:border-emerald-500 rounded-3xl p-7 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 cursor-pointer group flex flex-col justify-between">
+                    <div>
+                        <div class="w-16 h-16 rounded-2xl bg-emerald-500 text-white mx-auto mb-4 flex items-center justify-center text-3xl shadow-lg shadow-emerald-500/25 group-hover:scale-110 transition-transform">
+                            🎒
+                        </div>
+                        <span class="inline-block px-3 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-extrabold text-[11px] rounded-full uppercase tracking-wider mb-2">
+                            Gamified Assessment
+                        </span>
+                        <h3 class="font-black text-slate-900 text-xl mb-2">Child Portal</h3>
+                        <p class="text-xs font-semibold text-slate-500 leading-relaxed mb-6">
+                            Take Day 1 (Cognitive/Functional) & Day 2 (Behavior/Motor) 15-min interactive assessments with fun celebration breaks.
+                        </p>
+                    </div>
+                    <button type="button" onclick="openChildPortal()" class="w-full py-3 rounded-2xl bg-emerald-500 group-hover:bg-emerald-600 text-white font-extrabold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer">
+                        <span>Start Student Test 🚀</span>
+                        <i class="fa-solid fa-play"></i>
+                    </button>
+                </div>
+
+                <!-- Portal 3: Pro Portal -->
+                <div onclick="openCEODashboard()"
+                    class="bg-gradient-to-br from-purple-50/90 via-white to-indigo-50/60 border-2 border-purple-200 hover:border-purple-500 rounded-3xl p-7 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 cursor-pointer group flex flex-col justify-between">
+                    <div>
+                        <div class="w-16 h-16 rounded-2xl bg-purple-600 text-white mx-auto mb-4 flex items-center justify-center text-3xl shadow-lg shadow-purple-500/25 group-hover:scale-110 transition-transform">
+                            🩺
+                        </div>
+                        <span class="inline-block px-3 py-1 bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 font-extrabold text-[11px] rounded-full uppercase tracking-wider mb-2">
+                            Assessor & Specialist
+                        </span>
+                        <h3 class="font-black text-slate-900 text-xl mb-2">Pro Portal</h3>
+                        <p class="text-xs font-semibold text-slate-500 leading-relaxed mb-6">
+                            Executive analytics dashboard for SEN specialists, assessors, and educators to review AI telemetry and video screenings.
+                        </p>
+                    </div>
+                    <button type="button" onclick="openCEODashboard()" class="w-full py-3 rounded-2xl bg-purple-600 group-hover:bg-purple-700 text-white font-extrabold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer">
+                        <span>Access Pro Dashboard</span>
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+
+            <div class="prose prose-lg md:prose-xl max-w-none text-slate-700 leading-relaxed">
+
+                <div class="text-center mb-12">
+                    <h2 data-i18n="aboutTitle" class="text-3xl font-bold text-primary mb-4">Cognix - The Inclusive Tech
+                        Ecosystem</h2>
+                    <div class="w-24 h-1 bg-primary mx-auto rounded-full opacity-50"></div>
+                </div>
+
+                <!-- Collapsible Dropdown Accordion for Who We Are, Vision, Mission -->
+                <div class="space-y-6 mb-12">
+
+                    <!-- Accordion Item 1: Who We Are -->
+                    <div
+                        class="bg-white rounded-3xl border-2 border-indigo-200 hover:border-indigo-400 transition-all duration-300 shadow-lg overflow-hidden group">
+                        <button type="button" onclick="toggleAccordion('who-we-are-content', 'who-we-are-icon')"
+                            class="w-full flex items-center justify-between p-6 md:p-7 bg-gradient-to-r from-indigo-50/80 via-white to-purple-50/50 hover:from-indigo-100/80 hover:to-purple-100/60 transition-all text-start cursor-pointer">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="w-14 h-14 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-2xl font-bold shadow-md shadow-indigo-200">
+                                    <i class="fa-solid fa-users"></i>
+                                </div>
+                                <div>
+                                    <h2 data-i18n="aboutHeading"
+                                        class="text-2xl md:text-3xl font-black text-slate-900 m-0">Who We Are</h2>
+                                    <span
+                                        class="inline-block text-xs font-extrabold text-indigo-600 bg-indigo-100 px-3 py-1 rounded-full mt-1">انقر
+                                        للفتح / الإغلاق 🔽</span>
+                                </div>
+                            </div>
+                            <div class="w-12 h-12 rounded-2xl bg-white border-2 border-indigo-200 flex items-center justify-center text-indigo-600 transition-transform duration-300 shadow-sm group-hover:scale-110"
+                                id="who-we-are-icon">
+                                <i class="fa-solid fa-chevron-down text-lg"></i>
+                            </div>
+                        </button>
+                        <div id="who-we-are-content"
+                            class="px-8 py-7 border-t border-indigo-100 bg-white text-slate-700 leading-relaxed">
+                            <p data-i18n="aboutP1"
+                                class="mb-5 text-lg font-medium text-slate-800 border-s-4 border-indigo-500 ps-4 py-1 bg-indigo-50/50 rounded-e-xl">
+                                CodeRa is the first inclusive technology ecosystem dedicated to empowering students with
+                                special
+                                educational needs through future-focused digital education.
+                            </p>
+                            <p data-i18n="aboutP2" class="mb-4">
+                                We combine digital assessment, adaptive learning, robotics, coding, artificial
+                                intelligence, and
+                                personalized learning pathways into one connected ecosystem that enables every learner
+                                to
+                                discover their strengths, develop future-ready skills, and thrive in an increasingly
+                                digital
+                                world.
+                            </p>
+                            <p data-i18n="aboutP3" class="mb-4">
+                                Our approach goes beyond teaching technology. We create individualized learning
+                                experiences that
+                                recognize each student's unique abilities, provide measurable progress, and build
+                                confidence
+                                through hands-on innovation.
+                            </p>
+                            <p data-i18n="aboutP4">
+                                By bringing together education, technology, accessibility, and data-driven learning, we
+                                are
+                                redefining how students with diverse learning profiles access STEM education across
+                                Egypt, the
+                                GCC, and the Middle East.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Accordion Item 2: Vision -->
+                    <div
+                        class="bg-white rounded-3xl border-2 border-amber-200 hover:border-amber-400 transition-all duration-300 shadow-lg overflow-hidden group">
+                        <button type="button" onclick="toggleAccordion('vision-content', 'vision-icon')"
+                            class="w-full flex items-center justify-between p-6 md:p-7 bg-gradient-to-r from-amber-50/80 via-white to-yellow-50/50 hover:from-amber-100/80 hover:to-yellow-100/60 transition-all text-start cursor-pointer">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="w-14 h-14 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-2xl font-bold shadow-md shadow-amber-200">
+                                    <i class="fa-solid fa-eye"></i>
+                                </div>
+                                <div>
+                                    <h2 data-i18n="vision" class="text-2xl md:text-3xl font-black text-slate-900 m-0">
+                                        Vision</h2>
+                                    <span
+                                        class="inline-block text-xs font-extrabold text-amber-700 bg-amber-100 px-3 py-1 rounded-full mt-1">انقر
+                                        للفتح / الإغلاق 🔽</span>
+                                </div>
+                            </div>
+                            <div class="w-12 h-12 rounded-2xl bg-white border-2 border-amber-200 flex items-center justify-center text-amber-600 transition-transform duration-300 shadow-sm group-hover:scale-110"
+                                id="vision-icon">
+                                <i class="fa-solid fa-chevron-down text-lg"></i>
+                            </div>
+                        </button>
+                        <div id="vision-content"
+                            class="hidden px-8 py-7 border-t border-amber-100 bg-white text-slate-700 leading-relaxed">
+                            <p data-i18n="visionP1"
+                                class="mb-5 text-lg font-medium text-slate-800 border-s-4 border-amber-500 ps-4 py-1 bg-amber-50/50 rounded-e-xl">
+                                To become the Middle East's leading inclusive technology ecosystem, transforming how
+                                students with special educational needs are assessed, taught, empowered, and prepared
+                                for
+                                the future through accessible digital education, adaptive learning, and emerging
+                                technologies.
+                            </p>
+                            <p data-i18n="visionP2">
+                                We envision a future where every learnerregardless of abilityhas equal access to
+                                innovation, meaningful learning opportunities, and the skills needed to participate
+                                confidently in the digital economy.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Accordion Item 3: Mission -->
+                    <div
+                        class="bg-white rounded-3xl border-2 border-emerald-200 hover:border-emerald-400 transition-all duration-300 shadow-lg overflow-hidden group">
+                        <button type="button" onclick="toggleAccordion('mission-content', 'mission-icon')"
+                            class="w-full flex items-center justify-between p-6 md:p-7 bg-gradient-to-r from-emerald-50/80 via-white to-teal-50/50 hover:from-emerald-100/80 hover:to-teal-100/60 transition-all text-start cursor-pointer">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="w-14 h-14 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-2xl font-bold shadow-md shadow-emerald-200">
+                                    <i class="fa-solid fa-rocket"></i>
+                                </div>
+                                <div>
+                                    <h2 data-i18n="mission" class="text-2xl md:text-3xl font-black text-slate-900 m-0">
+                                        Mission</h2>
+                                    <span
+                                        class="inline-block text-xs font-extrabold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full mt-1">انقر
+                                        للفتح / الإغلاق 🔽</span>
+                                </div>
+                            </div>
+                            <div class="w-12 h-12 rounded-2xl bg-white border-2 border-emerald-200 flex items-center justify-center text-emerald-600 transition-transform duration-300 shadow-sm group-hover:scale-110"
+                                id="mission-icon">
+                                <i class="fa-solid fa-chevron-down text-lg"></i>
+                            </div>
+                        </button>
+                        <div id="mission-content"
+                            class="hidden px-8 py-7 border-t border-emerald-100 bg-white text-slate-700 leading-relaxed">
+                            <p data-i18n="missionP1"
+                                class="mb-5 text-lg font-medium text-slate-800 border-s-4 border-emerald-500 ps-4 py-1 bg-emerald-50/50 rounded-e-xl">
+                                Our mission is to empower students with special educational needs through a connected
+                                ecosystem that combines digital assessment, adaptive learning pathways, robotics,
+                                coding,
+                                artificial intelligence, engineering, and project-based education.
+                            </p>
+                            <p data-i18n="missionP2" class="mb-4">
+                                We design personalized learning journeys that help every student build technical skills,
+                                strengthen cognitive and problem-solving abilities, develop independence and confidence,
+                                and
+                                create real-world projects that prepare them for lifelong learning and future careers.
+                            </p>
+                            <p data-i18n="missionP3">
+                                Through collaboration with families, educators, schools, and technology partners, we aim
+                                to
+                                make inclusive technology education accessible, measurable, engaging, and impactful for
+                                every learner.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Accordion Item 4: Philosophy -->
+                    <div
+                        class="bg-white rounded-3xl border-2 border-purple-200 hover:border-purple-400 transition-all duration-300 shadow-lg overflow-hidden group">
+                        <button type="button" onclick="toggleAccordion('philosophy-content', 'philosophy-icon')"
+                            class="w-full flex items-center justify-between p-6 md:p-7 bg-gradient-to-r from-purple-50/80 via-white to-pink-50/50 hover:from-purple-100/80 hover:to-pink-100/60 transition-all text-start cursor-pointer">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="w-14 h-14 rounded-2xl bg-purple-600 text-white flex items-center justify-center text-2xl font-bold shadow-md shadow-purple-200">
+                                    <i class="fa-solid fa-heart"></i>
+                                </div>
+                                <div>
+                                    <h2 data-i18n="philosophy" class="text-2xl md:text-3xl font-black text-slate-900 m-0">
+                                        Our Philosophy</h2>
+                                    <span
+                                        class="inline-block text-xs font-extrabold text-purple-700 bg-purple-100 px-3 py-1 rounded-full mt-1">انقر
+                                        للفتح / الإغلاق 🔽</span>
+                                </div>
+                            </div>
+                            <div class="w-12 h-12 rounded-2xl bg-white border-2 border-purple-200 flex items-center justify-center text-purple-600 transition-transform duration-300 shadow-sm group-hover:scale-110"
+                                id="philosophy-icon">
+                                <i class="fa-solid fa-chevron-down text-lg"></i>
+                            </div>
+                        </button>
+                        <div id="philosophy-content"
+                            class="hidden px-8 py-7 border-t border-purple-100 bg-white text-slate-700 leading-relaxed">
+                            <p data-i18n="phil1"
+                                class="mb-5 text-lg font-medium text-slate-800 border-s-4 border-purple-500 ps-4 py-1 bg-purple-50/50 rounded-e-xl">
+                                We believe that ability should never define opportunity.
+                            </p>
+                            <p data-i18n="phil2" class="mb-4">
+                                Every student learns differently, progresses at a unique pace, and possesses strengths that can flourish within the right environment.
+                            </p>
+                            <p data-i18n="phil3">
+                                Technology is not simply a subject to be taught &mdash; it is a powerful tool for communication, creativity, independence, and inclusion. By combining adaptive education with evidence-informed practices, we help learners transform curiosity into capability and capability into lifelong opportunity.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Accordion Item 5: Our Impact -->
+                    <div
+                        class="bg-white rounded-3xl border-2 border-amber-200 hover:border-amber-400 transition-all duration-300 shadow-lg overflow-hidden group">
+                        <button type="button" onclick="toggleAccordion('impact-content', 'impact-icon')"
+                            class="w-full flex items-center justify-between p-6 md:p-7 bg-gradient-to-r from-amber-50/80 via-white to-orange-50/50 hover:from-amber-100/80 hover:to-orange-100/60 transition-all text-start cursor-pointer">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="w-14 h-14 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-2xl font-bold shadow-md shadow-amber-200">
+                                    <i class="fa-solid fa-bolt"></i>
+                                </div>
+                                <div>
+                                    <h2 data-i18n="impact" class="text-2xl md:text-3xl font-black text-slate-900 m-0">
+                                        Our Impact</h2>
+                                    <span
+                                        class="inline-block text-xs font-extrabold text-amber-700 bg-amber-100 px-3 py-1 rounded-full mt-1">انقر
+                                        للفتح / الإغلاق 🔽</span>
+                                </div>
+                            </div>
+                            <div class="w-12 h-12 rounded-2xl bg-white border-2 border-amber-200 flex items-center justify-center text-amber-600 transition-transform duration-300 shadow-sm group-hover:scale-110"
+                                id="impact-icon">
+                                <i class="fa-solid fa-chevron-down text-lg"></i>
+                            </div>
+                        </button>
+                        <div id="impact-content"
+                            class="hidden px-8 py-7 border-t border-amber-100 bg-white text-slate-700 leading-relaxed">
+                            <p data-i18n="impactSubtitle"
+                                class="mb-5 text-lg font-medium text-slate-800 border-s-4 border-amber-500 ps-4 py-1 bg-amber-50/50 rounded-e-xl">
+                                We prepare students to:
+                            </p>
+                            <ul class="space-y-4">
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-check text-emerald-500 text-lg mt-0.5"></i>
+                                    <span data-i18n="impact1" class="text-slate-700 font-medium">Think critically and solve problems creatively.</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-check text-emerald-500 text-lg mt-0.5"></i>
+                                    <span data-i18n="impact2" class="text-slate-700 font-medium">Build confidence through hands-on technology experiences.</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-check text-emerald-500 text-lg mt-0.5"></i>
+                                    <span data-i18n="impact3" class="text-slate-700 font-medium">Develop computational thinking and engineering skills.</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-check text-emerald-500 text-lg mt-0.5"></i>
+                                    <span data-i18n="impact4" class="text-slate-700 font-medium">Create meaningful digital and robotics projects.</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-check text-emerald-500 text-lg mt-0.5"></i>
+                                    <span data-i18n="impact5" class="text-slate-700 font-medium">Participate in STEM competitions and innovation challenges.</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-check text-emerald-500 text-lg mt-0.5"></i>
+                                    <span data-i18n="impact6" class="text-slate-700 font-medium">Build a portfolio of achievements that supports future education and career pathways.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="space-y-8 mb-12">
+                    <div class="border-s-4 border-primary ps-6 py-2 bg-indigo-50/50 rounded-e-xl">
+                        <h2 data-i18n="purpose" class="text-2xl font-bold text-slate-900 mb-2">Our Purpose</h2>
+                        <p data-i18n="purposeDesc" class="text-lg text-slate-700">To unlock the potential of every
+                            learner by making technology education accessible, personalized, and inclusive.</p>
+                    </div>
+
+                    <div class="border-s-4 border-secondary ps-6 py-2 bg-emerald-50/50 rounded-e-xl">
+                        <h2 data-i18n="promise" class="text-2xl font-bold text-slate-900 mb-2">Our Promise</h2>
+                        <p data-i18n="promiseDesc" class="text-lg text-slate-700">Every learner deserves the opportunity
+                            to discover, create, innovate, and belong.</p>
+                    </div>
+                </div>
+
+                <div class="bg-indigo-50/80 p-8 rounded-2xl border border-indigo-100">
+                    <h2 data-i18n="journey"
+                        class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-emerald-600 mb-8 text-center animate-pulse drop-shadow-sm">
+                        Our Learning Journey</h2>
+
+                    <!-- Visual Timeline Steps Pyramid Structure -->
+                    <div class="relative w-fit mx-auto mb-16 mt-8 px-4 md:px-8 overflow-visible">
+                        <div class="flex flex-col relative z-10 text-sm md:text-base font-bold">
+
+                            <!-- Step 7: Prepare for the Future -->
+                            <div class="flex items-center relative h-14 md:h-16 mb-6 md:mb-8 ms-[9rem] md:ms-[24rem]">
+                                <div
+                                    class="absolute top-1/2 end-[100%] w-[1.5rem] md:w-[4rem] h-[calc(100%+1.5rem)] md:h-[calc(100%+2rem)] border-t-4 border-s-4 border-indigo-400/40 rounded-ss-xl -z-10">
+                                </div>
+                                <span data-i18n="journey7"
+                                    class="journey-animated-step step-anim-7 bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-950 font-black border-2 border-indigo-400 px-5 md:px-8 py-3.5 rounded-2xl shadow-lg z-10 whitespace-nowrap">الاستعداد
+                                    للمستقبل 🚀</span>
+                            </div>
+
+                            <!-- Step 6: Compete -->
+                            <div class="flex items-center relative h-14 md:h-16 mb-6 md:mb-8 ms-[7.5rem] md:ms-[20rem]">
+                                <div
+                                    class="absolute top-1/2 end-[100%] w-[1.5rem] md:w-[4rem] h-[calc(100%+1.5rem)] md:h-[calc(100%+2rem)] border-t-4 border-s-4 border-purple-400/40 rounded-ss-xl -z-10">
+                                </div>
+                                <span data-i18n="journey6"
+                                    class="journey-animated-step step-anim-6 bg-purple-50 text-purple-950 font-extrabold border-2 border-purple-300 px-5 md:px-8 py-3 rounded-xl shadow-md z-10 whitespace-nowrap">منافسات
+                                    وتحديات 🏆</span>
+                            </div>
+
+                            <!-- Step 5: Certify -->
+                            <div class="flex items-center relative h-14 md:h-16 mb-6 md:mb-8 ms-[6rem] md:ms-[16rem]">
+                                <div
+                                    class="absolute top-1/2 end-[100%] w-[1.5rem] md:w-[4rem] h-[calc(100%+1.5rem)] md:h-[calc(100%+2rem)] border-t-4 border-s-4 border-sky-400/40 rounded-ss-xl -z-10">
+                                </div>
+                                <span data-i18n="journey5"
+                                    class="journey-animated-step step-anim-5 bg-sky-50 text-sky-950 font-extrabold border-2 border-sky-300 px-5 md:px-8 py-3 rounded-xl shadow-md z-10 whitespace-nowrap">شهادات
+                                    واعتماد ⭐️</span>
+                            </div>
+
+                            <!-- Step 4: Track -->
+                            <div class="flex items-center relative h-14 md:h-16 mb-6 md:mb-8 ms-[4.5rem] md:ms-[12rem]">
+                                <div
+                                    class="absolute top-1/2 end-[100%] w-[1.5rem] md:w-[4rem] h-[calc(100%+1.5rem)] md:h-[calc(100%+2rem)] border-t-4 border-s-4 border-emerald-400/40 rounded-ss-xl -z-10">
+                                </div>
+                                <span data-i18n="journey4"
+                                    class="journey-animated-step step-anim-4 bg-emerald-50 text-emerald-950 font-extrabold border-2 border-emerald-300 px-5 md:px-8 py-3 rounded-xl shadow-md z-10 whitespace-nowrap">متابعة
+                                    وإرشاد 🧩</span>
+                            </div>
+
+                            <!-- Step 3: Learn -->
+                            <div class="flex items-center relative h-14 md:h-16 mb-6 md:mb-8 ms-[3rem] md:ms-[8rem]">
+                                <div
+                                    class="absolute top-1/2 end-[100%] w-[1.5rem] md:w-[4rem] h-[calc(100%+1.5rem)] md:h-[calc(100%+2rem)] border-t-4 border-s-4 border-amber-400/40 rounded-ss-xl -z-10">
+                                </div>
+                                <span data-i18n="journey3"
+                                    class="journey-animated-step step-anim-3 bg-amber-50 text-amber-950 font-extrabold border-2 border-amber-300 px-5 md:px-8 py-3 rounded-xl shadow-md z-10 whitespace-nowrap">تعلم
+                                    تفاعلي 💻</span>
+                            </div>
+
+                            <!-- Step 2: Place -->
+                            <div class="flex items-center relative h-14 md:h-16 mb-6 md:mb-8 ms-[1.5rem] md:ms-[4rem]">
+                                <div
+                                    class="absolute top-1/2 end-[100%] w-[1.5rem] md:w-[4rem] h-[calc(100%+1.5rem)] md:h-[calc(100%+2rem)] border-t-4 border-s-4 border-rose-400/40 rounded-ss-xl -z-10">
+                                </div>
+                                <span data-i18n="journey2"
+                                    class="journey-animated-step step-anim-2 bg-rose-50 text-rose-950 font-extrabold border-2 border-rose-300 px-5 md:px-8 py-3 rounded-xl shadow-md z-10 whitespace-nowrap">تسكين
+                                    مخصص 🎯</span>
+                            </div>
+
+                            <!-- Step 1: Assess -->
+                            <div class="flex items-center relative h-14 md:h-16 ms-0">
+                                <span data-i18n="journey1"
+                                    class="journey-animated-step step-anim-1 bg-indigo-50 text-indigo-950 font-black border-2 border-indigo-500 px-5 md:px-8 py-3.5 rounded-2xl shadow-lg z-10 whitespace-nowrap ring-4 ring-indigo-200">تقييم
+                                    ذكي 🤖</span>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <p data-i18n="journeyQuote" class="text-center text-slate-600 italic max-w-2xl mx-auto font-medium">
+                        "Every child's journey starts with curiosity. CodeRa turns that curiosity into coding skills,
+                        confidence, and a future-ready career &mdash; one step at a time."
+                    </p>
+                </div>
+            </div>
+
+        </section>
+
+        <div class="section-divider max-w-6xl mx-auto"></div>
+
+        <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+            <div class="text-center mb-16">
+                <h2 data-i18n="tracks" class="text-4xl font-extrabold text-slate-900 mb-4">Our Tracks</h2>
+                <p data-i18n="tracksDesc" class="text-xl text-slate-500 max-w-2xl mx-auto font-medium">A structured path
+                    to mastery, designed for every stage of learning.</p>
+            </div>
+
+            <div class="pyramid-container">
+                <div class="pyramid-step step-5 group relative" onclick="openTrackModal('future')">
+                    <span class="text-xl md:text-2xl tracking-wide flex items-center gap-3 pointer-events-none">
+                        <i class="fa-solid fa-star text-yellow-300"></i> <span data-i18n="track5">Future Track</span>
+                    </span>
+                    <div data-i18n="track5Desc"
+                        class="absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 text-white text-xs px-3 py-1 rounded whitespace-nowrap pointer-events-none shadow-lg">
+                        Mastery & Career Prep
+                    </div>
+                </div>
+
+                <div class="pyramid-step step-4 group relative" onclick="openTrackModal('innovator')">
+                    <span class="text-lg md:text-xl tracking-wide flex items-center gap-3 pointer-events-none">
+                        <i class="fa-solid fa-lightbulb text-orange-300"></i> <span data-i18n="track4">Innovator
+                            Track</span>
+                    </span>
+                </div>
+
+                <div class="pyramid-step step-3 group relative" onclick="openTrackModal('creator')">
+                    <span class="text-lg md:text-xl tracking-wide flex items-center gap-3 pointer-events-none">
+                        <i class="fa-solid fa-wand-magic-sparkles text-purple-300"></i> <span data-i18n="track3">Creator
+                            Track</span>
+                    </span>
+                </div>
+
+                <div class="pyramid-step step-2 group relative" onclick="openTrackModal('builder')">
+                    <span class="text-lg md:text-xl tracking-wide flex items-center gap-3 pointer-events-none">
+                        <i class="fa-solid fa-hammer text-gray-200"></i> <span data-i18n="track2">Builder Track</span>
+                    </span>
+                </div>
+
+                <div class="pyramid-step step-1 group relative" onclick="openTrackModal('explorer')">
+                    <span class="text-lg md:text-xl tracking-wide flex items-center gap-3 pointer-events-none">
+                        <i class="fa-solid fa-compass text-teal-300"></i> <span data-i18n="track1">Explorer Track</span>
+                    </span>
+                </div>
+            </div>
+            <p data-i18n="foundationToFuture"
+                class="text-center text-slate-400 mt-8 text-sm uppercase tracking-widest font-bold opacity-80">
+                Foundation to Future
+            </p>
+        </section>
+
+    </main>
+
+
+
+    <footer class="bg-footerBg border-t border-slate-800 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
+
+                <div class="md:col-span-6 lg:col-span-7 space-y-6">
+                    <div class="flex items-center cursor-pointer"
+                        onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                        <img src="/logo.svg" alt="CodeRa Logo"
+                            class="h-16 w-auto object-contain filter drop-shadow-md hover:scale-105 transition-all duration-300">
+                    </div>
+                    <p data-i18n="footerDesc" class="text-slate-400 text-sm max-w-sm leading-relaxed">
+                        The inclusive technology ecosystem dedicated to empowering students with special educational
+                        needs through future-focused digital education.
+                    </p>
+
+                    <div class="flex space-x-4 space-x-reverse pt-2">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all duration-300 border border-white/5">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-green-500 hover:text-white transition-all duration-300 border border-white/5">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-blue-400 hover:text-white transition-all duration-300 border border-white/5">
+                            <i class="fa-brands fa-telegram"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-red-500 hover:text-white transition-all duration-300 border border-white/5">
+                            <i class="fa-brands fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="md:col-span-6 lg:col-span-5 space-y-8">
+                    <div>
+                        <h3 data-i18n="contact" class="text-sm font-bold text-white tracking-wider uppercase mb-6">
+                            Contact Us</h3>
+                        <ul class="space-y-4">
+                            <li
+                                class="flex items-start gap-3 text-slate-400 text-sm hover:text-white transition-colors cursor-pointer">
+                                <i class="fa-solid fa-location-dot mt-1 text-cyan-400"></i>
+                                <span data-i18n="cairoEgypt">Cairo, Egypt</span>
+                            </li>
+                            <li
+                                class="flex items-center gap-3 text-slate-400 text-sm hover:text-white transition-colors cursor-pointer">
+                                <i class="fa-solid fa-headset text-cyan-400"></i>
+                                <span data-i18n="helpText">We're here to help!</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-xs text-slate-500 flex gap-1">
+                    &copy; <span id="currentYear"></span> <span data-i18n="rights">CodeRa. All rights reserved.</span>
+                </p>
+                <div class="text-xs text-slate-500 text-center">
+                    <span data-i18n="devBy">Developed by</span> <span class="font-bold text-slate-300">Cognix
+                        Team</span>
+                </div>
+                <div class="flex items-center space-x-6 space-x-reverse text-xs text-slate-500">
+                    <button type="button" onclick="openCEODashboard()"
+                        class="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors flex items-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <span data-i18n="ceoDashboard">CEO Dashboard</span>
+                    </button>
+                    <a href="#" data-i18n="privacyPolicy" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" data-i18n="termsOfService" class="hover:text-white transition-colors">Terms of
+                        Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========================================================================= -->
+    <!-- 🤖 Floating AI Educational & Support Chatbot Widget -->
+    <!-- ========================================================================= -->
+    <div id="coderaChatbotContainer" class="fixed bottom-6 end-6 z-50 flex flex-col items-end">
+        <!-- Floating Launcher Button -->
+        <button id="chatbotToggleBtn" type="button"
+            class="group relative flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-primary via-indigo-600 to-purple-600 text-white shadow-2xl hover:shadow-indigo-500/50 hover:scale-110 active:scale-95 transition-all duration-300 border-2 border-white/80 cursor-pointer"
+            title="CodeRa AI Assistant">
+            <span class="absolute -top-1 -end-1 flex h-4 w-4">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-4 w-4 bg-cyan-500 border-2 border-white"></span>
+            </span>
+            <i id="chatbotIconOpen" class="fa-solid fa-robot text-2xl group-hover:rotate-12 transition-transform duration-300"></i>
+            <i id="chatbotIconClose" class="fa-solid fa-xmark text-2xl hidden"></i>
+        </button>
+
+        <!-- Chat Window Popup -->
+        <div id="chatbotWindow"
+            class="hidden w-96 max-w-[calc(100vw-2rem)] h-[540px] max-h-[85vh] bg-white rounded-3xl shadow-2xl border border-slate-200/90 flex flex-col overflow-hidden mb-4 transition-all duration-300 transform origin-bottom-right">
+            
+            <!-- Chatbot Header -->
+            <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-primary p-4 text-white flex justify-between items-center shadow-sm">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white text-lg border border-white/30">
+                        🤖
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-sm leading-tight flex items-center gap-1.5">
+                            <span>CodeRa AI Advisor</span>
+                            <span class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
+                        </h3>
+                        <p class="text-[11px] text-indigo-100/90">Instant SEN & Placement Guidance</p>
+                    </div>
+                </div>
+                <button id="chatbotCloseBtn" type="button" class="text-white/80 hover:text-white hover:bg-white/10 w-8 h-8 rounded-full flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-minus"></i>
+                </button>
+            </div>
+
+            <!-- Messages Stream -->
+            <div id="chatbotMessages" class="flex-1 p-4 overflow-y-auto space-y-3.5 bg-slate-50/50 text-sm">
+                <!-- Bot Intro Message -->
+                <div class="flex items-start gap-2.5">
+                    <div class="w-7 h-7 rounded-full bg-primary text-white flex-shrink-0 flex items-center justify-center text-xs">
+                        🤖
+                    </div>
+                    <div class="bg-white border border-slate-200 text-slate-800 p-3 rounded-2xl rounded-tl-sm shadow-sm max-w-[85%] text-xs leading-relaxed">
+                        Hello! 👋 I am your <strong>CodeRa AI Advisor</strong>. How can I help you today? Ask me about our <strong>50-Question AI Assessment</strong>, <strong>SEN & Autism Accommodations</strong>, <strong>5 Career Tracks</strong>, or <strong>Institutional Partnerships</strong>!
+                    </div>
+                </div>
+
+                <!-- Quick Prompt Chips -->
+                <div id="chatQuickPrompts" class="flex flex-wrap gap-1.5 pt-1">
+                    <button type="button" class="quick-chip text-[11px] font-semibold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-full px-3 py-1.5 transition-all text-start cursor-pointer" data-prompt="How does the 50-Question AI Assessment work?">
+                        🎯 50-Question Assessment
+                    </button>
+                    <button type="button" class="quick-chip text-[11px] font-semibold bg-cyan-50 hover:bg-cyan-100 text-cyan-700 border border-cyan-200 rounded-full px-3 py-1.5 transition-all text-start cursor-pointer" data-prompt="What are the 5 Career Tracks and how is level decided?">
+                        🛣️ 5 Career Tracks
+                    </button>
+                    <button type="button" class="quick-chip text-[11px] font-semibold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-full px-3 py-1.5 transition-all text-start cursor-pointer" data-prompt="How does CodeRa support ADHD, Autism, and SEN learners?">
+                        🧠 SEN & Diagnosis Support
+                    </button>
+                    <button type="button" class="quick-chip text-[11px] font-semibold bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-full px-3 py-1.5 transition-all text-start cursor-pointer" data-prompt="How can schools and institutions partner with CodeRa?">
+                        🏫 School Partnerships
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Input Bar -->
+            <form id="chatbotForm" class="p-3 border-t border-slate-100 bg-white flex items-center gap-2">
+                <input type="text" id="chatbotInput" required placeholder="Type your question here..."
+                    class="flex-1 bg-slate-100 text-slate-800 text-xs rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all">
+                <button type="submit" class="bg-primary hover:bg-primary/90 text-white w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform active:scale-95 cursor-pointer">
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="childTestPage" class="bg-slate-50 text-slate-800 hidden min-h-screen">
+        <main class="main-container h-full w-full">
+            <div id="app"></div>
+        </main>
+    </div>
+
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        const header = document.querySelector('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                header.classList.add('shadow-md');
+            } else {
+                header.classList.remove('shadow-md');
+            }
+        });
+
+        // --- Modals Logic ---
+        const modalOverlay = document.getElementById('modalOverlay');
+        const signUpModal = document.getElementById('signUpModal');
+        const signInModal = document.getElementById('signInModal');
+        const trackModal = document.getElementById('trackModal');
+        const roleSelectionModal = document.getElementById('roleSelectionModal');
+        const parentFormModal = document.getElementById('parentFormModal');
+        const childConfirmModal = document.getElementById('childConfirmModal');
+        const institutionFormModal = document.getElementById('institutionFormModal');
+        const childWithYouModal = document.getElementById('childWithYouModal');
+
+        const navSignInBtn = document.getElementById('navSignInBtn');
+        const navSignUpBtn = document.getElementById('navSignUpBtn');
+        const switchToSignIn = document.getElementById('switchToSignIn');
+        const switchToSignUp = document.getElementById('switchToSignUp');
+        const closeBtns = document.querySelectorAll('.closeModal');
+
+        const joinTrackBtn = document.getElementById('joinTrackBtn');
+        const btnRoleParent = document.getElementById('btnRoleParent');
+        const btnRoleChild = document.getElementById('btnRoleChild');
+        const btnRoleInstitution = document.getElementById('btnRoleInstitution');
+
+        window.openModal = function (modal) {
+            if (typeof modal === 'string') modal = document.getElementById(modal);
+            if (!modal) return;
+            modalOverlay.classList.remove('hidden');
+            setTimeout(() => {
+                modalOverlay.classList.remove('opacity-0');
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('scale-95');
+                }, 10);
+            }, 10);
+        };
+
+        window.closeModal = function () {
+            modalOverlay.classList.add('opacity-0');
+            const allModals = [signUpModal, signInModal, trackModal, roleSelectionModal, parentFormModal, childConfirmModal, institutionFormModal, childWithYouModal];
+            allModals.forEach(m => m && m.classList.add('scale-95'));
+
+            setTimeout(() => {
+                modalOverlay.classList.add('hidden');
+                allModals.forEach(m => m && m.classList.add('hidden'));
+            }, 300);
+        };
+
+        window.switchModal = function (hideModal, showModal) {
+            if (typeof hideModal === 'string') hideModal = document.getElementById(hideModal);
+            if (typeof showModal === 'string') showModal = document.getElementById(showModal);
+            if (hideModal) hideModal.classList.add('hidden', 'scale-95');
+            if (showModal) {
+                showModal.classList.remove('hidden');
+                setTimeout(() => {
+                    showModal.classList.remove('scale-95');
+                }, 10);
+            }
+        };
+
+        window.openRoleSelectionModal = function () {
+            openModal(roleSelectionModal);
+        };
+
+        window.openParentDashboard = function () {
+            closeModal();
+            if (typeof window.openParentDashboardModule === 'function') {
+                window.openParentDashboardModule();
+            } else if (typeof window.openParentPortal === 'function' && window.openParentPortal !== window.openParentDashboard) {
+                window.openParentPortal();
+            } else {
+                document.body.classList.add('exam-mode');
+                const testPage = document.getElementById('childTestPage');
+                if (testPage) {
+                    testPage.classList.remove('hidden');
+                    testPage.classList.add('exam-active');
+                    testPage.style.display = 'flex';
+                    testPage.scrollTop = 0;
+                }
+                window.scrollTo(0, 0);
+                const appContainer = document.getElementById('app');
+                if (appContainer && typeof window.renderParentDashboard === 'function') {
+                    window.renderParentDashboard(appContainer);
+                }
+            }
+        };
+
+        window.openParentPortal = window.openParentDashboard;
+
+        window.openChildPortal = function () {
+            closeModal();
+            if (typeof window.startChildTest === 'function') {
+                window.startChildTest(false);
+            }
+        };
+
+        window.openProPortal = function () {
+            if (typeof window.openCEODashboard === 'function') {
+                window.openCEODashboard();
+            }
+        };
+
+        window.openParentModal = function (stage = 1) {
+            if (typeof window.openParentModalModule === 'function') {
+                window.openParentModalModule(stage);
+            } else {
+                openModal(parentFormModal);
+            }
+        };
+
+        window.openCEODashboard = function () {
+            closeModal();
+            if (typeof window.openCEODashboardModule === 'function') {
+                window.openCEODashboardModule();
+            } else {
+                document.body.classList.add('exam-mode', 'ceo-view-mode');
+                const testPage = document.getElementById('childTestPage');
+                if (testPage) {
+                    testPage.classList.remove('hidden');
+                    testPage.classList.add('exam-active');
+                    testPage.style.display = 'block';
+                    testPage.scrollTop = 0;
+                }
+                window.scrollTo(0, 0);
+            }
+        };
+
+        if (navSignInBtn) navSignInBtn.addEventListener('click', () => openModal(signInModal));
+        if (navSignUpBtn) navSignUpBtn.addEventListener('click', () => openModal(signUpModal));
+        closeBtns.forEach(btn => btn.addEventListener('click', closeModal));
+        if (modalOverlay) {
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) closeModal();
+            });
+        }
+
+        if (switchToSignIn) switchToSignIn.addEventListener('click', () => switchModal(signUpModal, signInModal));
+        if (switchToSignUp) switchToSignUp.addEventListener('click', () => switchModal(signInModal, signUpModal));
+
+        // Toast Notification Helper
+        function showNotification(message, type = 'success') {
+            let toast = document.getElementById('toast-notification');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'toast-notification';
+                document.body.appendChild(toast);
+            }
+            toast.className = `fixed top-24 end-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-2xl transition-all duration-300 text-white font-semibold text-sm ${type === 'success' ? 'bg-emerald-600' : 'bg-primary'
+                }`;
+            toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-info'} text-lg"></i> <span>${message}</span>`;
+
+            toast.classList.remove('translate-y-[-20px]', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-[-20px]', 'opacity-0');
+            }, 3500);
+        }
+
+        // Sign In Form Submission -> Direct to Placement Assessment
+        const signInForm = document.getElementById('signInForm');
+        if (signInForm) {
+            signInForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                closeModal();
+                showNotification(
+                    currentLang === 'ar' ? 'تم تسجيل الدخول بنجاح! جاري بدء اختبار التقييم...' : 'Signed in successfully! Starting your assessment...',
+                    'success'
+                );
+                setTimeout(() => {
+                    startChildTest();
+                }, 600);
+            });
+        }
+
+        // Sign Up Form Submission -> Direct to Placement Assessment
+        const signUpForm = document.getElementById('signUpForm');
+        if (signUpForm) {
+            signUpForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                closeModal();
+                showNotification(
+                    currentLang === 'ar' ? 'تم إنشاء الحساب بنجاح! جاري بدء التقييم...' : 'Account created successfully! Starting your assessment...',
+                    'success'
+                );
+                setTimeout(() => {
+                    startChildTest();
+                }, 600);
+            });
+        }
+
+        // Join Now button -> Opens Role Selection Modal ("Who are you?")
+        if (joinTrackBtn) {
+            joinTrackBtn.addEventListener('click', () => {
+                switchModal(trackModal, roleSelectionModal);
+            });
+        }
+
+        // --- Role Buttons ---
+        if (btnRoleChild) {
+            btnRoleChild.addEventListener('click', () => {
+                switchModal(roleSelectionModal, childConfirmModal);
+            });
+        }
+
+        if (btnRoleParent) {
+            btnRoleParent.addEventListener('click', () => {
+                closeModal();
+                if (typeof window.openParentModal === 'function') {
+                    window.openParentModal(1);
+                } else {
+                    switchModal(roleSelectionModal, parentFormModal);
+                }
+            });
+        }
+
+        if (btnRoleInstitution) {
+            btnRoleInstitution.addEventListener('click', () => {
+                switchModal(roleSelectionModal, institutionFormModal);
+            });
+        }
+
+        // --- Parent Form File Attachment & Submission ---
+        let attachedDiagnosisData = null;
+        const parentSonDiagnosisFile = document.getElementById('parentSonDiagnosisFile');
+        const diagnosisDropArea = document.getElementById('diagnosisDropArea');
+        const diagnosisFilePrompt = document.getElementById('diagnosisFilePrompt');
+        const diagnosisFilePreview = document.getElementById('diagnosisFilePreview');
+        const diagnosisAttachedFileName = document.getElementById('diagnosisAttachedFileName');
+        const removeDiagnosisBtn = document.getElementById('removeDiagnosisBtn');
+
+        if (diagnosisDropArea && parentSonDiagnosisFile) {
+            diagnosisDropArea.addEventListener('click', (e) => {
+                if (e.target !== removeDiagnosisBtn && !removeDiagnosisBtn?.contains(e.target)) {
+                    parentSonDiagnosisFile.click();
+                }
+            });
+
+            parentSonDiagnosisFile.addEventListener('change', (e) => {
+                const file = e.target.files && e.target.files[0];
+                if (file) {
+                    attachedDiagnosisData = {
+                        name: file.name,
+                        size: (file.size / 1024).toFixed(1) + ' KB',
+                        type: file.type,
+                        lastModified: file.lastModified
+                    };
+                    if (diagnosisAttachedFileName) diagnosisAttachedFileName.textContent = file.name;
+                    if (diagnosisFilePrompt) diagnosisFilePrompt.classList.add('hidden');
+                    if (diagnosisFilePreview) diagnosisFilePreview.classList.remove('hidden');
+                }
+            });
+        }
+
+        if (removeDiagnosisBtn) {
+            removeDiagnosisBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                attachedDiagnosisData = null;
+                if (parentSonDiagnosisFile) parentSonDiagnosisFile.value = '';
+                if (diagnosisFilePreview) diagnosisFilePreview.classList.add('hidden');
+                if (diagnosisFilePrompt) diagnosisFilePrompt.classList.remove('hidden');
+            });
+        }
+
+        const parentFormSubmitBtn = document.getElementById('parentFormSubmitBtn');
+        if (parentFormSubmitBtn) {
+            parentFormSubmitBtn.addEventListener('click', () => {
+                const childNameInput = document.getElementById('parentChildName');
+                const childAgeInput = document.getElementById('parentChildAge');
+                const diagnosisSelect = document.getElementById('parentDiagnosisSelect');
+                const diagnosisNotes = document.getElementById('parentDiagnosisNotes');
+                const childGradeInput = document.getElementById('parentChildGrade');
+                const childTechExp = document.getElementById('parentChildTechExp');
+
+                const selectedInterests = Array.from(document.querySelectorAll('.interest-checkbox:checked')).map(cb => cb.value);
+
+                const childName = (childNameInput && childNameInput.value.trim()) || 'Alex Rivers';
+                const age = (childAgeInput && childAgeInput.value.trim()) || '14';
+                const diagnosis = (diagnosisSelect ? diagnosisSelect.value : 'None') + (diagnosisNotes && diagnosisNotes.value ? ` (${diagnosisNotes.value.trim()})` : '');
+
+                const parentProfile = {
+                    childName,
+                    age,
+                    diagnosis,
+                    grade: childGradeInput ? childGradeInput.value : '',
+                    techExp: childTechExp ? childTechExp.value : '',
+                    interests: selectedInterests,
+                    attachedDiagnosis: attachedDiagnosisData,
+                    savedAt: Date.now()
+                };
+
+                try {
+                    localStorage.setItem('codera_parent_profile', JSON.stringify(parentProfile));
+                } catch (err) {}
+
+                showNotification(
+                    currentLang === 'ar' ? '✅ تم حفظ بيانات الطالب والتشخيص بنجاح!' : '✅ Student Profile & Diagnosis attached successfully!',
+                    'success'
+                );
+
+                switchModal(parentFormModal, childWithYouModal);
+            });
+        }
+
+        // --- Institution Form Submission ---
+        const instPartnershipForm = document.getElementById('institutionPartnershipForm');
+        if (instPartnershipForm) {
+            instPartnershipForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const orgName = document.getElementById('instOrgName')?.value || '';
+                const contactPerson = document.getElementById('instContactPerson')?.value || '';
+                const phone = document.getElementById('instContactPhone')?.value || '';
+                const details = document.getElementById('instRequestDetails')?.value || '';
+
+                const requestObj = {
+                    orgName,
+                    contactPerson,
+                    phone,
+                    details,
+                    timestamp: new Date().toISOString()
+                };
+
+                try {
+                    const prev = JSON.parse(localStorage.getItem('codera_institution_requests') || '[]');
+                    prev.push(requestObj);
+                    localStorage.setItem('codera_institution_requests', JSON.stringify(prev));
+                } catch (err) {}
+
+                closeModal();
+                instPartnershipForm.reset();
+                showNotification(
+                    currentLang === 'ar' 
+                        ? `✅ تم استلام طلب المؤسسة بنجاح! سيتواصل فريقنا معك على الرقم ${phone} قريباً.`
+                        : `✅ Request received! Our team will contact you shortly at ${phone}.`,
+                    'success'
+                );
+            });
+        }
+
+        // --- Tracks Data & Logic ---
+
+        const trackDetails = {
+            en: {
+                explorer: { title: "Explorer Track", duration: "4 Months", sessions: "32 Sessions (90m)", project: "Program a Bee-Bot to complete a visual mission." },
+                builder: { title: "Builder Track", duration: "5 Months", sessions: "40 Sessions (90m)", project: "Build and program a LEGO robot to solve a simple challenge." },
+                creator: { title: "Creator Track", duration: "6 Months", sessions: "48 Sessions (90m)", project: "Design an interactive game or a smart robot using Scratch, LEGO SPIKE, or micro:bit." },
+                innovator: { title: "Innovator Track", duration: "8 Months", sessions: "64 Sessions (2h)", project: "Develop a real-world engineering project using Python, Arduino, and AI fundamentals." },
+                future: { title: "Future Engineer Track", duration: "9 Months", sessions: "72 Sessions (2h)", project: "Capstone project presented in a showcase, with a digital portfolio." }
+            },
+            ar: {
+                explorer: { title: "مسار المستكشف", duration: "4 أشهر", sessions: "32 جلسة (90 دقيقة)", project: "برمجة روبوت Bee-Bot لإكمال مهمة بصرية تفاعلية." },
+                builder: { title: "مسار البناء", duration: "5 أشهر", sessions: "40 جلسة (90 دقيقة)", project: "بناء وبرمجة روبوت LEGO لحل تحديات برمجية بسيطة." },
+                creator: { title: "مسار المبدع", duration: "6 أشهر", sessions: "48 جلسة (90 دقيقة)", project: "تصميم لعبة تفاعلية أو روبوت ذكي باستخدام Scratch و LEGO SPIKE و micro:bit." },
+                innovator: { title: "مسار المبتكر", duration: "8 أشهر", sessions: "64 جلسة (ساعتان)", project: "تطوير مشروع هندسي حقيقي باستخدام Python و Arduino وأساسيات الذكاء الاصطناعي." },
+                future: { title: "مسار مهندس المستقبل", duration: "9 أشهر", sessions: "72 جلسة (ساعتان)", project: "مشروع تخرج متكامل يتم عرضه في معرض التكنولوجيا مع معرض أعمال رقمي (Portfolio)." }
+            },
+            styles: {
+                explorer: { icon: 'fa-compass text-teal-600', color: 'from-teal-100 via-teal-50 to-emerald-100' },
+                builder: { icon: 'fa-hammer text-amber-600', color: 'from-amber-100 via-amber-50 to-orange-100' },
+                creator: { icon: 'fa-wand-magic-sparkles text-purple-600', color: 'from-purple-100 via-purple-50 to-indigo-100' },
+                innovator: { icon: 'fa-lightbulb text-orange-600', color: 'from-orange-100 via-orange-50 to-yellow-100' },
+                future: { icon: 'fa-star text-emerald-600', color: 'from-emerald-100 via-emerald-50 to-teal-100' }
+            }
+        };
+
+        let currentActiveTrack = 'explorer';
+
+        window.openTrackModal = function (trackId) {
+            currentActiveTrack = trackId;
+            updateTrackModalContent();
+
+            const style = trackDetails.styles[trackId];
+            document.getElementById('trackModalIcon').innerHTML = `<i class="fa-solid ${style.icon}"></i>`;
+            document.getElementById('trackModalBg').className = `absolute inset-0 bg-gradient-to-br opacity-100 ${style.color}`;
+
+            openModal(trackModal);
+        };
+
+        function updateTrackModalContent() {
+            if (!currentActiveTrack) return;
+            const data = trackDetails[currentLang][currentActiveTrack];
+            document.getElementById('trackModalTitle').textContent = data.title;
+            document.getElementById('trackModalDuration').textContent = data.duration;
+            document.getElementById('trackModalSessions').textContent = data.sessions;
+            document.getElementById('trackModalProject').textContent = data.project;
+        }
+
+        // --- Language Switcher Logic ---
+        const translations = {
+            en: {
+                langBtn: "", signIn: "Sign In", signUp: "Sign Up",
+                heroBadge: "Designed for Every Learner — Parents, Children & SEN Students Welcome",
+                heroCard1Title: "Assess",
+                heroCard1Desc: "Discover unique strengths with our smart 50-question assessment",
+                heroCard2Title: "Code & Build",
+                heroCard2Desc: "Hands-on projects tailored to every learner",
+                heroCard3Title: "Specialize & Work",
+                heroCard3Desc: "A clear pathway from student to confident digital creator",
+                whoWeAre: "Welcome To CodeRa", subtitle: "Discover the vision behind CodeRa and how we are transforming education.",
+                aboutTitle: "CodeRa  The Inclusive Tech Ecosystem", aboutHeading: "Who We Are",
+                aboutP1: "CodeRa is the first inclusive technology ecosystem dedicated to empowering students with special educational needs through future-focused digital education.",
+                aboutP2: "We combine digital assessment, adaptive learning, robotics, coding, artificial intelligence, and personalized learning pathways into one connected ecosystem that enables every learner to discover their strengths, develop future-ready skills, and thrive in an increasingly digital world.",
+                aboutP3: "Our approach goes beyond teaching technology. We create individualized learning experiences that recognize each student's unique abilities, provide measurable progress, and build confidence through hands-on innovation.",
+                aboutP4: "By bringing together education, technology, accessibility, and data-driven learning, we are redefining how students with diverse learning profiles access STEM education across Egypt, the GCC, and the Middle East.",
+                vision: "Vision", visionP1: "To become the Middle East's leading inclusive technology ecosystem, transforming how students with special educational needs are assessed, taught, empowered, and prepared for the future through accessible digital education, adaptive learning, and emerging technologies.",
+                visionP2: "We envision a future where every learnerregardless of abilityhas equal access to innovation, meaningful learning opportunities, and the skills needed to participate confidently in the digital economy.",
+                mission: "Mission", missionP1: "Our mission is to empower students with special educational needs through a connected ecosystem that combines digital assessment, adaptive learning pathways, robotics, coding, artificial intelligence, engineering, and project-based education.",
+                missionP2: "We design personalized learning journeys that help every student build technical skills, strengthen cognitive and problem-solving abilities, develop independence and confidence, and create real-world projects that prepare them for lifelong learning and future careers.",
+                missionP3: "Through collaboration with families, educators, schools, and technology partners, we aim to make inclusive technology education accessible, measurable, engaging, and impactful for every learner.",
+                purpose: "Our Purpose", purposeDesc: "To unlock the potential of every learner by making technology education accessible, personalized, and inclusive.",
+                promise: "Our Promise", promiseDesc: "Every learner deserves the opportunity to discover, create, innovate, and belong.",
+                philosophy: "Our Philosophy", phil1: "We believe that ability should never define opportunity.", phil2: "Every student learns differently, progresses at a unique pace, and possesses strengths that can flourish within the right environment.", phil3: "Technology is not simply a subject to be taughtit is a powerful tool for communication, creativity, independence, and inclusion. By combining adaptive education with evidence-informed practices, we help learners transform curiosity into capability and capability into lifelong opportunity.",
+                impact: "Our Impact", impactSubtitle: "We prepare students to:", impact1: "Think critically and solve problems creatively.", impact2: "Build confidence through hands-on technology experiences.", impact3: "Develop computational thinking and engineering skills.", impact4: "Create meaningful digital and robotics projects.", impact5: "Participate in STEM competitions and innovation challenges.", impact6: "Build a portfolio of achievements that supports future education and career pathways.",
+                journey: "Our Learning Journey", journey1: "Assess", journey2: "Place", journey3: "Learn", journey4: "Track", journey5: "Certify", journey6: "Compete", journey7: "Prepare for the Future",
+                journeyQuote: "\"Every student's journey begins with understanding their strengths and ends with empowering them to become confident creators, innovators, and active contributors to the future digital world.\"",
+                tracks: "Our Tracks", tracksDesc: "A structured path to mastery, designed for every stage of learning.", track5: "Future Track", track5Desc: "Mastery & Career Prep", track4: "Innovator Track", track3: "Creator Track", track2: "Builder Track", track1: "Explorer Track",
+                foundationToFuture: "Foundation to Future", footerDesc: "The inclusive technology ecosystem dedicated to empowering students with special educational needs through future-focused digital education.",
+                contact: "Contact Us", cairoEgypt: "Cairo, Egypt", helpText: "We're here to help!", rights: "CodeRa. All rights reserved.", devBy: "Developed by", privacyPolicy: "Privacy Policy", termsOfService: "Terms of Service",
+
+                // Modals
+                createAccTitle: "Create an Account", fName: "First Name", fNamePlace: "First Name", lName: "Last Name", lNamePlace: "Last Name",
+                emailLabel: "Email Address", emailPlace: "you@example.com", phoneLabel: "Phone Number", phonePlace: "+20 100 000 0000",
+                passLabel: "Password", passPlace: "", confPassLabel: "Confirm Password", confPassPlace: "",
+                signUpBtnText: "Sign Up", alreadyHave: "Already have an account?", signInTitle: "Welcome Back", forgotPass: "Forgot password?",
+                loginBtn: "Sign In", dontHave: "Don't have an account?", durationLabel: "Duration", sessionsLabel: "Sessions",
+                finalProjectLabel: "Final Project", promoTitle: "Promotion System", promoDesc: "Transition is not automatic. Students must meet the following criteria to advance:",
+                promoReq1: "Achieve 80-85% of learning goals.", promoReq2: "Complete the Final Project.", promoReq3: "Pass the Tech Readiness Assessment.", promoReq4: "Trainer Recommendation.",
+                joinNow: "Join Now", selectRoleTitle: "Who are you?", selectRoleDesc: "Select your profile to continue registration.",
+                roleParent: "Parent", roleChild: "Child", roleInstitution: "Institution",
+                childConfirmTitle: "Are you sure you want to take the test?", confirmBtn: "Confirm",
+                instFormTitle: "How can we serve you?", instFormLabel: "Your Request Details", instFormPlace: "Write what you want to do here...",
+                instContact: "For support, call: ",
+
+                // Parent Form Modal
+                parentFormMainTitle: "Parent Registration & Profile", stage1Time: "Estimated time: 5 minutes",
+                stage1Title: "Stage 1: Parent Registration", lblChildName: "Child's Name", lblAge: "Age", lblDiagnosis: "Diagnosis (if any)",
+                lblLang: "Language", lblSchool: "School", lblGrade: "Grade", lblDevices: "Devices Used", lblTechExp: "Previous Tech Experience",
+                stage2Title: "Stage 2: Parent Questionnaire", secDailyLiving: "Daily Living", qTablet: "Uses a tablet?", qComputer: "Uses a computer?",
+                qMouse: "Can use a mouse?", qInstructions: "Can follow two instructions?", qIndependent: "Works independently?",
+                secInterests: "Interests", qLikes: "What do they like? (Select all that apply)", btnSubmitApp: "Submit Application",
+
+                // Child With You Modal
+                childWithYouTitle: "Application Submitted! ",
+                childWithYouDesc: "Is your child with you right now? We can start the placement assessment immediately.",
+                childWithYouYes: "Yes, start the assessment now",
+                childWithYouNo: "Not right now, go back home",
+
+                // Exam Page & CEO Dashboard
+                exitTest: "Exit", examTitle: "CodeRa AI Placement Assessment", studentLabel: "Student: Alex Rivers",
+                ceoDashboard: "CEO Dashboard",
+                ceoTitle: "CodeRa CEO Executive Command Center 👑",
+                ceoSubtitle: "Real-Time Inclusive Tech Ecosystem Performance & AI Analytics",
+                kpi1Label: "Total Active Students",
+                kpi2Label: "AI Placement Exams",
+                kpi3Label: "Goal Success Rate",
+                kpi4Label: "Partner Institutions",
+                trackDistributionTitle: "Track Enrollment & Age Distribution",
+                recentActivityTitle: "Recent Assessment & Placement Activity",
+                ceoFooterNote: "CodeRa AI Intelligence System • Confidential Executive Access"
+            },
+            ar: {
+                langBtn: "English", signIn: "تسجيل الدخول", signUp: "إنشاء حساب جديد",
+                heroBadge: "مصمم لجميع المتعلمين — نرحب بأولياء الأمور والأطفال وأصحاب الهمم",
+                heroCard1Title: "تقييم ذكي 🎯",
+                heroCard1Desc: "اكتشف نقاط القوة والقدرات الفريدة لطفلك من خلال تقييمنا الذكي المكون من 50 سؤالاً",
+                heroCard2Title: "برمجة وبناء 💻",
+                heroCard2Desc: "مشاريع عملية تفاعلية وتطبيقات برمجية مخصصة لتناسب كل متعلم",
+                heroCard3Title: "تخصص وإنجاز 🚀",
+                heroCard3Desc: "مسار تعليمي منظم وواضح يحول طفلك إلى صانع ومبتكر رقمي واثق",
+                ceoDashboard: "لوحة قيادة الرئيس التنفيذي 👑",
+                ceoTitle: "مركز القيادة التنفيذية لـ CodeRa 👑",
+                ceoSubtitle: "التحليلات والمؤشرات اللحظية للنظام التكنولوجي الشامل بالذكاء الاصطناعي",
+                kpi1Label: "إجمالي الطلاب النشطين",
+                kpi2Label: "اختبارات التسكين بالذكاء الاصطناعي",
+                kpi3Label: "نسبة تحقيق أهداف التعلم",
+                kpi4Label: "المؤسسات الشريكة للتربية الخاصة",
+                trackDistributionTitle: "توزيع الطلاب حسب المسارات والأعمار",
+                recentActivityTitle: "أحدث نشاطات التقييم والتسكين اللحظية",
+                ceoFooterNote: "نظام الذكاء الاصطناعي لـ CodeRa • وصول تنفيذي مشفر وخاص",
+                whoWeAre: "أهلاً بك في CodeRa", subtitle: "اكتشف مسار طفلك البرمجي المبتكر واكتشف قدراته في الذكاء الاصطناعي والتكنولوجيا.",
+                aboutTitle: "CodeRa - المنظومة التكنولوجية الشاملة للأطفال والناشئين", aboutHeading: "من نحن",
+                aboutP1: "CodeRa هي أول منظومة تكنولوجية تعليمية شاملة مخصصة لتمكين الأطفال والطلاب واكتشاف مهاراتهم الرقمية والهندسية لمستقبل واعد.",
+                aboutP2: "نحن نجمع بين التقييم الذكي بالذكاء الاصطناعي، والتعلم التكيفي الممتع، والروبوتات، والبرمجة، والذكاء الاصطناعي في بيئة تفاعلية مشجعة تمنح كل طفل ثقة وشغفاً للإبداع.",
+                aboutP3: "نهجنا يدمج المتعة بالتعليم المخصص، حيث نراعي قدرات كل طالب ونوفر مسارات تعلم مرنة تحقق تقدماً ملموساً خطوة بخطوة.",
+                aboutP4: "من خلال الجمع بين التعليم العملي والتكنولوجيا الشاملة، نمهد الطريق للأجيال القادمة لاكتشاف علوم STEM والتميز في الاقتصاد الرقمي.",
+                vision: "رؤيتنا", visionP1: "أن نكون المنظومة التكنولوجية الرائدة في الشرق الأوسط التي تحول تجربة تعلم الأطفال والناشئين للتكنولوجيا والروبوتات والذكاء الاصطناعي.",
+                visionP2: "نطمح لمستقبل يمتلك فيه كل متعلم فرصاً متساوية للابتكار والتألق والمشاركة بثقة في صناعة المستقبل الرقمي.",
+                mission: "مهمتنا", missionP1: "تمكين الطلاب والأطفال من خلال مسارات تعلم متصلة تجمع بين التقييم الرقمي التفاعلي، البرمجة، الروبوتات، والذكاء الاصطناعي.",
+                missionP2: "تصميم رحلات تعليمية مخصصة تساعد كل طالب على بناء مهاراته التقنية، وتطوير التفكير النقدي وحل المشكلات، وبناء الاستقلالية والثقة.",
+                missionP3: "التعاون الفعال مع أولياء الأمور والمعلمين لتقديم تعليم تكنولوجي ممتع، متاح، وذو أثر حقيقي ومقاس.",
+                purpose: "هدفنا", purposeDesc: "إطلاق العنان لإمكانيات كل طفل من خلال جعل تعليم التكنولوجيا متاحاً، ممتعاً، ومخصصاً لمستقبله.",
+                promise: "وعدنا", promiseDesc: "يستحق كل متعلم الفرصة للاكتشاف، والابتكار، وإنشاء مشاريعه الخاصة والانتماء لمجتمع المبدعين.",
+                philosophy: "فلسفتنا", phil1: "نؤمن بأن شغف التعلم والقدرة لا حدود لهما.", phil2: "كل طفل يتعلم بطريقة فريدة ويمتلك نقاط قوة مزدهرة في البيئة التشجيعية المناسبة.", phil3: "التكنولوجيا ليست مجرد مادة تُدرّس - بل هي أداة سحرية للتعبير والإبداع، وتطوير التفكير الهندي، وبناء المستقبل.",
+                impact: "تأثيرنا", impactSubtitle: "نحن نعد طفلك لـ:", impact1: "التفكير النقدي وحل المشكلات بأسلوب إبداعي ممتع.", impact2: "بناء الثقة بالنفس من خلال تجارب برمجية وروبوتية عملية.", impact3: "تطوير التفكير المحوسب والمهارات الهندسية القوية.", impact4: "إنشاء مشاريع برمجية وروبوتية تفاعلية حقيقية.", impact5: "المشاركة في المسابقات التكنولوجية وتحديات الابتكار.", impact6: "بناء محفظة إنجازات رقمية (Portfolio) تدعم مستقبله التعليمي والمهني.",
+                journey: "رحلة التعلم الممتعة", journey1: "تقييم ذكي", journey2: "تسكين مخصص", journey3: "تعلم تفاعلي", journey4: "متابعة وإرشاد", journey5: "شهادات واعتماد", journey6: "منافسات وتحديات", journey7: "الاستعداد للمستقبل",
+                journeyQuote: "\"تبدأ رحلة كل طفل بالفضول، وتحول CodeRa ذلك الفضول إلى مهارات برمجة وثقة ومستقبل واعد - خطوة بخطوة.\"",
+                tracks: "مساراتنا التعليمية", tracksDesc: "مسار منظم نحو الإتقان مصمم لكل مرحلة عمرية وتعليمية.", track5: "مسار مهندس المستقبل", track5Desc: "الإتقان الاحترافي والجاهزية", track4: "مسار المبتكر", track3: "مسار المبدع", track2: "مسار البناء", track1: "مسار المستكشف",
+                foundationToFuture: "من الأساسيات إلى المستقبل الرقمي", footerDesc: "المنظومة التكنولوجية الشاملة المخصصة لتمكين الأطفال والطلاب من خلال التعليم الرقمي الموجه للمستقبل.",
+                contact: "تواصل معنا", cairoEgypt: "القاهرة، مصر", helpText: "فريق الدعم هنا لمساعدتك دائماً!", rights: "CodeRa. جميع الحقوق محفوظة.", devBy: "تم التطوير بواسطة فريق CodeRa", privacyPolicy: "سياسة الخصوصية", termsOfService: "شروط الخدمة",
+
+                // Modals
+                createAccTitle: "إنشاء حساب جديد", fName: "الاسم الأول", fNamePlace: "الاسم الأول", lName: "الاسم الأخير", lNamePlace: "الاسم الأخير",
+                emailLabel: "البريد الإلكتروني", emailPlace: "you@example.com", phoneLabel: "رقم الهاتف", phonePlace: "+20 100 000 0000",
+                passLabel: "كلمة المرور", passPlace: "", confPassLabel: "تأكيد كلمة المرور", confPassPlace: "",
+                signUpBtnText: "إنشاء الحساب", alreadyHave: "لديك حساب بالفعل؟", signInTitle: "مرحباً بعودتك", forgotPass: "نسيت كلمة المرور؟",
+                loginBtn: "تسجيل الدخول", dontHave: "ليس لديك حساب؟", durationLabel: "المدة", sessionsLabel: "الجلسات",
+                finalProjectLabel: "المشروع النهائي", promoTitle: "نظام الترقية والتنقل", promoDesc: "الانتقال بين المسارات يعتمد على التميز وتحقيق المعايير التالية:",
+                promoReq1: "تحقيق 80-85% من أهداف التعلم.", promoReq2: "إتمام المشروع النهائي التفاعلي.", promoReq3: "اجتياز تقييم الجاهزية التقنية.", promoReq4: "توصية المدرب المباشر.",
+                joinNow: "انضم الآن فوراً 🚀", selectRoleTitle: "من أنت؟", selectRoleDesc: "اختر نوع حسابك لبدء التجربة التفاعلية.",
+                roleParent: "ولي أمر 👨‍👩‍👧", roleChild: "طفل / طالب 👧‍💻", roleInstitution: "مؤسسة / مدرسة 🏫",
+                childConfirmTitle: "هل أنت جاهز لبدء التقييم التفاعلي الممتع؟", confirmBtn: "نعم، ابدأ التقييم الآن! 🚀",
+                instFormTitle: "كيف يمكننا خدمتك؟", instFormLabel: "تفاصيل الطلب", instFormPlace: "اكتب تفاصيل طلبك أو استفسارك هنا...",
+                instContact: "للدعم المباشر اتصل على: ",
+
+                // Parent Form Modal
+                parentFormMainTitle: "تسجيل ولي الأمر والملف الشخصي", stage1Time: "الوقت المقدر: 5 دقائق",
+                stage1Title: "المرحلة الأولى: بيانات ولي الأمر والطفل", lblChildName: "اسم الطفل", lblAge: "العمر", lblDiagnosis: "التشخيص (إن وجد)",
+                lblLang: "اللغة المفضل تعلمها", lblSchool: "المدرسة", lblGrade: "الصف الدراسي", lblDevices: "الأجهزة المستخدمة", lblTechExp: "الخبرة التقنية السابقة",
+                stage2Title: "المرحلة الثانية: استبيان اهتمامات طفلك", secDailyLiving: "المهارات اليومية", qTablet: "هل يستخدم الجهاز اللوحي (التابلت)؟", qComputer: "هل يستخدم الكمبيوتر؟",
+                qMouse: "هل يمكنه استخدام الماوس بسهولة؟", qInstructions: "هل يمكنه اتباع التعليمات المركبة؟", qIndependent: "هل يعمل بشكل مستقل؟",
+                secInterests: "الاهتمامات والشغف", qLikes: "ما الذي يحبه طفلك؟ (اختر كل ما ينطبق)", btnSubmitApp: "تقديم الطلب وبدء التقييم 🚀",
+
+                // Child With You Modal
+                childWithYouTitle: "تم تسجيل الطلب بنجاح! 🎉",
+                childWithYouDesc: "هل طفلك معك الآن؟ يمكننا البدء في اختبار التسكين والتقييم التفاعلي فوراً.",
+                childWithYouYes: "نعم، ابدأ التقييم الآن 🚀",
+                childWithYouNo: "ليس الآن، العودة للرئيسية",
+
+                // Exam Page
+                exitTest: "خروج ✕", examTitle: "تقييم التسكين بالذكاء الاصطناعي - CodeRa 🤖", studentLabel: "الطالب: أليكس ريفرز"
+            }
+        };
+
+        let currentLang = 'ar';
+        const langToggleBtn = document.getElementById('langToggleBtn');
+        const langToggleText = document.getElementById('langToggleText');
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.documentElement.lang = currentLang;
+            if (langToggleText) {
+                langToggleText.textContent = translations[currentLang].langBtn;
+            }
+            updateTranslations();
+        }
+
+        function updateTranslations() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang] && translations[currentLang][key]) {
+                    el.textContent = translations[currentLang][key];
+                }
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (translations[currentLang] && translations[currentLang][key]) {
+                    el.placeholder = translations[currentLang][key];
+                }
+            });
+            updateTrackModalContent();
+        }
+
+        if (langToggleBtn) {
+            langToggleBtn.addEventListener('click', () => {
+                setLanguage(currentLang === 'en' ? 'ar' : 'en');
+            });
+        }
+
+        // Initialize Arabic on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setLanguage('ar');
+        });
+
+        // --- Accordion Toggle Logic ---
+        window.toggleAccordion = function (contentId, iconId) {
+            const content = document.getElementById(contentId);
+            const icon = document.getElementById(iconId);
+            if (!content) return;
+
+            const isHidden = content.classList.contains('hidden');
+            if (isHidden) {
+                content.classList.remove('hidden');
+                if (icon) icon.style.transform = 'rotate(180deg)';
+            } else {
+                content.classList.add('hidden');
+                if (icon) icon.style.transform = 'rotate(0deg)';
+            }
+        };
+
+        // =========================================================================
+        // 🤖 Floating AI Chatbot Logic
+        // =========================================================================
+        const chatbotToggleBtn = document.getElementById('chatbotToggleBtn');
+        const chatbotWindow = document.getElementById('chatbotWindow');
+        const chatbotCloseBtn = document.getElementById('chatbotCloseBtn');
+        const chatbotIconOpen = document.getElementById('chatbotIconOpen');
+        const chatbotIconClose = document.getElementById('chatbotIconClose');
+        const chatbotMessages = document.getElementById('chatbotMessages');
+        const chatbotForm = document.getElementById('chatbotForm');
+        const chatbotInput = document.getElementById('chatbotInput');
+
+        let isChatbotOpen = false;
+
+        function toggleChatbot(open) {
+            isChatbotOpen = typeof open === 'boolean' ? open : !isChatbotOpen;
+            if (isChatbotOpen) {
+                chatbotWindow.classList.remove('hidden');
+                chatbotIconOpen.classList.add('hidden');
+                chatbotIconClose.classList.remove('hidden');
+                setTimeout(() => chatbotInput?.focus(), 100);
+            } else {
+                chatbotWindow.classList.add('hidden');
+                chatbotIconOpen.classList.remove('hidden');
+                chatbotIconClose.classList.add('hidden');
+            }
+        }
+
+        if (chatbotToggleBtn) chatbotToggleBtn.addEventListener('click', () => toggleChatbot());
+        if (chatbotCloseBtn) chatbotCloseBtn.addEventListener('click', () => toggleChatbot(false));
+
+        const chatHistory = [
+            {
+                role: 'system',
+                content: 'You are CodeRa AI Advisor, the official dedicated educational consultant for CodeRa (The Inclusive Tech Ecosystem). CodeRa offers: 1) A smart 50-Question AI Assessment testing 5 core digital readiness pillars; 2) 5 Career Tracks (Explorer: tactile robotics; Builder: LEGO robotics; Creator: Scratch games; Innovator: Python/IoT; Future Engineer: AI capstone projects); 3) Complete SEN & Autism/ADHD accommodations (high-contrast visuals, optional read-aloud audio with mute/unmute control, sign language guides, scheduled wellness breaks, low-pressure pacing); 4) Institutional partnerships with schools (direct hotline: 01115489561).\n\nSTRICT DOMAIN RESTRICTION & SCOPE POLICY:\n- You must ONLY answer questions directly related to CodeRa, its assessment, tracks, inclusive STEM/robotics education, and SEN accommodations.\n- If the user asks anything outside CodeRa\'s scope (such as politics, cooking recipes, weather, general trivia, celebrities, sports, non-STEM homework, or unrelated software), you MUST politely refuse and guide them back to CodeRa.\n- Arabic refusal message: "عذراً، أنا مخصص للإجابة فقط عن كل ما يتعلق بمنصة **CodeRa**، تقييمات التسكين الذكية، مسارات الروبوتات والبرمجة، وتسهيلات أصحاب الهمم (SEN). كيف يمكنني مساعدتك في برامج كوديرا اليوم؟ 🌟"\n- English refusal message: "I am specifically designed to assist with **CodeRa**, our 50-Question AI Assessment, coding & robotics tracks, and inclusive SEN education. How can I help you explore CodeRa today? 🌟"\n- Always respond warmly in the user\'s language (Arabic or English), utilizing formatted markdown lists, bold keywords, and friendly emojis.'
+            }
+        ];
+
+        function formatMarkdown(text) {
+            if (!text) return '';
+            let html = text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/^### (.*$)/gim, '<h4 class="font-bold text-slate-900 mt-2 mb-1 text-sm">$1</h4>')
+                .replace(/^## (.*$)/gim, '<h3 class="font-bold text-slate-900 mt-2 mb-1 text-sm">$1</h3>')
+                .replace(/^\s*[\-\*]\s+(.*$)/gim, '<li class="ms-4 list-disc">$1</li>')
+                .replace(/^\s*(\d+)\.\s+(.*$)/gim, '<li class="ms-4 list-decimal">$2</li>')
+                .replace(/\n/g, '<br/>');
+            return html;
+        }
+
+        function appendChatMessage(text, isUser = false) {
+            const msgRow = document.createElement('div');
+            msgRow.className = `flex items-start gap-2.5 ${isUser ? 'flex-row-reverse' : ''}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = `w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center text-xs shadow-sm ${isUser ? 'bg-indigo-600 text-white' : 'bg-primary text-white'}`;
+            avatar.textContent = isUser ? '👤' : '🤖';
+
+            const bubble = document.createElement('div');
+            bubble.className = `p-3 rounded-2xl text-xs leading-relaxed max-w-[85%] shadow-sm ${
+                isUser 
+                    ? 'bg-primary text-white rounded-tr-sm text-start font-medium' 
+                    : 'bg-white border border-slate-200 text-slate-800 rounded-tl-sm text-start'
+            }`;
+            bubble.innerHTML = isUser ? text.replace(/\n/g, '<br/>') : formatMarkdown(text);
+
+            msgRow.appendChild(avatar);
+            msgRow.appendChild(bubble);
+            chatbotMessages.appendChild(msgRow);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const typingRow = document.createElement('div');
+            typingRow.id = 'chat-typing-indicator';
+            typingRow.className = 'flex items-start gap-2.5';
+            typingRow.innerHTML = `
+                <div class="w-7 h-7 rounded-full bg-primary text-white flex-shrink-0 flex items-center justify-center text-xs shadow-sm">🤖</div>
+                <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-tl-sm shadow-sm flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-indigo-500 animate-bounce" style="animation-delay: 0s;"></span>
+                    <span class="w-2 h-2 rounded-full bg-indigo-500 animate-bounce" style="animation-delay: 0.2s;"></span>
+                    <span class="w-2 h-2 rounded-full bg-indigo-500 animate-bounce" style="animation-delay: 0.4s;"></span>
+                </div>
+            `;
+            chatbotMessages.appendChild(typingRow);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const typingRow = document.getElementById('chat-typing-indicator');
+            if (typingRow) typingRow.remove();
+        }
+        async function getAIResponse(query) {
+            // Azure AI Services API key (configurable via localStorage.setItem('azure_ai_api_key', '...') or environment)
+            const apiKey = localStorage.getItem('azure_ai_api_key') || "YOUR_AZURE_API_KEY_HERE";
+            const endpoints = [
+                "https://ah30309142502238-8748-resource.openai.azure.com/openai/deployments/DeepSeek-V3.2/chat/completions?api-version=2024-08-01-preview",
+                "https://ah30309142502238-8748-resource.openai.azure.com/openai/deployments/o4-mini/chat/completions?api-version=2024-08-01-preview"
+            ];
+
+            chatHistory.push({ role: 'user', content: query });
+            if (chatHistory.length > 12) {
+                // Keep system prompt + last 10 messages
+                chatHistory.splice(1, chatHistory.length - 11);
+            }
+
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'api-key': apiKey
+                        },
+                        body: JSON.stringify({
+                            messages: chatHistory
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.choices && data.choices.length > 0 && data.choices[0].message) {
+                            const aiText = data.choices[0].message.content;
+                            chatHistory.push({ role: 'assistant', content: aiText });
+                            return aiText;
+                        }
+                    }
+                } catch (error) {
+                    console.warn("Chatbot endpoint error, trying backup:", error);
+                }
+            }
+
+            return getStaticFallbackResponse(query);
+        }
+
+        function getStaticFallbackResponse(query) {
+            const q = query.toLowerCase();
+            const isAr = /[\u0600-\u06FF]/.test(query) || currentLang === 'ar';
+
+            if (q.includes('50') || q.includes('assessment') || q.includes('test') || q.includes('تقييم') || q.includes('اختبار')) {
+                return isAr
+                    ? '🎯 **نظام التقييم الرقمي الذكي (50 سؤالاً):**\nيقيس الاختبار 5 مهارات أساسية:\n1. التفكير المنطقي وحل المشكلات 🧩\n2. المهارات الحركية والتفاعل الرقمي 🖱️\n3. التواصل والتعليمات الصوتية/البصرية 🔊\n4. الانتباه والذاكرة البصرية 👁️\n5. المفاهيم البرمجية الأساسية 💻\n\nيتم تسكين الطالب تلقائياً في المستوى المناسب فور الانتهاء!'
+                    : '🎯 **The 50-Question AI Placement Assessment:**\nIt measures 5 core digital readiness pillars:\n1. Logical & Computational Thinking 🧩\n2. Fine Motor & Screen Interaction 🖱️\n3. Receptive & Audio-Visual Communication 🔊\n4. Attention & Visual Memory 👁️\n5. Foundational Coding Concepts 💻\n\nIt automatically determines the child\'s track upon completion!';
+            }
+
+            if (q.includes('track') || q.includes('level') || q.includes('مسار') || q.includes('مستو')) {
+                return isAr
+                    ? '🛣️ **المسارات الـ 5 المتاحة في CodeRa:**\n• **مسار المستكشف (Explorer):** للبدايات والتفاعل الأساسي والروبوتات البسيطة 🧭\n• **مسار البناء (Builder):** بناء وبرمجة روبوتات LEGO والتحكم 🔨\n• **مسار المبدع (Creator):** برمجة الألعاب التفاعلية بـ Scratch و LEGO SPIKE 🎨\n• **مسار المبتكر (Innovator):** برمجة Python و Arduino وإنترنت الأشياء 💡\n• **مهندس المستقبل (Future Engineer):** مشاريع تخرج متقدمة وذكاء اصطناعي 🚀'
+                    : '🛣️ **CodeRa 5 Career Pathways:**\n• **Explorer Track:** Tactile robotics & foundational logic 🧭\n• **Builder Track:** LEGO robotics & sensor programming 🔨\n• **Creator Track:** Interactive Scratch games & smart automation 🎨\n• **Innovator Track:** Python, Arduino & IoT engineering 💡\n• **Future Engineer Track:** AI capstone portfolios & real-world projects 🚀';
+            }
+
+            if (q.includes('adhd') || q.includes('autism') || q.includes('sen') || q.includes('توحد') || q.includes('فرط حركة') || q.includes('تشخيص') || q.includes('احتياجات') || q.includes('صعوبات')) {
+                return isAr
+                    ? '🧠 **دعم أصحاب الهمم وصعوبات التعلم (SEN):**\n• أسئلة تفاعلية بصرية وصوتية مع تحكم كامل بالصوت (Mute/Unmute) 🔇🔊\n• دعم لغة الإشارة وفواصل استراحة ذكية بين الأجزاء ⏸️\n• خوارزمية ذكاء اصطناعي تتكيف تلقائياً مع تشخيص طفلك وتمنحه الدعم والوقت الكافي بدون أي ضغوط!'
+                    : '🧠 **Inclusive SEN & Diagnosis Support:**\n• High-contrast visual cues, optional speech read-aloud, and sound control 🔇🔊\n• Built-in Sign Language video guides and scheduled wellness breaks ⏸️\n• Adaptive AI engine that adjusts instruction style to the student\'s diagnosis without stress!';
+            }
+
+            if (q.includes('school') || q.includes('institution') || q.includes('partner') || q.includes('مدرسة') || q.includes('مؤسسة') || q.includes('شراكة') || q.includes('اتصال') || q.includes('رقم')) {
+                return isAr
+                    ? '🏫 **شراكات المدارس والمؤسسات:**\nنوفر تراخيص لتقييم الطلاب، مناهج روبوتات وبرمجة شاملة، وتدريب المعلمين.\nيمكنك ملء استمارة المؤسسة وترك رقم هاتفك، أو الاتصال بالخط الساخن مباشرة: **01115489561** 📞'
+                    : '🏫 **School & Institutional Partnerships:**\nWe provide placement licenses, inclusive coding curricula, and teacher enablement.\nFill out the Institution form with your contact phone or call our hotline: **01115489561** 📞';
+            }
+
+            return isAr
+                ? 'عذراً، أنا مخصص للإجابة فقط عن كل ما يتعلق بمنصة **CodeRa**، تقييمات التسكين الذكية، مسارات الروبوتات والبرمجة، وتسهيلات أصحاب الهمم (SEN). كيف يمكنني مساعدتك في برامج كوديرا اليوم؟ 🌟'
+                : 'I am specifically designed to assist with **CodeRa**, our 50-Question AI Assessment, coding & robotics tracks, and inclusive SEN education. How can I help you explore CodeRa today? 🌟';
+        }
+
+        if (chatbotForm && chatbotInput) {
+            chatbotForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const text = chatbotInput.value.trim();
+                if (!text) return;
+                appendChatMessage(text, true);
+                chatbotInput.value = '';
+
+                showTypingIndicator();
+                const reply = await getAIResponse(text);
+                removeTypingIndicator();
+                appendChatMessage(reply, false);
+            });
+        }
+
+        document.querySelectorAll('.quick-chip').forEach(chip => {
+            chip.addEventListener('click', async () => {
+                const prompt = chip.getAttribute('data-prompt');
+                if (prompt) {
+                    appendChatMessage(prompt, true);
+                    showTypingIndicator();
+                    const reply = await getAIResponse(prompt);
+                    removeTypingIndicator();
+                    appendChatMessage(reply, false);
+                }
+            });
+        });
+
+        function startChildTest(restore = false) {
+            closeModal();
+            document.body.classList.add('exam-mode');
+            const testPage = document.getElementById('childTestPage');
+            if (testPage) {
+                testPage.classList.remove('hidden');
+                testPage.classList.add('exam-active');
+            }
+            window.scrollTo(0, 0);
+
+            let studentName = 'Alex Rivers';
+            try {
+                const parentProfile = localStorage.getItem('codera_parent_profile');
+                if (parentProfile) {
+                    const parsed = JSON.parse(parentProfile);
+                    if (parsed.childName && parsed.childName.trim()) {
+                        studentName = parsed.childName.trim();
+                    }
+                }
+            } catch (err) {}
+
+            if (typeof window.initAssessment === 'function') {
+                window.initAssessment(studentName, restore);
+            }
+        }
+
+        function exitChildTest() {
+            const exitOverlay = document.querySelector('#exit-confirm-overlay');
+            if (exitOverlay) {
+                exitOverlay.style.display = 'flex';
+                return;
+            }
+            if (typeof window.exitAssessment === 'function') {
+                window.exitAssessment(true);
+            } else {
+                localStorage.removeItem('codera_active_assessment_session');
+                localStorage.removeItem('cognix_active_assessment_session');
+                localStorage.removeItem('eduverse_assessment_session_v2');
+                localStorage.removeItem('eduverse_assessment_session');
+                const testPage = document.getElementById('childTestPage');
+                if (testPage) {
+                    testPage.classList.remove('exam-active');
+                    testPage.classList.add('hidden');
+                }
+                document.body.classList.remove('exam-mode');
+                window.location.reload();
+            }
+        }
+
+        // --- Prevent Right-Click Context Menu ---
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+        });
+
+        // --- Prevent F12 and DevTools Shortcuts ---
+        document.addEventListener('keydown', (e) => {
+            if (
+                e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
+                (e.ctrlKey && (e.key === 'U' || e.key === 'u'))
+            ) {
+                e.preventDefault();
+            }
+        });
+    </script>
+    <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>
