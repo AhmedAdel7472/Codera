@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ArrowRight,
   ArrowLeft,
@@ -95,6 +95,11 @@ export const RoleJourneyApp: React.FC<RoleJourneyAppProps> = ({
   const [currentScreen, setCurrentScreen] = useState<RoleJourneyScreen>(initialScreen);
   const [history, setHistory] = useState<RoleJourneyScreen[]>([]);
   const [toastMsg, setToastMsg] = useState('');
+
+  useEffect(() => {
+    setCurrentScreen(initialScreen);
+    setHistory([]);
+  }, [initialScreen]);
 
   const showToast = (msg: string) => {
     setToastMsg(msg);

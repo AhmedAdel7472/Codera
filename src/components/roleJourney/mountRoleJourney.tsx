@@ -33,7 +33,7 @@ export function openRoleJourney(screen: RoleJourneyScreen = 'main') {
 
   roleJourneyRootInstance.render(
     <React.StrictMode>
-      <RoleJourneyApp initialScreen={screen} onClose={handleClose} />
+      <RoleJourneyApp key={`${screen}-${Date.now()}`} initialScreen={screen} onClose={handleClose} />
     </React.StrictMode>
   );
 }
