@@ -44,7 +44,7 @@ export class PaymentModal {
 
   private getModalHtml(): string {
     return `
-      <div id="paymentModalOverlay" class="fixed inset-0 z-[400] hidden items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 overflow-y-auto" dir="ltr">
+      <div id="paymentModalOverlay" class="fixed inset-0 z-[100002] hidden items-center justify-center bg-slate-950/85 backdrop-blur-md p-4 overflow-y-auto" dir="ltr">
         <div class="relative w-full max-w-xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-indigo-100 dark:border-slate-800 overflow-hidden my-8 animate-fadeIn">
           
           <!-- Header -->
@@ -151,6 +151,15 @@ export class PaymentModal {
   }
 
   private attachEventListeners() {
+    const modalOverlay = document.getElementById('paymentModalOverlay');
+    if (modalOverlay) {
+      modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+          this.close();
+        }
+      });
+    }
+
     const closeBtn = document.getElementById('closePaymentModalBtn');
     if (closeBtn) {
       closeBtn.addEventListener('click', () => this.close());

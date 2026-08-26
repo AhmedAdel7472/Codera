@@ -202,15 +202,15 @@ export function renderParentDashboard(
 
   // Profile 2 / Add New Child Card
   const addNewChildCardHtml = `
-    <div id="addNewChildBtnCard" class="bg-gradient-to-br from-slate-50 to-indigo-50/50 dark:from-slate-900/60 dark:to-indigo-950/30 border-2 border-dashed border-indigo-300 dark:border-indigo-800 hover:border-indigo-500 rounded-3xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-300 hover:scale-[1.01] shadow-sm hover:shadow-xl group min-h-[440px]">
-      <div class="w-20 h-20 rounded-2xl bg-indigo-100 dark:bg-indigo-900/60 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white flex items-center justify-center text-3xl font-black transition-all mb-4 shadow-lg shadow-indigo-500/20 group-hover:rotate-6">
+    <div id="addNewChildBtnCard" class="bg-gradient-to-br from-slate-50 via-emerald-50/40 to-teal-50/30 dark:from-slate-900/60 dark:via-emerald-950/30 dark:to-teal-950/20 border-2 border-dashed border-emerald-300 dark:border-emerald-700 hover:border-emerald-500 rounded-3xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-300 hover:scale-[1.01] shadow-sm hover:shadow-xl group min-h-[440px]">
+      <div class="w-20 h-20 rounded-2xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 group-hover:bg-gradient-to-tr group-hover:from-emerald-500 group-hover:to-teal-600 group-hover:text-white flex items-center justify-center text-3xl font-black transition-all mb-4 shadow-lg shadow-emerald-500/20 group-hover:rotate-6">
         <i class="fa-solid fa-user-plus"></i>
       </div>
       <h3 class="text-xl font-black text-slate-900 dark:text-white mb-2">Register Another Child</h3>
       <p class="text-xs text-slate-500 dark:text-slate-400 max-w-xs mb-6 leading-relaxed">
         Add another child profile to customize their learning interest survey, accessibility accommodations, and launch independent AI assessments.
       </p>
-      <span class="px-6 py-3 rounded-2xl bg-indigo-600 group-hover:bg-indigo-700 text-white font-extrabold text-sm shadow-lg shadow-indigo-500/25 transition-all flex items-center gap-2">
+      <span class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-extrabold text-sm shadow-lg shadow-emerald-500/25 transition-all flex items-center gap-2">
         <i class="fa-solid fa-plus"></i>
         <span>Add New Student Profile</span>
       </span>
