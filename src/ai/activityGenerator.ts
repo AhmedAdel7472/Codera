@@ -32,6 +32,38 @@ export interface QuestionBaseline {
   type: 'pattern_matrix' | 'robot_mission' | 'picture_match' | 'rule_shift' | 'motor_target';
 }
 
+// ---------------------------------------------------------------------------
+// Cognitive Assessment (Assessment 1) — 25 Task Baselines
+// Mapped 1-to-1 from Cognitive_Assessment_25_Tasks.pdf
+// ---------------------------------------------------------------------------
+export const COGNITIVE_ASSESSMENT_BASELINES: QuestionBaseline[] = [
+  { slot: 1, domain: 'cognitive_ability', skill: 'visual_memory', format: 'structured', subSkill: 'Working Memory — Visual Recall', title: 'Task 1: Visual Recall', baselinePrompt: 'Display symbols briefly, hide them, then identify which symbols appeared in the original set.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
+  { slot: 2, domain: 'cognitive_ability', skill: 'working_memory', format: 'performance', subSkill: 'Working Memory — Sequential Memory', title: 'Task 2: Sequential Memory', baselinePrompt: 'Reconstruct the original sequence of symbols in the exact order shown.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
+  { slot: 3, domain: 'cognitive_ability', skill: 'working_memory', format: 'performance', subSkill: 'Working Memory — Remember & Follow', title: 'Task 3: Remember & Follow', baselinePrompt: 'Remember the sequence of actions and perform them in the correct order.', maxPoints: 2, difficulty: 2, type: 'pattern_matrix' },
+  { slot: 4, domain: 'cognitive_ability', skill: 'pattern_recognition', format: 'structured', subSkill: 'Fluid Reasoning — Pattern Recognition', title: 'Task 4: Pattern Recognition', baselinePrompt: 'Complete the visual pattern by selecting the missing element.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
+  { slot: 5, domain: 'cognitive_ability', skill: 'logical_reasoning', format: 'structured', subSkill: 'Fluid Reasoning — Rule Detection', title: 'Task 5: Rule Detection', baselinePrompt: 'Deduce the underlying transformation rule and predict the next item.', maxPoints: 2, difficulty: 2, type: 'pattern_matrix' },
+  { slot: 6, domain: 'cognitive_ability', skill: 'problem_solving', format: 'structured', subSkill: 'Fluid Reasoning — Problem Solving', title: 'Task 6: Problem Solving', baselinePrompt: 'Choose the most effective action to overcome the obstacle and reach the goal.', maxPoints: 2, difficulty: 2, type: 'pattern_matrix' },
+  { slot: 7, domain: 'cognitive_ability', skill: 'flexibility', format: 'structured', subSkill: 'Cognitive Flexibility — Rule Switching', title: 'Task 7: Rule Switching', baselinePrompt: 'Switch from sorting by color to sorting by shape as the rule changes.', maxPoints: 2, difficulty: 2, type: 'rule_shift' },
+  { slot: 8, domain: 'cognitive_ability', skill: 'visual_memory', format: 'structured', subSkill: 'Visual-Spatial — Visual Matching', title: 'Task 8: Visual Matching', baselinePrompt: 'Find the shape that perfectly matches the target among similar options.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
+  { slot: 9, domain: 'cognitive_ability', skill: 'pattern_recognition', format: 'structured', subSkill: 'Visual-Spatial — Mental Rotation', title: 'Task 9: Mental Rotation', baselinePrompt: 'Select the option that represents the target shape after rotation.', maxPoints: 2, difficulty: 2, type: 'pattern_matrix' },
+  { slot: 10, domain: 'cognitive_ability', skill: 'logical_reasoning', format: 'structured', subSkill: 'Visual-Spatial — Spatial Relationships', title: 'Task 10: Spatial Relationships', baselinePrompt: 'Identify relative spatial positions (above, inside, beside) accurately.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
+  { slot: 11, domain: 'cognitive_ability', skill: 'sequencing', format: 'performance', subSkill: 'Visual-Spatial — Spatial Construction', title: 'Task 11: Spatial Construction', baselinePrompt: 'Select the correct order to assemble the target structure.', maxPoints: 2, difficulty: 2, type: 'pattern_matrix' },
+  { slot: 12, domain: 'cognitive_ability', skill: 'attention', format: 'structured', subSkill: 'Processing Speed — Visual Search', title: 'Task 12: Visual Search', baselinePrompt: 'Scan the grid quickly and count the target symbols among distractors.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
+  { slot: 13, domain: 'cognitive_ability', skill: 'attention', format: 'structured', subSkill: 'Processing Speed — Symbol Matching Speed', title: 'Task 13: Symbol Matching Speed', baselinePrompt: 'Verify whether two rapidly presented symbols match identically (YES/NO).', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
+  { slot: 14, domain: 'cognitive_ability', skill: 'attention', format: 'structured', subSkill: 'Sustained Attention — Target Detection', title: 'Task 14: Target Detection', baselinePrompt: 'Detect occurrences of the target symbol in a continuous stream of stimuli.', maxPoints: 2, difficulty: 2, type: 'pattern_matrix' },
+  { slot: 15, domain: 'cognitive_ability', skill: 'attention', format: 'structured', subSkill: 'Sustained Attention — Visual Attention Over Time', title: 'Task 15: Attention Over Time', baselinePrompt: 'Maintain attention over an extended sequence to spot target alerts.', maxPoints: 2, difficulty: 2, type: 'pattern_matrix' },
+  { slot: 16, domain: 'cognitive_ability', skill: 'attention', format: 'structured', subSkill: 'Selective Attention — Distractor Filtering', title: 'Task 16: Selective Attention', baselinePrompt: 'Isolate the designated target and ignore surrounding visual noise.', maxPoints: 2, difficulty: 2, type: 'pattern_matrix' },
+  { slot: 17, domain: 'cognitive_ability', skill: 'flexibility', format: 'structured', subSkill: 'Cognitive Flexibility — Change Sorting Rule', title: 'Task 17: Change Sorting Rule', baselinePrompt: 'Adapt sorting behavior when criteria shift from size to color.', maxPoints: 2, difficulty: 2, type: 'rule_shift' },
+  { slot: 18, domain: 'cognitive_ability', skill: 'flexibility', format: 'structured', subSkill: 'Cognitive Flexibility — Switch Between Rules', title: 'Task 18: Switch Between Rules', baselinePrompt: 'Alternate flexibly between two rules across consecutive trials.', maxPoints: 2, difficulty: 3, type: 'rule_shift' },
+  { slot: 19, domain: 'cognitive_ability', skill: 'problem_solving', format: 'performance', subSkill: 'Planning & Problem Solving — Find Best Route', title: 'Task 19: Find Best Route', baselinePrompt: 'Determine the fastest and unobstructed path to the destination.', maxPoints: 2, difficulty: 2, type: 'robot_mission' },
+  { slot: 20, domain: 'cognitive_ability', skill: 'problem_solving', format: 'structured', subSkill: 'Planning & Problem Solving — Solve Problem', title: 'Task 20: Solve Problem', baselinePrompt: 'Identify the required action or bug fix to resolve the problem.', maxPoints: 2, difficulty: 2, type: 'pattern_matrix' },
+  { slot: 21, domain: 'cognitive_ability', skill: 'flexibility', format: 'performance', subSkill: 'Planning & Flexibility — Find Alternative', title: 'Task 21: Find Alternative', baselinePrompt: 'Find an effective contingency plan when the primary option fails.', maxPoints: 2, difficulty: 3, type: 'robot_mission' },
+  { slot: 22, domain: 'cognitive_ability', skill: 'following_instructions', format: 'structured', subSkill: 'Rules & Instructions — Multiple Rules', title: 'Task 22: Multiple Rules', baselinePrompt: 'Identify the item meeting all simultaneous compound criteria.', maxPoints: 2, difficulty: 2, type: 'pattern_matrix' },
+  { slot: 23, domain: 'cognitive_ability', skill: 'following_instructions', format: 'structured', subSkill: 'Rules & Instructions — Multi-Step Instructions', title: 'Task 23: Multi-Step Instructions', baselinePrompt: 'Execute a multi-step sequence following precise instructions in order.', maxPoints: 2, difficulty: 2, type: 'pattern_matrix' },
+  { slot: 24, domain: 'cognitive_ability', skill: 'logical_reasoning', format: 'structured', subSkill: 'Information Processing — Multiple Conditions', title: 'Task 24: Multiple Conditions Info', baselinePrompt: 'Query and match data satisfying multiple concurrent attributes.', maxPoints: 2, difficulty: 3, type: 'pattern_matrix' },
+  { slot: 25, domain: 'cognitive_ability', skill: 'problem_solving', format: 'structured', subSkill: 'Decision Making — Choose Best Option', title: 'Task 25: Choose Best Option', baselinePrompt: 'Weigh practical options and select the most sensible, safe decision.', maxPoints: 2, difficulty: 3, type: 'pattern_matrix' }
+];
+
 export const QUESTION_BASELINES: QuestionBaseline[] = [
   // --- DOMAIN 1: COGNITIVE ABILITIES (Q1 - Q12 | 25 Pts) ---
   { slot: 1, domain: 'cognitive_ability', skill: 'classification', format: 'structured', subSkill: 'Rule-Based Grouping', title: 'Logical Grouping', baselinePrompt: 'Identify which candidate follows the group classification rule.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
@@ -513,20 +545,674 @@ const COGNITIVE_SLOT_CONFIGS: Record<number, { instructions: string; sequence?: 
   },
 };
 
-export class ActivityGenerator {
-  private client: AzureOpenAIClient;
-
-  constructor() {
-    this.client = new AzureOpenAIClient();
+// ---------------------------------------------------------------------------
+// 25 Dedicated Cognitive Task Procedural Fallback Configurations
+// 1-to-1 match for Tasks 1 to 25 from Cognitive_Assessment_25_Tasks.pdf
+// ---------------------------------------------------------------------------
+export const COGNITIVE_25_TASK_CONFIGS: Record<
+  number,
+  {
+    instructions: string;
+    sequence?: string[];
+    options: Array<{ label: string; emoji?: string; correct: boolean }>;
+    hint: string;
   }
+> = {
+  1: {
+    instructions: 'Task 1 — Visual Recall: Look at the symbols shown: [🔴 Circle, 🔺 Triangle, ⭐ Star, ⬛ Square]. Select the group containing the exact symbols you saw before.',
+    sequence: ['Original Symbols:', '🔴 Circle', '🔺 Triangle', '⭐ Star', '⬛ Square'],
+    options: [
+      { label: '🔴 🔺 ⭐ ⬛ (Original 4 Symbols)', emoji: '⭐', correct: true },
+      { label: '🔴 🔷 ☀️ ⬛ (Contains Distractors)', emoji: '🔷', correct: false },
+      { label: '🔺 ⭐ 🌙 🟢 (Wrong Items)', emoji: '🌙', correct: false }
+    ],
+    hint: 'Recall the 4 symbols shown at the start: Circle, Triangle, Star, Square.'
+  },
+  2: {
+    instructions: 'Task 2 — Sequential Memory: Symbols were shown in this exact order: [⭐ Star → 🔴 Circle → 🔺 Triangle → ⬛ Square]. Which option restores the original order?',
+    sequence: ['Scrambled Items: ⬛ Square, 🔺 Triangle, ⭐ Star, 🔴 Circle', 'Target: Restore Original Sequence'],
+    options: [
+      { label: '⭐ → 🔴 → 🔺 → ⬛ (Original Order)', emoji: '⭐', correct: true },
+      { label: '⬛ → 🔺 → 🔴 → ⭐ (Reversed)', emoji: '⬛', correct: false },
+      { label: '🔴 → ⭐ → ⬛ → 🔺 (Scrambled)', emoji: '🔴', correct: false }
+    ],
+    hint: 'The sequence started with Star ⭐ and ended with Square ⬛!'
+  },
+  3: {
+    instructions: 'Task 3 — Remember & Follow: Remember these 3 steps: [1. Click Red Circle 🔴 → 2. Move to Blue Box 📦 → 3. Press Green Button 🟢]. Which sequence is correct?',
+    sequence: ['Step 1: Click 🔴', 'Step 2: Move to 📦', 'Step 3: Press 🟢'],
+    options: [
+      { label: '🔴 Circle → 📦 Box → 🟢 Button (Correct Order)', emoji: '🟢', correct: true },
+      { label: '🟢 Button → 🔴 Circle → 📦 Box (Wrong Order)', emoji: '🔴', correct: false },
+      { label: '📦 Box → 🟢 Button → 🔴 Circle (Wrong Order)', emoji: '📦', correct: false }
+    ],
+    hint: 'Remember: Red Circle first, then Box, then Green Button!'
+  },
+  4: {
+    instructions: 'Task 4 — Pattern Recognition: Identify the repeating pattern: [🔴 🔺 🔴 🔺 🔴 ❓]. Choose what comes next!',
+    sequence: ['🔴 Circle', '🔺 Triangle', '🔴 Circle', '🔺 Triangle', '🔴 Circle', '❓ Next Symbol'],
+    options: [
+      { label: '🔺 Triangle (Completes Pattern)', emoji: '🔺', correct: true },
+      { label: '🔴 Circle (Repeats Same)', emoji: '🔴', correct: false },
+      { label: '⬛ Square (New Symbol)', emoji: '⬛', correct: false }
+    ],
+    hint: 'The pattern alternates between Circle 🔴 and Triangle 🔺!'
+  },
+  5: {
+    instructions: 'Task 5 — Rule Detection: Notice the transformation rule: [🔴 → 🔺 → ⬛] and [🔺 → ⬛ → ⭐]. What comes next in: [⬛ → ⭐ → ❓]?',
+    sequence: ['Example 1: 🔴 → 🔺 → ⬛', 'Example 2: 🔺 → ⬛ → ⭐', 'Solve: ⬛ → ⭐ → ❓'],
+    options: [
+      { label: '💎 Diamond (Next in Series)', emoji: '💎', correct: true },
+      { label: '🔴 Circle (Old Symbol)', emoji: '🔴', correct: false },
+      { label: '🔺 Triangle (Previous)', emoji: '🔺', correct: false }
+    ],
+    hint: 'Each sequence shifts one step forward in the symbol series!'
+  },
+  6: {
+    instructions: 'Task 6 — Problem Solving: A delivery robot\'s main path to the charging pad is blocked by a safety fence 🚧. Which action safely reaches the goal?',
+    sequence: ['Path A: Direct (Blocked by 🚧)', 'Path B: Side Corridor (Clear ✅)', 'Path C: Stairs (Inaccessible 🚫)'],
+    options: [
+      { label: 'Take Side Corridor B around fence ✅', emoji: '✅', correct: true },
+      { label: 'Attempt to push through safety fence 🚧', emoji: '🚧', correct: false },
+      { label: 'Turn off and wait indefinitely 🛑', emoji: '🛑', correct: false }
+    ],
+    hint: 'Find the open, unobstructed detour path!'
+  },
+  7: {
+    instructions: 'Task 7 — Rule Switching: Round 1 was \'Sort by COLOR (Red)\'. Round 2 NEW RULE: \'Sort by SHAPE (Stars only, any color)\'. Which item follows the NEW rule?',
+    sequence: ['Old Rule: Sort by COLOR 🔴', 'NEW RULE: Sort by SHAPE ⭐ (Stars)', 'Select the item matching the NEW rule:'],
+    options: [
+      { label: '🔵 Blue Star (Matches Shape Rule) ⭐', emoji: '⭐', correct: true },
+      { label: '🔴 Red Circle (Follows Old Rule) 🔴', emoji: '🔴', correct: false },
+      { label: '🟩 Green Square (Neither) 🟩', emoji: '🟩', correct: false }
+    ],
+    hint: 'Ignore the old color rule! Switch to the new rule: choose the Star ⭐!'
+  },
+  8: {
+    instructions: 'Task 8 — Visual Matching: Target Shape: [ Hexagon ⬡ with a center dot • ]. Find the identical matching shape among the options:',
+    sequence: ['Target: ⬡ [Hexagon + Center Dot •]', 'Examine all features carefully!'],
+    options: [
+      { label: '⬡ [Hexagon with Center Dot •] (Exact Match)', emoji: '⬡', correct: true },
+      { label: '⬡ [Hexagon without Dot] (Missing Feature)', emoji: '⬡', correct: false },
+      { label: '⬢ [Solid Filled Hexagon] (Wrong Fill)', emoji: '⬢', correct: false }
+    ],
+    hint: 'Check both the outline shape and the internal dot!'
+  },
+  9: {
+    instructions: 'Task 9 — Mental Rotation: Target shape is an \'L-bracket\' ⌐ pointing Top-Right. If rotated 90° clockwise ↻, which option represents the rotated shape?',
+    sequence: ['Original: ⌐ (Top-Right)', 'Rotation: 90° Clockwise ↻', 'Candidate = ❓'],
+    options: [
+      { label: '¬ (Bottom-Right) [90° Clockwise] ↻', emoji: '¬', correct: true },
+      { label: '⌐ (Unchanged) [0°]', emoji: '⌐', correct: false },
+      { label: 'L (180° Inverted)', emoji: 'L', correct: false }
+    ],
+    hint: 'Imagine turning the shape a quarter-turn to the right!'
+  },
+  10: {
+    instructions: 'Task 10 — Spatial Relationships: A blue circle 🔵 is INSIDE a yellow square 🟨, and a green triangle 🔺 is ABOVE the yellow square. Which statement is correct?',
+    sequence: ['🔺 Green Triangle (Above)', '🟨 Yellow Square', '🔵 Blue Circle (Inside Square)'],
+    options: [
+      { label: 'Blue circle 🔵 is inside yellow square 🟨', emoji: '🔵', correct: true },
+      { label: 'Green triangle 🔺 is inside blue circle 🔵', emoji: '🔺', correct: false },
+      { label: 'Yellow square 🟨 is above green triangle 🔺', emoji: '🟨', correct: false }
+    ],
+    hint: 'Look at the nested description: Blue is INSIDE Yellow!'
+  },
+  11: {
+    instructions: 'Task 11 — Spatial Construction: To assemble the robotic arm, which 3 parts must be joined in order: [Base Plate 🔩 → Swivel Joint ⚙️ → Gripper Hand 🦾]?',
+    sequence: ['Target: Functional Robot Arm', 'Parts: 🦾 Gripper, 🔩 Base, ⚙️ Joint'],
+    options: [
+      { label: '1. 🔩 Base Plate → 2. ⚙️ Joint → 3. 🦾 Gripper', emoji: '🦾', correct: true },
+      { label: '1. 🦾 Gripper → 2. 🔩 Base Plate → 3. ⚙️ Joint', emoji: '⚙️', correct: false },
+      { label: '1. ⚙️ Joint → 2. 🦾 Gripper → 3. 🔩 Base Plate', emoji: '🔩', correct: false }
+    ],
+    hint: 'Always build upward starting from the Base Plate 🔩!'
+  },
+  12: {
+    instructions: 'Task 12 — Visual Search: Scan the items below and count how many Target Stars ⭐ appear among the distractors: [⭐ 🔴 ⭐ 🔷 ⭐ 🟢 ⬛]?',
+    sequence: ['Display: ⭐  🔴  ⭐  🔷  ⭐  🟢  ⬛', 'Target to Count: ⭐ Stars'],
+    options: [
+      { label: 'Exactly 3 Stars ⭐', emoji: '⭐', correct: true },
+      { label: 'Only 2 Stars ⭐', emoji: '2️⃣', correct: false },
+      { label: '4 Stars ⭐', emoji: '4️⃣', correct: false }
+    ],
+    hint: 'Count each star: first one, middle one, third one = 3!'
+  },
+  13: {
+    instructions: 'Task 13 — Symbol Matching Speed: Fast Match! Do these two symbols match exactly: [ 🛡️ Shield ] vs [ 🛡️ Shield ]?',
+    sequence: ['Left Symbol: 🛡️', 'Right Symbol: 🛡️', 'Do they match?'],
+    options: [
+      { label: 'YES — Exact Match ✅', emoji: '✅', correct: true },
+      { label: 'NO — Different ❌', emoji: '❌', correct: false },
+      { label: 'Cannot Determine ❓', emoji: '❓', correct: false }
+    ],
+    hint: 'Both items are the identical Shield 🛡️ symbol!'
+  },
+  14: {
+    instructions: 'Task 14 — Target Detection: Keep attention on this stream of items: [ 🚗 🚲 ✈️ 🚗 🚀 🚗 🚢 ]. Whenever you see the Target CAR 🚗, mark it. How many times did 🚗 appear?',
+    sequence: ['Item Stream: 🚗 🚲 ✈️ 🚗 🚀 🚗 🚢', 'Target: 🚗'],
+    options: [
+      { label: 'Detected 3 times 🚗', emoji: '🚗', correct: true },
+      { label: 'Detected 1 time 🚗', emoji: '1️⃣', correct: false },
+      { label: 'Detected 5 times 🚗', emoji: '5️⃣', correct: false }
+    ],
+    hint: 'Item 1 is 🚗, Item 4 is 🚗, Item 6 is 🚗: 3 occurrences!'
+  },
+  15: {
+    instructions: 'Task 15 — Attention Over Time: Over an 8-stage sequence, a beacon flashed [🟢 🟢 🟢 🔴 🟢 🟢 🔴 🟢]. Which stages had the RED alert 🔴?',
+    sequence: ['Stages 1-4: 🟢 🟢 🟢 🔴', 'Stages 5-8: 🟢 🟢 🔴 🟢'],
+    options: [
+      { label: 'Stage 4 and Stage 7 🔴', emoji: '🔴', correct: true },
+      { label: 'Stage 1 and Stage 8 🟢', emoji: '🟢', correct: false },
+      { label: 'Stage 3 and Stage 5 🟡', emoji: '🟡', correct: false }
+    ],
+    hint: 'Count the positions of the red alerts: 4th and 7th!'
+  },
+  16: {
+    instructions: 'Task 16 — Selective Attention: Find the KEY 🔑 located in the center of the cluttered toolbox, ignoring surrounding wires 🔌, nuts 🔩, and screws 🪛.',
+    sequence: ['Surrounding: 🔩 🪛 🔌 🔩 🪛', 'Target in Center: 🔑', 'Filter out the noise!'],
+    options: [
+      { label: 'Center Key 🔑 (Target Identified)', emoji: '🔑', correct: true },
+      { label: 'Corner Nut 🔩 (Distractor)', emoji: '🔩', correct: false },
+      { label: 'Wire Clutter 🔌 (Distractor)', emoji: '🔌', correct: false }
+    ],
+    hint: 'Focus only on the key 🔑 and ignore all background clutter!'
+  },
+  17: {
+    instructions: 'Task 17 — Change the Sorting Rule: The sorting rule just changed from \'Sort by Size\' to \'Sort by Color: BLUE\'. Which item goes into the bin?',
+    sequence: ['Old Category: Large Items', 'NEW CATEGORY: BLUE Items 🔵', 'Candidate Items: [🔴 Big Red Ball, 🔵 Small Blue Gem, 🟩 Big Green Box]'],
+    options: [
+      { label: '🔵 Small Blue Gem (Matches New Color Rule)', emoji: '🔵', correct: true },
+      { label: '🔴 Big Red Ball (Follows Old Size Rule)', emoji: '🔴', correct: false },
+      { label: '🟩 Big Green Box (Wrong Color)', emoji: '🟩', correct: false }
+    ],
+    hint: 'Size does not matter now! Only the color Blue 🔵 counts!'
+  },
+  18: {
+    instructions: 'Task 18 — Switch Between Rules: Alternate rules: Item 1 = Color (Yellow 🟡), Item 2 = Shape (Triangle 🔺), Item 3 = Color (Yellow 🟡). What rule applies to Item 4?',
+    sequence: ['Item 1: Color Rule 🟡', 'Item 2: Shape Rule 🔺', 'Item 3: Color Rule 🟡', 'Item 4: ❓ Which Rule?'],
+    options: [
+      { label: 'Shape Rule 🔺 (Alternating Pattern)', emoji: '🔺', correct: true },
+      { label: 'Color Rule 🟡 (Break in Pattern)', emoji: '🟡', correct: false },
+      { label: 'Sound Rule 🔊 (Unrelated)', emoji: '🔊', correct: false }
+    ],
+    hint: 'The rules switch back and forth: Color → Shape → Color → Shape!'
+  },
+  19: {
+    instructions: 'Task 19 — Find the Best Route: Robo needs to get from Start [A] to Goal [D]. Route 1 is 3 steps (clean). Route 2 is 5 steps with traffic. Route 3 is blocked. Which is best?',
+    sequence: ['Route 1: A → B → D (3 steps, Clear ✅)', 'Route 2: A → C → E → F → D (5 steps ⏳)', 'Route 3: A → G → D (Blocked ⛔)'],
+    options: [
+      { label: 'Route 1: 3 steps, fastest and clear 🚀', emoji: '🚀', correct: true },
+      { label: 'Route 2: 5 steps with traffic 🐢', emoji: '🐢', correct: false },
+      { label: 'Route 3: Blocked path ⛔', emoji: '⛔', correct: false }
+    ],
+    hint: 'Route 1 is both clear and the shortest number of steps!'
+  },
+  20: {
+    instructions: 'Task 20 — Solve the Problem: The program crashed because input variable \'age\' received text instead of a number. What action solves the bug?',
+    sequence: ['Bug: Type Error (Expected number, got string)', 'Root Cause: No data type validation', 'Solution = ❓'],
+    options: [
+      { label: 'Convert input to integer before processing 🔢', emoji: '🔢', correct: true },
+      { label: 'Delete the whole program and restart ❌', emoji: '❌', correct: false },
+      { label: 'Ignore the error and run anyway ⚠️', emoji: '⚠️', correct: false }
+    ],
+    hint: 'Converting the input text into a number resolves the type mismatch!'
+  },
+  21: {
+    instructions: 'Task 21 — Find an Alternative: The primary printer is out of paper 📄❌. You have an urgent handout to print for class. What is the best alternative plan?',
+    sequence: ['Goal: Print urgent class handout', 'Problem: Primary printer out of paper', 'Alternative Action = ❓'],
+    options: [
+      { label: 'Send job to the Library network printer down the hall 🖨️', emoji: '🖨️', correct: true },
+      { label: 'Cancel class and do not print 🚫', emoji: '🚫', correct: false },
+      { label: 'Keep pressing print on empty printer 🔄', emoji: '🔄', correct: false }
+    ],
+    hint: 'Find another available printer to complete the task on time!'
+  },
+  22: {
+    instructions: 'Task 22 — Multiple Rules: Select the item that satisfies ALL 3 rules: [1. Must be BLUE 🔵] AND [2. Must be a STAR ⭐] AND [3. Must have a BORDER 🔲].',
+    sequence: ['Rule 1: BLUE 🔵', 'Rule 2: STAR ⭐', 'Rule 3: BORDER 🔲'],
+    options: [
+      { label: 'Blue Star with Border 🔲⭐ (All 3 Rules Satisfied)', emoji: '⭐', correct: true },
+      { label: 'Blue Circle with Border 🔲🔵 (Fails Shape Rule)', emoji: '🔵', correct: false },
+      { label: 'Yellow Star with Border 🔲⭐ (Fails Color Rule)', emoji: '🟡', correct: false }
+    ],
+    hint: 'Must be Blue AND Star AND Bordered: only one item has all three!'
+  },
+  23: {
+    instructions: 'Task 23 — Multi-Step Instructions: Follow carefully: \'First open Folder A 📁, THEN copy File 1 📄, THEN rename it to Final.doc ✏️, FINALLY upload to Cloud ☁️\'. Which step is Step 3?',
+    sequence: ['1. Open Folder A 📁', '2. Copy File 1 📄', '3. Rename to Final.doc ✏️', '4. Upload to Cloud ☁️'],
+    options: [
+      { label: 'Rename it to Final.doc ✏️ (Step 3)', emoji: '✏️', correct: true },
+      { label: 'Copy File 1 📄 (Step 2)', emoji: '📄', correct: false },
+      { label: 'Upload to Cloud ☁️ (Step 4)', emoji: '☁️', correct: false }
+    ],
+    hint: 'Look at the 3rd step in the sequence: Rename!'
+  },
+  24: {
+    instructions: 'Task 24 — Multiple Conditions: From the student table, find the candidate who: [Grade = 10] AND [Club = Robotics 🤖] AND [Status = Active ✅].',
+    sequence: ['Sam: Grade 9, Robotics, Active', 'Alex: Grade 10, Robotics, Active ✅', 'Jordan: Grade 10, Art, Active'],
+    options: [
+      { label: 'Alex (Grade 10, Robotics 🤖, Active ✅)', emoji: '🤖', correct: true },
+      { label: 'Sam (Grade 9 — wrong grade)', emoji: '👤', correct: false },
+      { label: 'Jordan (Art Club — wrong club)', emoji: '🎨', correct: false }
+    ],
+    hint: 'Alex matches all three requirements: Grade 10, Robotics, Active!'
+  },
+  25: {
+    instructions: 'Task 25 — Choose the Best Option: You are working on a coding project and get completely stuck on a syntax error after trying for 15 minutes. What is the best decision?',
+    sequence: ['Situation: Stuck on syntax error for 15 mins', 'Goal: Learn and make progress', 'Decision = ❓'],
+    options: [
+      { label: 'Check the documentation or ask the mentor for guidance 🙋', emoji: '🙋', correct: true },
+      { label: 'Give up and close the laptop for the day 🚪', emoji: '🚪', correct: false },
+      { label: 'Copy-paste random code without reading it 🎲', emoji: '🎲', correct: false }
+    ],
+    hint: 'Asking for help after trying independently is the smart, professional decision!'
+  }
+};
 
-  /**
-   * Generates or loads activity item for slot (1 to 50).
-   *
-   * STRATEGY:
-   *   1. Build a guaranteed-correct fallback from the slot config (instant, offline).
-   *   2. Skip AI for robot_mission / picture_match / motor_target (interaction-based).
-   *   3. Ask Azure OpenAI for the FULL question including matching answer options.
+// ---------------------------------------------------------------------------
+// ASSESSMENT 1 — PDF Task Blueprints (25 Cognitive Task Types)
+//
+// Each entry defines:
+//   • cognitiveBlueprint : The LOCKED concept the AI must always test (from PDF)
+//   • variationStrategy  : How the AI randomizes surface content per student
+//   • slotMapping        : Which slot(s) in the 50-slot system use this blueprint
+// ---------------------------------------------------------------------------
+export interface Assessment1TaskBlueprint {
+  taskNumber: number;
+  taskName: string;
+  skillArea: string;
+  cognitiveBlueprint: string;
+  variationStrategy: string;
+  slotMapping: number[];
+}
+
+export const ASSESSMENT1_TASK_BLUEPRINTS: Assessment1TaskBlueprint[] = [
+  {
+    taskNumber: 1,
+    taskName: 'Visual Recall',
+    skillArea: 'Working Memory',
+    cognitiveBlueprint:
+      'Display a set of symbols for a brief time, then hide them and show a larger mixed set. ' +
+      'The student must identify which items they saw in the original set. ' +
+      'Tests visual working memory by requiring accurate recall from short-term exposure.',
+    variationStrategy:
+      'Randomize the symbols used (use emojis from technology, nature, or daily-life themes). ' +
+      'Vary the size of the original set (3–6 items) and the distractor pool (6–10 items). ' +
+      'Always keep exactly ONE correct answer option that lists the originally shown items.',
+    slotMapping: [1]
+  },
+  {
+    taskNumber: 2,
+    taskName: 'Sequential Memory',
+    skillArea: 'Working Memory',
+    cognitiveBlueprint:
+      'Present a sequence of symbols in a specific order, hide it, then show the same symbols in a scrambled order. ' +
+      'The student reconstructs the original sequence. ' +
+      'Tests ordered working memory and sequential processing.',
+    variationStrategy:
+      'Randomize the symbol set and sequence length (3–6 items). ' +
+      'Always present one correct reconstruction option and two plausible wrong orders. ' +
+      'Use emoji symbols from coding, robotics, or nature themes.',
+    slotMapping: [2]
+  },
+  {
+    taskNumber: 3,
+    taskName: 'Remember & Follow',
+    skillArea: 'Working Memory',
+    cognitiveBlueprint:
+      'Show a short sequence of 2–4 actions together, then hide the instructions. ' +
+      'The student selects the correct ordered action sequence from memory. ' +
+      'Tests prospective working memory and action sequencing under recall conditions.',
+    variationStrategy:
+      'Randomize action themes (robot commands, classroom tasks, lab procedures). ' +
+      'Vary sequence length (2–4 steps). ' +
+      'Present one correct sequence and two wrong sequences as options.',
+    slotMapping: [3]
+  },
+  {
+    taskNumber: 4,
+    taskName: 'Pattern Recognition',
+    skillArea: 'Fluid Reasoning',
+    cognitiveBlueprint:
+      'Display a visual pattern with one element missing. ' +
+      'The student selects the element that logically completes the pattern. ' +
+      'Tests fluid reasoning through abstract pattern completion.',
+    variationStrategy:
+      'Vary the pattern type (alternating, growing, color-rotating, shape-shifting). ' +
+      'Use different symbol sets each time (geometric, emoji, letter-based). ' +
+      'Ensure the correct answer is unambiguously derivable from the pattern rule.',
+    slotMapping: [4]
+  },
+  {
+    taskNumber: 5,
+    taskName: 'Rule Detection',
+    skillArea: 'Fluid Reasoning',
+    cognitiveBlueprint:
+      'Show several examples that all follow the same hidden rule. ' +
+      'The student infers the rule and selects what should come next. ' +
+      'Tests inductive fluid reasoning and rule abstraction.',
+    variationStrategy:
+      'Vary the rule type (transformation, substitution, increment, color-shift). ' +
+      'Use different symbol domains per session. ' +
+      'Present three options: correct next item, a plausible rule-follower from wrong position, and an unrelated item.',
+    slotMapping: [5]
+  },
+  {
+    taskNumber: 6,
+    taskName: 'Problem Solving',
+    skillArea: 'Fluid Reasoning',
+    cognitiveBlueprint:
+      'Present a visual problem situation with a blocked path or unmet condition. ' +
+      'Offer three possible solution actions. ' +
+      'The student selects the action that best solves the problem. ' +
+      'Tests deductive fluid reasoning and solution evaluation.',
+    variationStrategy:
+      'Vary the problem domain (robot navigation, lab task, data pipeline, coding bug). ' +
+      'Always have exactly one optimal solution and two sub-optimal/wrong ones. ' +
+      'Use clear emoji to represent the situation visually.',
+    slotMapping: [6]
+  },
+  {
+    taskNumber: 7,
+    taskName: 'Rule Switching',
+    skillArea: 'Cognitive Flexibility',
+    cognitiveBlueprint:
+      'Ask the student to apply one sorting/classification rule, then switch to a new rule mid-task. ' +
+      'The student must demonstrate the ability to abandon the old rule and apply the new one. ' +
+      'Tests task-switching and cognitive flexibility under rule-change conditions.',
+    variationStrategy:
+      'Vary the rule pairs (color→shape, size→type, direction→function). ' +
+      'Use different item sets (shapes, robot parts, data types). ' +
+      'Present a question that asks which item follows the NEW rule, not the old one.',
+    slotMapping: [7]
+  },
+  {
+    taskNumber: 8,
+    taskName: 'Visual Matching',
+    skillArea: 'Visual-Spatial Processing',
+    cognitiveBlueprint:
+      'Show a target shape or symbol alongside several similar but distinct options. ' +
+      'The student selects the exact matching item. ' +
+      'Tests visual discrimination and spatial feature matching.',
+    variationStrategy:
+      'Use geometric shapes, circuit symbols, or robot parts as targets. ' +
+      'Include visually similar distractors (minor rotations, color differences, feature additions). ' +
+      'Exactly one option matches the target perfectly.',
+    slotMapping: [8]
+  },
+  {
+    taskNumber: 9,
+    taskName: 'Mental Rotation',
+    skillArea: 'Visual-Spatial Processing',
+    cognitiveBlueprint:
+      'Show a target shape. Present several rotated versions and ask which represents the same shape. ' +
+      'Tests mental rotation ability and 3D/2D spatial reasoning.',
+    variationStrategy:
+      'Rotate shapes by varying angles (90°, 180°, 270°). ' +
+      'Include mirror-flipped distractors as wrong answers. ' +
+      'Vary shape complexity per difficulty level.',
+    slotMapping: [9]
+  },
+  {
+    taskNumber: 10,
+    taskName: 'Spatial Relationships',
+    skillArea: 'Visual-Spatial Processing',
+    cognitiveBlueprint:
+      'Show objects in specific spatial positions and ask the student to identify the relationship ' +
+      '(above, below, left, right, diagonal). ' +
+      'Tests spatial reasoning and positional vocabulary comprehension.',
+    variationStrategy:
+      'Vary the object pair (robot and sensor, star and grid cell, icon and container). ' +
+      'Use above/below/left/right for easier levels; add diagonal for harder. ' +
+      'Present three position options as answers.',
+    slotMapping: [10]
+  },
+  {
+    taskNumber: 11,
+    taskName: 'Spatial Construction',
+    skillArea: 'Visual-Spatial Processing',
+    cognitiveBlueprint:
+      'Display an arrangement of shapes, then hide it and ask the student to identify or recreate ' +
+      'the same arrangement from options. ' +
+      'Tests spatial memory and construction accuracy.',
+    variationStrategy:
+      'Vary the number of shapes (2–6) and their arrangement. ' +
+      'Present one correct reconstruction and two arrangements with swapped or rotated elements. ' +
+      'Use grids, quadrants, or free-form layouts.',
+    slotMapping: [11]
+  },
+  {
+    taskNumber: 12,
+    taskName: 'Visual Search',
+    skillArea: 'Processing Speed & Attention',
+    cognitiveBlueprint:
+      'Show a target symbol alongside a field of symbols. ' +
+      'The student identifies whether and where the target appears as quickly as possible. ' +
+      'Tests visual scanning speed and perceptual accuracy.',
+    variationStrategy:
+      'Vary the target symbol and the distractor symbols. ' +
+      'Change the field size (8–20 items). ' +
+      'Always ensure one unambiguously correct answer (found/not found, or which position).',
+    slotMapping: [12]
+  },
+  {
+    taskNumber: 13,
+    taskName: 'Symbol Matching Speed',
+    skillArea: 'Processing Speed',
+    cognitiveBlueprint:
+      'Show a target symbol, then a set of symbols. ' +
+      'The student decides YES or NO — does the target appear in the set? ' +
+      'Tests rapid comparison and processing speed.',
+    variationStrategy:
+      'Vary whether the target is present (50% present / 50% absent). ' +
+      'Vary the set size and symbol types. ' +
+      'Phrase as a multiple-choice question with YES/NO as options and one additional distractor.',
+    slotMapping: [13]
+  },
+  {
+    taskNumber: 14,
+    taskName: 'Target Detection',
+    skillArea: 'Sustained Attention',
+    cognitiveBlueprint:
+      'Display symbols one at a time in a sequence. ' +
+      'The student must identify the moment the target symbol appears. ' +
+      'Tests vigilance and sustained selective attention.',
+    variationStrategy:
+      'Vary the target symbol and the sequence. ' +
+      'Ask the student to identify which position in the sequence the target appeared. ' +
+      'Present three position options as answers.',
+    slotMapping: [14]
+  },
+  {
+    taskNumber: 15,
+    taskName: 'Visual Attention Over Time',
+    skillArea: 'Sustained Attention',
+    cognitiveBlueprint:
+      'Show a continuous stream of symbols and ask the student to track appearances of the target. ' +
+      'Tests sustained attention across a longer time window.',
+    variationStrategy:
+      'Vary the target, stream length (10–20 items shown in sequence text), and number of target occurrences. ' +
+      'Ask how many times the target appeared — present three count options as answers.',
+    slotMapping: [15]
+  },
+  {
+    taskNumber: 16,
+    taskName: 'Selective Attention',
+    skillArea: 'Selective Attention',
+    cognitiveBlueprint:
+      'Show a collection of items with varying features (color, shape, size). ' +
+      'The student selects only items matching two simultaneous conditions (e.g., BLUE + LARGE). ' +
+      'Tests dual-condition filtering and selective attention.',
+    variationStrategy:
+      'Vary condition pairs (color+shape, size+type, function+location). ' +
+      'Use emoji or shape descriptors. ' +
+      'Present three answer options: correct dual-match set, single-condition match, and unrelated set.',
+    slotMapping: [16]
+  },
+  {
+    taskNumber: 17,
+    taskName: 'Change the Sorting Rule',
+    skillArea: 'Cognitive Flexibility',
+    cognitiveBlueprint:
+      'Ask the student to sort items by one rule, then introduce a new rule and ask which item belongs ' +
+      'in a specific category under the new rule. ' +
+      'Tests cognitive flexibility and rule updating.',
+    variationStrategy:
+      'Vary the rule transition (color→shape, size→function, type→priority). ' +
+      'Use items from coding, robotics, or school contexts. ' +
+      'One correct answer under the NEW rule; two answers that reflect the old rule or neither.',
+    slotMapping: [17]
+  },
+  {
+    taskNumber: 18,
+    taskName: 'Switch Between Rules',
+    skillArea: 'Cognitive Flexibility',
+    cognitiveBlueprint:
+      'Display a rule indicator before each item and ask the student to apply the currently shown rule. ' +
+      'Rules alternate between two options (e.g., COLOR vs SHAPE). ' +
+      'Tests rapid rule-switching and inhibitory control.',
+    variationStrategy:
+      'Vary the two alternating rules and the item set. ' +
+      'Ask which action applies given the current rule cue. ' +
+      'Present three answers: correct rule-following action, action from the OTHER rule, and an unrelated action.',
+    slotMapping: [18]
+  },
+  {
+    taskNumber: 19,
+    taskName: 'Find the Best Route',
+    skillArea: 'Planning & Problem Solving',
+    cognitiveBlueprint:
+      'Show a simple map with a start, goal, multiple routes, and obstacles. ' +
+      'The student chooses the route that successfully reaches the goal. ' +
+      'Tests spatial planning and route evaluation.',
+    variationStrategy:
+      'Vary the map context (city streets, data center corridors, space station, school hallways). ' +
+      'Use emoji route descriptions as sequence steps. ' +
+      'Present three routes: one viable, one blocked, one that loops back.',
+    slotMapping: [19]
+  },
+  {
+    taskNumber: 20,
+    taskName: 'Solve the Problem',
+    skillArea: 'Planning & Problem Solving',
+    cognitiveBlueprint:
+      'Present a situation where the direct/obvious solution does not work due to a constraint. ' +
+      'The student must select an alternative action that overcomes the constraint. ' +
+      'Tests adaptive planning and constraint-aware problem solving.',
+    variationStrategy:
+      'Vary the blocked scenario (path blocked, resource unavailable, permission denied). ' +
+      'Use tech/robotics contexts. ' +
+      'Present three options: best workaround, doing nothing, and an action that worsens the situation.',
+    slotMapping: [20]
+  },
+  {
+    taskNumber: 21,
+    taskName: 'Find an Alternative',
+    skillArea: 'Planning & Cognitive Flexibility',
+    cognitiveBlueprint:
+      'Give the student an initial route or solution that then becomes unavailable mid-task. ' +
+      'They must identify a valid alternative to still reach the goal. ' +
+      'Tests adaptive re-planning and cognitive flexibility under disruption.',
+    variationStrategy:
+      'Vary the disruption type (path blocked, tool broken, data missing). ' +
+      'Present three alternative actions: correct adaptive alternative, going back to the broken path, giving up.',
+    slotMapping: [21]
+  },
+  {
+    taskNumber: 22,
+    taskName: 'Multiple Rules',
+    skillArea: 'Following Rules & Instructions',
+    cognitiveBlueprint:
+      'Give the student two rules that must be followed simultaneously when selecting items. ' +
+      'Tests dual-rule compliance and instruction-following under compound conditions.',
+    variationStrategy:
+      'Vary the two rules (include/exclude based on color, shape, type, size). ' +
+      'Use coding/robotics item sets. ' +
+      'Present three options: item satisfying both rules, item satisfying only one rule, item satisfying neither.',
+    slotMapping: [22]
+  },
+  {
+    taskNumber: 23,
+    taskName: 'Multi-Step Instructions',
+    skillArea: 'Following Rules & Instructions',
+    cognitiveBlueprint:
+      'Give the student a sequence of 3–4 ordered actions to complete. ' +
+      'Tests sequential instruction-following and procedural working memory.',
+    variationStrategy:
+      'Vary the action domain (robot programming, file management, lab protocol). ' +
+      'Present three options: correct ordered sequence, same steps in wrong order, sequence with a step missing.',
+    slotMapping: [23]
+  },
+  {
+    taskNumber: 24,
+    taskName: 'Find Information Using Multiple Conditions',
+    skillArea: 'Information Processing',
+    cognitiveBlueprint:
+      'Show a simple data table with columns (e.g., Name, Type, Status). ' +
+      'The student finds the entry matching multiple specified conditions simultaneously. ' +
+      'Tests conditional information lookup and logical conjunction.',
+    variationStrategy:
+      'Vary table content (files, robots, students, tasks). ' +
+      'Use 2–3 conditions (e.g., Type=PDF AND Status=Complete). ' +
+      'Present three answer options: correct row, row matching only one condition, row matching neither.',
+    slotMapping: [24]
+  },
+  {
+    taskNumber: 25,
+    taskName: 'Choose the Best Option',
+    skillArea: 'Decision Making',
+    cognitiveBlueprint:
+      'Present a situation with missing information or competing options. ' +
+      'The student evaluates and selects the best course of action. ' +
+      'Tests practical decision making, prioritization, and judgment.',
+    variationStrategy:
+      'Vary the decision scenario (asking for help, reporting a bug, choosing a file format). ' +
+      'Always have one objectively best choice, one acceptable but sub-optimal choice, and one clearly wrong choice. ' +
+      'Keep language simple and scenario relatable to tech/school contexts.',
+    slotMapping: [25]
+  }
+];
+
+// ---------------------------------------------------------------------------
+// Map: slot number (1–50) → Assessment 1 task number (1–25)
+// Slots not listed here have no PDF blueprint override (use standard prompt).
+// ---------------------------------------------------------------------------
+export const ASSESSMENT1_SLOT_TO_TASK: Record<number, number> = {
+  // Cognitive Ability domain (slots 1–12) → Tasks 1–12
+  1:  1,   // Visual Recall
+  2:  2,   // Sequential Memory
+  3:  3,   // Remember & Follow
+  4:  4,   // Pattern Recognition
+  5:  5,   // Rule Detection
+  6:  6,   // Problem Solving
+  7:  7,   // Rule Switching
+  8:  8,   // Visual Matching
+  9:  9,   // Mental Rotation
+  10: 10,  // Spatial Relationships
+  11: 11,  // Spatial Construction
+  12: 12,  // Visual Search
+  // Functional Skills domain (slots 13–24) → Tasks 13–23
+  13: 13,  // Symbol Matching Speed
+  14: 14,  // Target Detection
+  15: 15,  // Visual Attention Over Time
+  16: 16,  // Selective Attention
+  17: 17,  // Change the Sorting Rule
+  18: 18,  // Switch Between Rules
+  19: 19,  // Find the Best Route
+  20: 20,  // Solve the Problem
+  21: 21,  // Find an Alternative
+  22: 22,  // Multiple Rules
+  23: 23,  // Multi-Step Instructions
+  24: 24,  // Find Information Using Multiple Conditions
+  // Communication Level domain (slots 25–34) → Task 25 + standard
+  25: 25,  // Choose the Best Option
+  // Slots 26–50: standard prompt (no PDF override, domain-specific generation)
+};
+
+// ---------------------------------------------------------------------------
+// Student context passed to generateActivity() for adaptive AI generation
+// ---------------------------------------------------------------------------
 export interface StudentMetricsContext {
   studentName?: string;
   diagnosis?: string;
@@ -555,14 +1241,22 @@ export class ActivityGenerator {
    *   4. Strictly validate: exactly 3 options, exactly 1 correct, all labels non-empty.
    *   5. Any failure at steps 3-4 silently returns the slot-config fallback.
    */
-  public async generateActivity(slot: number, studentMetrics?: StudentMetricsContext): Promise<ActivityItem> {
-    const base = QUESTION_BASELINES.find(b => b.slot === slot) || QUESTION_BASELINES[0];
+  public async generateActivity(
+    slot: number,
+    studentMetrics?: StudentMetricsContext,
+    assessmentType: 'cognitive_ability' | 'all' = 'cognitive_ability'
+  ): Promise<ActivityItem> {
+    const base = assessmentType === 'cognitive_ability'
+      ? (COGNITIVE_ASSESSMENT_BASELINES.find(b => b.slot === slot) || COGNITIVE_ASSESSMENT_BASELINES[0])
+      : (QUESTION_BASELINES.find(b => b.slot === slot) || QUESTION_BASELINES[0]);
 
     // ── Step 1: Build guaranteed fallback from slot config ──────────────────
-    const fallbackPayload = this.buildProceduralPayload(base);
+    const fallbackPayload = assessmentType === 'cognitive_ability'
+      ? (COGNITIVE_25_TASK_CONFIGS[slot] || this.buildProceduralPayload(base))
+      : this.buildProceduralPayload(base);
 
     const fallbackItem: ActivityItem = {
-      id: `act_slot_${slot}_${Date.now()}`,
+      id: `act_${assessmentType}_slot_${slot}_${Date.now()}`,
       slot,
       domain: base.domain,
       skill: base.skill,
@@ -575,7 +1269,7 @@ export class ActivityGenerator {
       maxPoints: base.maxPoints,
       type: base.type,
       payload: fallbackPayload,
-      hintText: fallbackPayload.hint || `Focus on the ${base.subSkill} carefully. Take your time!`,
+      hintText: fallbackPayload.hint || fallbackPayload.hintText || `Focus on the ${base.subSkill} carefully. Take your time!`,
       source: 'procedural'
     };
 
@@ -588,20 +1282,71 @@ export class ActivityGenerator {
     try {
       const domainLabel = base.domain.replace(/_/g, ' ');
       const skillLabel  = base.skill.replace(/_/g, ' ');
-      
+
+      // Build student adaptive context notes
       const metricsContextNotes = studentMetrics ? [
         `- Student Profile: ${studentMetrics.studentName || 'Student'}`,
-        studentMetrics.diagnosis ? `- Medical/Educational Diagnosis: ${studentMetrics.diagnosis} (Tailor visual cues, simplify complex syntax, and support focus)` : '',
-        studentMetrics.interests && studentMetrics.interests.length > 0 ? `- Student Interests: ${studentMetrics.interests.join(', ')} (Incorporate themes where appropriate)` : '',
-        studentMetrics.currentAccuracy !== undefined ? `- Current Session Accuracy: ${Math.round(studentMetrics.currentAccuracy * 100)}%` : '',
-        studentMetrics.averageResponseTimeMs ? `- Avg Latency: ${Math.round(studentMetrics.averageResponseTimeMs / 1000)}s per item` : ''
+        studentMetrics.diagnosis
+          ? `- Medical/Educational Diagnosis: ${studentMetrics.diagnosis} (Tailor visual cues, simplify complex syntax, and support focus)`
+          : '',
+        studentMetrics.interests && studentMetrics.interests.length > 0
+          ? `- Student Interests: ${studentMetrics.interests.join(', ')} (Incorporate themes where appropriate)`
+          : '',
+        studentMetrics.currentAccuracy !== undefined
+          ? `- Current Session Accuracy: ${Math.round(studentMetrics.currentAccuracy * 100)}%`
+          : '',
+        studentMetrics.averageResponseTimeMs
+          ? `- Avg Latency: ${Math.round(studentMetrics.averageResponseTimeMs / 1000)}s per item`
+          : ''
       ].filter(Boolean).join('\n') : '';
+
+      // ── Inject Assessment 1 PDF blueprint if this slot is mapped ───────────
+      const taskNumber = assessmentType === 'cognitive_ability'
+        ? slot
+        : ASSESSMENT1_SLOT_TO_TASK[slot];
+      const blueprint  = taskNumber != null
+        ? ASSESSMENT1_TASK_BLUEPRINTS.find(b => b.taskNumber === taskNumber)
+        : undefined;
+
+      // A lightweight student seed drives surface-content variation between students.
+      // Different students get different emoji sets, numbers, and scenarios even for
+      // the same cognitive concept.
+      const studentSeed = studentMetrics?.studentName
+        ? `[Student seed: ${studentMetrics.studentName.trim().slice(0, 8)}-${Date.now() % 9973}]`
+        : `[Student seed: anon-${Date.now() % 9973}]`;
+
+      // ── Build the prompt ────────────────────────────────────────────────────
+      const blueprintSection = blueprint ? [
+        '',
+        '═══════════════════════════════════════════════════════════',
+        '  ASSESSMENT 1 — COGNITIVE TASK BLUEPRINT (FROM PDF)',
+        '═══════════════════════════════════════════════════════════',
+        `Task ${blueprint.taskNumber}: ${blueprint.taskName}`,
+        `Skill Area: ${blueprint.skillArea}`,
+        '',
+        'COGNITIVE CONCEPT TO TEST (LOCKED — do NOT change this):',
+        blueprint.cognitiveBlueprint,
+        '',
+        'SURFACE CONTENT VARIATION INSTRUCTIONS (randomize these):',
+        blueprint.variationStrategy,
+        '',
+        studentSeed,
+        '═══════════════════════════════════════════════════════════',
+        'CRITICAL: The generated question MUST test the exact cognitive concept above.',
+        'The scenario, symbols, numbers, and theme MUST be different from the default.',
+        'Every student must receive a UNIQUE surface instance of this cognitive task.',
+        '═══════════════════════════════════════════════════════════',
+      ].join('\n') : '';
+
+      const totalSlotsCount = assessmentType === 'cognitive_ability' ? 25 : 50;
+      const examTitle = assessmentType === 'cognitive_ability' ? 'Assessment 1 — Cognitive Assessment' : 'Full Assessment';
 
       const prompt = [
         'You are an inclusive education assessment designer for SEN students (Grade 8 to University, ages 13-21).',
         metricsContextNotes ? `\nStudent Adaptive Context:\n${metricsContextNotes}\n` : '',
+        blueprintSection,
         'Generate a COMPLETE assessment question for:',
-        `- Slot: ${slot} of 50`,
+        `- Task / Slot: ${slot} of ${totalSlotsCount} (${examTitle})`,
         `- Domain: ${domainLabel}`,
         `- Skill: ${skillLabel}`,
         `- Sub-skill: ${base.subSkill}`,
@@ -610,6 +1355,9 @@ export class ActivityGenerator {
         '',
         'RULES (follow strictly):',
         '1. Write a clear, engaging question for SEN students',
+        blueprint
+          ? '1a. APPLY the Assessment 1 cognitive blueprint above — the concept is fixed, only the surface content changes'
+          : '',
         '2. The "sequence" array shows the visual puzzle to the student (2-5 short emoji+text items)',
         '3. Provide EXACTLY 3 answer options',
         '4. Mark EXACTLY 1 option as correct (correct: true), the other 2 must be false',

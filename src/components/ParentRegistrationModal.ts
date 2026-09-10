@@ -123,10 +123,10 @@ export class ParentRegistrationModal {
             </div>
 
             <h2 class="text-2xl md:text-3xl font-black flex items-center gap-2.5 text-white">
-              <span>👶 Add Child / Student Profile</span>
+              <span>👨‍🎓 Add Student Profile</span>
             </h2>
             <p class="text-emerald-100 text-xs md:text-sm mt-1 max-w-xl leading-relaxed">
-              Register your child's profile with tailored diagnostic background and sensory preferences to launch their personalized AI learning journey.
+              Register your student's profile with tailored diagnostic background and sensory preferences to launch their personalized AI learning journey.
             </p>
 
             <!-- Stepper Progress Bar -->
@@ -386,7 +386,7 @@ export class ParentRegistrationModal {
           </div>
           <div>
             <h3 class="text-base font-extrabold text-slate-900 dark:text-white">Step 2: Digital Skills &amp; Passions Survey</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400">We incorporate your child's favorite themes into problem statements and gamified challenges.</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400">We incorporate your student's favorite themes into problem statements and gamified challenges.</p>
           </div>
         </div>
 
@@ -413,7 +413,7 @@ export class ParentRegistrationModal {
           <label class="block text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">
             Passions &amp; Favorite Topic Badges
           </label>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">Click badges to select what makes your child excited to learn:</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">Click badges to select what makes your student excited to learn:</p>
 
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
             ${passionsList.map(item => {
@@ -434,7 +434,7 @@ export class ParentRegistrationModal {
           <div class="text-emerald-600 text-xl font-bold mt-0.5">🚀</div>
           <div class="text-xs text-emerald-950 dark:text-emerald-200 leading-relaxed">
             <strong>Ready for AI Placement:</strong><br />
-            Upon clicking Submit, your child's profile will be registered and saved to your Parent Hub. You will immediately proceed to the 50-question adaptive AI placement assessment to identify their initial competency level and recommended track.
+            Upon clicking Submit, your student's profile will be registered and saved to your Parent Hub. You will immediately proceed to the 50-question adaptive AI placement assessment to identify their initial competency level and recommended track.
           </div>
         </div>
       </div>

@@ -6,15 +6,27 @@ import { renderParentDashboard } from './components/ParentDashboard';
 import { mountCodeRaOnboardingModal } from './components/onboarding/mountOnboardingModal';
 import { openRoleJourney, closeRoleJourney } from './components/roleJourney/mountRoleJourney';
 
+import { SkillSelectorModal, SelectedAssessmentType } from './components/SkillSelectorModal';
+
 export { mountCodeRaOnboardingModal, openRoleJourney, closeRoleJourney };
 
 let currentRunner: AssessmentRunner | null = null;
 let parentRegistrationModalInstance: ParentRegistrationModal | null = null;
+let skillSelectorModalInstance: SkillSelectorModal | null = null;
+
+export function openSkillSelector(studentName?: string) {
+  if (!skillSelectorModalInstance) {
+    skillSelectorModalInstance = new SkillSelectorModal((examType: SelectedAssessmentType, name: string) => {
+      startDedicatedAssessment(name, examType, false);
+    });
+  }
+  skillSelectorModalInstance.open(studentName);
+}
 
 export function openParentModal(stage: 1 | 2 = 1) {
   if (!parentRegistrationModalInstance) {
     parentRegistrationModalInstance = new ParentRegistrationModal((profile) => {
-      startChildTest(false);
+      openSkillSelector(profile?.childName || profile?.studentFullName || 'Alex Rivers');
     });
   }
   parentRegistrationModalInstance.open(stage);
@@ -34,6 +46,18 @@ export function openParentDashboard() {
 }
 
 export function startChildTest(restore: boolean = false) {
+  if (restore && AssessmentRunner.getSavedSession()) {
+    startDedicatedAssessment(undefined, 'cognitive_ability', true);
+    return;
+  }
+  openSkillSelector();
+}
+
+export function startDedicatedAssessment(
+  studentName?: string,
+  assessmentType: 'cognitive_ability' | 'all' = 'cognitive_ability',
+  restoreIfAvailable: boolean = false
+) {
   const childTestPage = document.getElementById('childTestPage');
   if (childTestPage) {
     document.body.classList.add('exam-mode');
@@ -42,23 +66,6 @@ export function startChildTest(restore: boolean = false) {
     window.scrollTo(0, 0);
   }
 
-  let studentName = 'Alex Rivers';
-  try {
-    const parentProfile = localStorage.getItem('codera_parent_profile');
-    if (parentProfile) {
-      const parsed = JSON.parse(parentProfile);
-      if (parsed.studentFullName && parsed.studentFullName.trim()) {
-        studentName = parsed.studentFullName.trim();
-      } else if (parsed.childName && parsed.childName.trim()) {
-        studentName = parsed.childName.trim();
-      }
-    }
-  } catch (err) {}
-
-  initAssessment(studentName, restore);
-}
-
-export function initAssessment(studentName?: string, restoreIfAvailable: boolean = false) {
   let name = studentName;
   if (!name || name === 'Alex Rivers') {
     try {
@@ -81,8 +88,16 @@ export function initAssessment(studentName?: string, restoreIfAvailable: boolean
       AssessmentRunner.clearSavedSession();
     }
     currentRunner = new AssessmentRunner(appContainer);
-    currentRunner.startSession(name, restoreIfAvailable);
+    currentRunner.startSession(name, restoreIfAvailable, assessmentType);
   }
+}
+
+export function initAssessment(
+  studentName?: string,
+  restoreIfAvailable: boolean = false,
+  assessmentType: 'cognitive_ability' | 'all' = 'cognitive_ability'
+) {
+  startDedicatedAssessment(studentName, assessmentType, restoreIfAvailable);
 }
 
 export function exitAssessment(reload: boolean = true) {
@@ -136,7 +151,9 @@ export function openProPortal() {
 (window as any).openCEODashboardModule = openCEODashboard;
 (window as any).renderParentDashboard = renderParentDashboard;
 (window as any).mountCodeRaOnboardingModal = mountCodeRaOnboardingModal;
-(window as any).openCodeRaOnboardingModal = mountCodeRaOnboardingModal;
+(window as any).openSkillSelector = openSkillSelector;
+(window as any).startDedicatedAssessment = startDedicatedAssessment;
+(window as any).startCognitiveAssessment = (name?: string) => startDedicatedAssessment(name, 'cognitive_ability', false);
 (window as any).openRoleJourney = openRoleJourney;
 (window as any).closeRoleJourney = closeRoleJourney;
 (window as any).openRoleJourneyModule = openRoleJourney;

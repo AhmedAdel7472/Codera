@@ -147,7 +147,7 @@ export const RoleJourneyApp: React.FC<RoleJourneyAppProps> = ({
     try {
       localStorage.setItem('codera_user_role', JSON.stringify({ role: 'BUILDER', type: 'CODER' }));
     } catch (e) {}
-    showToast('🚀 Launching Child Placement Assessment...');
+    showToast('🚀 Launching Student Placement Assessment...');
     setTimeout(() => {
       returnToLanding();
       if (typeof (window as any).startChildTest === 'function') {

@@ -7,7 +7,14 @@ import {
   PartBreakRecord,
   CodingChallengeResult,
 } from '../engine/telemetrySchema';
-import { ActivityGenerator, ActivityItem, QUESTION_BASELINES, StudentMetricsContext } from '../ai/activityGenerator';
+import {
+  ActivityGenerator,
+  ActivityItem,
+  QUESTION_BASELINES,
+  COGNITIVE_ASSESSMENT_BASELINES,
+  QuestionBaseline,
+  StudentMetricsContext
+} from '../ai/activityGenerator';
 import { ScoringEngine, DOMAIN_CONFIG, TOTAL_BASE_QUESTIONS, PART_ONE_QUESTIONS } from '../engine/scoringEngine';
 import { PlacementEngine, PlacementResult } from '../engine/placementEngine';
 import { QualitativeAnalyzer } from '../ai/qualitativeAnalyzer';
@@ -32,6 +39,7 @@ export interface StoredUserAnswer {
 
 export interface SavedAssessmentSession {
   schemaVersion: '2.0';
+  assessmentType?: 'cognitive_ability' | 'all';
   studentName: string;
   currentQuestionIndex: number;
   totalTimerSeconds: number;
@@ -59,12 +67,17 @@ export class AssessmentRunner {
   private analyzer: QualitativeAnalyzer;
   private studentName: string = 'Alex Rivers';
 
-  // 50-Question Plan & State
-  private cachedActivities: (ActivityItem | null)[] = new Array(TOTAL_BASE_QUESTIONS).fill(null);
+  // Configurable Exam Mode: 'cognitive_ability' (25 Tasks from PDF) or 'all' (Legacy 50 Qs)
+  private assessmentType: 'cognitive_ability' | 'all' = 'cognitive_ability';
+  private totalQuestions: number = 25;
+  private activeBaselines: QuestionBaseline[] = COGNITIVE_ASSESSMENT_BASELINES;
+
+  // Question Plan & State
+  private cachedActivities: (ActivityItem | null)[] = new Array(25).fill(null);
   private userAnswers: StoredUserAnswer[] = [];
   private questionTimeRecords: QuestionTimeRecord[] = [];
   private breakEvents: BreakEvent[] = [];
-  private currentQuestionIndex: number = 0; // 0 to 49
+  private currentQuestionIndex: number = 0; // 0 to totalQuestions - 1
 
   // Timers & Toggles
   private totalTimerSeconds: number = 0;
@@ -99,6 +112,18 @@ export class AssessmentRunner {
     this.container = container;
     this.generator = new ActivityGenerator();
     this.analyzer = new QualitativeAnalyzer();
+    this.initUserAnswers();
+  }
+
+  public setAssessmentType(type: 'cognitive_ability' | 'all') {
+    this.assessmentType = type;
+    if (type === 'cognitive_ability') {
+      this.totalQuestions = 25;
+      this.activeBaselines = COGNITIVE_ASSESSMENT_BASELINES;
+    } else {
+      this.totalQuestions = TOTAL_BASE_QUESTIONS;
+      this.activeBaselines = QUESTION_BASELINES;
+    }
     this.initUserAnswers();
   }
 
@@ -191,6 +216,7 @@ export class AssessmentRunner {
       this.studentName = studentName;
       const sessionData: SavedAssessmentSession = {
         schemaVersion: '2.0',
+        assessmentType: this.assessmentType,
         studentName,
         currentQuestionIndex: this.currentQuestionIndex,
         totalTimerSeconds: this.totalTimerSeconds,
@@ -226,7 +252,7 @@ export class AssessmentRunner {
   }
 
   private initUserAnswers() {
-    this.userAnswers = new Array(TOTAL_BASE_QUESTIONS).fill(null).map(() => ({
+    this.userAnswers = new Array(this.totalQuestions).fill(null).map(() => ({
       selectedAnswerIndex: null,
       robotSequence: [],
       motorClicks: [],
@@ -240,18 +266,26 @@ export class AssessmentRunner {
       remainingTimeWhenAnsweredMs: null,
       breaksDuringQuestion: 0
     }));
+    this.cachedActivities = new Array(this.totalQuestions).fill(null);
     this.questionTimeRecords = [];
     this.breakEvents = [];
     this.partBreakRecord = null;
   }
 
-  public async startSession(studentName: string = 'Alex Rivers', restoreIfAvailable: boolean = true) {
+  public async startSession(
+    studentName: string = 'Alex Rivers',
+    restoreIfAvailable: boolean = true,
+    assessmentType: 'cognitive_ability' | 'all' = 'cognitive_ability'
+  ) {
     this.studentName = studentName;
     const saved = restoreIfAvailable ? AssessmentRunner.getSavedSession() : null;
 
     if (saved) {
-      this.currentQuestionIndex = Math.max(0, Math.min(TOTAL_BASE_QUESTIONS - 1, saved.currentQuestionIndex || 0));
-      this.cachedActivities = saved.cachedActivities || new Array(TOTAL_BASE_QUESTIONS).fill(null);
+      if (saved.assessmentType) {
+        this.setAssessmentType(saved.assessmentType);
+      }
+      this.currentQuestionIndex = Math.max(0, Math.min(this.totalQuestions - 1, saved.currentQuestionIndex || 0));
+      this.cachedActivities = saved.cachedActivities || new Array(this.totalQuestions).fill(null);
       this.userAnswers = saved.userAnswers;
       this.questionTimeRecords = saved.questionTimeRecords || [];
       this.breakEvents = saved.breakEvents || [];
@@ -275,8 +309,8 @@ export class AssessmentRunner {
         await this.loadQuestion(this.currentQuestionIndex, false);
       }
     } else {
+      this.setAssessmentType(assessmentType);
       this.currentQuestionIndex = 0;
-      this.cachedActivities = new Array(TOTAL_BASE_QUESTIONS).fill(null);
       this.initUserAnswers();
       this.totalTimerSeconds = 0;
       this.questionTimerSecondsRemaining = AssessmentRunner.QUESTION_TIME_LIMIT_SEC;
@@ -396,13 +430,13 @@ export class AssessmentRunner {
   }
 
   private async loadQuestion(targetIndex: number, resetTimer: boolean = true) {
-    if (targetIndex < 0 || targetIndex >= TOTAL_BASE_QUESTIONS) return;
+    if (targetIndex < 0 || targetIndex >= this.totalQuestions) return;
 
     this.motorTargetPos = { top: 80, left: 240 };
     const myGen = ++this.loadGen;
 
     this.currentQuestionIndex = targetIndex;
-    const baseline = QUESTION_BASELINES[targetIndex];
+    const baseline = this.activeBaselines[targetIndex];
 
     if (this.questionTimerInterval) {
       clearInterval(this.questionTimerInterval);
@@ -419,7 +453,7 @@ export class AssessmentRunner {
     if (!this.cachedActivities[targetIndex]) {
       this.renderLoadingState(targetIndex);
       const metrics = this.getStudentMetricsContext();
-      this.cachedActivities[targetIndex] = await this.generator.generateActivity(baseline.slot, metrics);
+      this.cachedActivities[targetIndex] = await this.generator.generateActivity(baseline.slot, metrics, this.assessmentType);
       if (myGen !== this.loadGen) return;
     }
 
@@ -473,7 +507,7 @@ export class AssessmentRunner {
   }
 
   private renderLoadingState(targetIndex: number) {
-    const baseline = QUESTION_BASELINES[targetIndex];
+    const baseline = this.activeBaselines[targetIndex];
     const domainConfig = DOMAIN_CONFIG[baseline.domain];
 
     const playground = this.container.querySelector('#playground-area');
@@ -489,10 +523,10 @@ export class AssessmentRunner {
   }
 
   private async prefetchNextQuestion(nextIndex: number) {
-    if (nextIndex >= 0 && nextIndex < TOTAL_BASE_QUESTIONS && !this.cachedActivities[nextIndex]) {
-      const baseline = QUESTION_BASELINES[nextIndex];
+    if (nextIndex >= 0 && nextIndex < this.totalQuestions && !this.cachedActivities[nextIndex]) {
+      const baseline = this.activeBaselines[nextIndex];
       const metrics = this.getStudentMetricsContext();
-      this.generator.generateActivity(baseline.slot, metrics).then(activity => {
+      this.generator.generateActivity(baseline.slot, metrics, this.assessmentType).then(activity => {
         if (!this.cachedActivities[nextIndex]) {
           this.cachedActivities[nextIndex] = activity;
         }
@@ -504,7 +538,7 @@ export class AssessmentRunner {
     // Look ahead 3 questions in advance to ensure 0ms latency on user clicking Next
     for (let offset = 1; offset <= 3; offset++) {
       const target = currentIndex + offset;
-      if (target < TOTAL_BASE_QUESTIONS) {
+      if (target < this.totalQuestions) {
         this.prefetchNextQuestion(target);
       }
     }
@@ -673,7 +707,7 @@ export class AssessmentRunner {
   private recordQuestionTimeData(wasAnswered: boolean) {
     const endTimestamp = Date.now();
     const answerState = this.userAnswers[this.currentQuestionIndex];
-    const baseline = QUESTION_BASELINES[this.currentQuestionIndex];
+    const baseline = this.activeBaselines[this.currentQuestionIndex];
     const activity = this.cachedActivities[this.currentQuestionIndex];
 
     const totalDurationMs = endTimestamp - this.itemStartTimestamp;
@@ -716,16 +750,16 @@ export class AssessmentRunner {
 
     this.questionTimerSecondsRemaining = AssessmentRunner.QUESTION_TIME_LIMIT_SEC;
 
-    // Check for Part 1 completion (after Q25 / index 24)
-    if (this.currentQuestionIndex === PART_ONE_QUESTIONS - 1) {
+    // Check for Part 1 completion (only in legacy 50-question full exam)
+    if (this.assessmentType === 'all' && this.currentQuestionIndex === PART_ONE_QUESTIONS - 1) {
       this.isLoadingNextQuestion = false;
       this.triggerPartBreak();
       return;
     }
 
-    if (this.currentQuestionIndex < TOTAL_BASE_QUESTIONS - 1) {
-      const currentDomain = QUESTION_BASELINES[this.currentQuestionIndex].domain;
-      const nextDomain = QUESTION_BASELINES[this.currentQuestionIndex + 1].domain;
+    if (this.currentQuestionIndex < this.totalQuestions - 1) {
+      const currentDomain = this.activeBaselines[this.currentQuestionIndex].domain;
+      const nextDomain = this.activeBaselines[this.currentQuestionIndex + 1].domain;
 
       if (currentDomain !== nextDomain) {
         this.showDomainTransitionBanner(nextDomain, () => {
@@ -842,18 +876,25 @@ export class AssessmentRunner {
             </div>
           </div>
           <div style="background:#fef3c7; border:2px solid #fde68a; color:#d97706; padding:0.4rem 0.9rem; border-radius:1rem; font-weight:900; font-size:0.85rem; display:flex; align-items:center; gap:0.4rem;">
-            ⭐ <span>${totalCompleted} of 50 Completed</span>
+            ⭐ <span>${totalCompleted} of ${this.totalQuestions} Completed</span>
           </div>
         </div>
 
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.75rem;">
-          ${[
+          ${(this.assessmentType === 'cognitive_ability' ? [
+            { id: 'cog_wm', name: 'Working Memory', icon: '🧩', range: [0, 2], total: 3 },
+            { id: 'cog_fr', name: 'Fluid Reasoning', icon: '💡', range: [3, 5], total: 3 },
+            { id: 'cog_vs', name: 'Visual-Spatial', icon: '📐', range: [7, 10], total: 4 },
+            { id: 'cog_att', name: 'Attention & Speed', icon: '⚡', range: [11, 15], total: 5 },
+            { id: 'cog_flex', name: 'Flexibility', icon: '🔄', range: [6, 17], total: 3 },
+            { id: 'cog_plan', name: 'Planning & Decisions', icon: '🗺️', range: [18, 24], total: 7 }
+          ] : [
             { id: 'cognitive', name: 'Cognitive Logic', icon: '🧠', range: [0, 11], total: 12 },
             { id: 'functional', name: 'Robot Missions', icon: '🤖', range: [12, 23], total: 12 },
             { id: 'communication', name: 'Communication', icon: '💬', range: [24, 33], total: 10 },
             { id: 'behavioral', name: 'Behavioral Prep', icon: '🌟', range: [34, 41], total: 8 },
             { id: 'motor', name: 'Tech & Motors', icon: '🦾', range: [42, 49], total: 8 }
-          ].map(d => {
+          ]).map(d => {
             const isCurrentDomain = this.currentQuestionIndex >= d.range[0] && this.currentQuestionIndex <= d.range[1];
             const isCompletedDomain = this.currentQuestionIndex > d.range[1];
             const answeredInDomain = this.userAnswers.filter((a, idx) => idx >= d.range[0] && idx <= d.range[1] && (idx < this.currentQuestionIndex || (a && (a.isSolved || a.timedOut)))).length;
@@ -902,9 +943,9 @@ export class AssessmentRunner {
         <div class="activity-header">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap:wrap; gap:0.5rem;">
             <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-              <span class="activity-domain-badge">${domainConfig.name}</span>
+              <span class="activity-domain-badge">${this.assessmentType === 'cognitive_ability' ? 'Cognitive Assessment' : domainConfig.name}</span>
               <span style="font-size:0.82rem; font-weight:800; color:#64748b; background:#f1f5f9; padding:0.35rem 0.75rem; border-radius:10px;">
-                Q${this.currentQuestionIndex + 1} of 50 • ${baseline.subSkill}
+                Task ${this.currentQuestionIndex + 1} of ${this.totalQuestions} • ${baseline.subSkill}
               </span>
               ${activity.source === 'azure_openai'
                 ? `<span style="font-size:0.75rem; font-weight:900; background:#ecfeff; border:2px solid #a5f3fc; color:#0891b2; padding:0.25rem 0.65rem; border-radius:10px; display:inline-flex; align-items:center; gap:4px;" title="Generated dynamically via Azure OpenAI">🤖 Azure AI</span>`
@@ -1366,12 +1407,16 @@ export class AssessmentRunner {
       });
     } catch (e) {}
 
+    const examTitleText = this.assessmentType === 'cognitive_ability'
+      ? 'all 25 Cognitive Assessment tasks'
+      : 'all 50 questions';
+
     this.container.innerHTML = `
       <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:60vh; text-align:center; padding:3rem 1rem;">
         <div style="font-size:4rem; margin-bottom:1.5rem; animation:bounce 1.5s infinite;">🎉</div>
         <h2 style="font-size:2rem; font-weight:800; color:#fff; margin-bottom:0.75rem;">Assessment Complete!</h2>
         <p style="color:var(--text-secondary); font-size:1.05rem; margin-bottom:2rem; max-width:460px;">
-          Amazing work completing all 50 questions! Your results are being compiled and your personalised CodeRa AI report is being generated...
+          Amazing work completing ${examTitleText}! Your results are being compiled and your personalised CodeRa AI report is being generated...
         </p>
         <div style="display:flex; align-items:center; gap:0.75rem; background:rgba(6,182,212,0.12); border:1px solid rgba(6,182,212,0.3); padding:1rem 2rem; border-radius:20px;">
           <div style="width:18px; height:18px; border-radius:50%; border:3px solid var(--accent-cyan); border-top-color:transparent; animation:spin 0.9s linear infinite;"></div>
@@ -1393,11 +1438,11 @@ export class AssessmentRunner {
     const itemTelemetries: ItemTelemetry[] = [];
     const itemMaxPtsMap: Record<string, number> = {};
 
-    // Compile telemetry across all 50 questions
-    for (let i = 0; i < TOTAL_BASE_QUESTIONS; i++) {
+    // Compile telemetry across active questions
+    for (let i = 0; i < this.totalQuestions; i++) {
       const activity = this.cachedActivities[i];
       const answerState = this.userAnswers[i];
-      const baseline = QUESTION_BASELINES[i];
+      const baseline = this.activeBaselines[i];
       if (!activity) continue;
 
       let isCorrect = false;
@@ -1445,7 +1490,10 @@ export class AssessmentRunner {
     const formatScores = ScoringEngine.calculateFormatScores(itemTelemetries, itemMaxPtsMap);
     const codingReadinessScore = ScoringEngine.calculateCodingReadinessScore(itemTelemetries);
 
-    const totalScore = ScoringEngine.calculateTotalScore(domainScores);
+    const rawTotalScore = ScoringEngine.calculateTotalScore(domainScores);
+    const totalScore = this.assessmentType === 'cognitive_ability'
+      ? (domainScores.cognitive_ability?.raw_accuracy_pct || (rawTotalScore / 25) * 100)
+      : rawTotalScore;
     const placement = PlacementEngine.evaluatePlacement(totalScore, domainScores, itemTelemetries, '2.0');
 
     // Domain Time Summaries
@@ -1511,7 +1559,7 @@ export class AssessmentRunner {
       localStorage.setItem('codera_all_sessions', JSON.stringify(sessionsArr));
     } catch(e) {}
 
-    // Gated Child Experience: Render Screening Video & Booking Screen (NO SCORES FOR CHILD)
+    // Gated Student Experience: Render Screening Video & Booking Screen (NO SCORES FOR STUDENT)
     this.renderChildScreeningAndBookingScreen(session);
   }
 

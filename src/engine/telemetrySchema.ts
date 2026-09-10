@@ -68,7 +68,7 @@ export type SkillName =
   | 'basic_robot_control';
 
 // ---------------------------------------------------------------------------
-// Age groups — expanded from child-only to G8–University (v2)
+// Age groups — expanded from student foundational to G8–University (v2)
 // ---------------------------------------------------------------------------
 export type AgeGroup =
   | '4-6'           // legacy (v1) — kept for backward compatibility
