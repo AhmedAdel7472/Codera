@@ -89,16 +89,10 @@ export class PlacementEngine {
     domainScores: Record<AssessmentDomain, DomainScore>,
     items: ItemTelemetry[],
   ): PlacementResult {
-    // For single-domain exams (e.g. Cognitive Assessment 25 tasks), normalize score to 100
-    const isSingleDomain = items.length > 0 && items.every(i => i.domain === items[0].domain);
-    const scoreForLevel = isSingleDomain
-      ? (totalScore / Math.max(1, items.reduce((acc, it) => acc + (it.accuracy_score !== undefined ? 2 : 2), 0))) * 100
-      : totalScore;
-
-    // Determine base level
+    // Determine base level directly from 0-100 totalScore
     let baseLevel = PLACEMENT_LEVELS_V2[0]; // default L1
     for (const level of PLACEMENT_LEVELS_V2) {
-      if (scoreForLevel >= level.minScore && scoreForLevel <= level.maxScore) {
+      if (totalScore >= level.minScore && totalScore <= level.maxScore) {
         baseLevel = level;
         break;
       }
@@ -107,13 +101,24 @@ export class PlacementEngine {
 
     const flags: PlacementResult['flags'] = [];
 
+    // Check if this was a single-domain session
+    const hasTestedItems = items.length > 0;
+    const testedDomains = new Set(items.map(i => i.domain));
+    const isSingleDomainSession = hasTestedItems && testedDomains.size === 1;
+
+    const isDomainRelevant = (d: AssessmentDomain) => {
+      if (!isSingleDomainSession) return true;
+      if (testedDomains.has(d)) return true;
+      const score = domainScores[d]?.earned_score ?? 0;
+      return score > 0;
+    };
+
     // --- Safety override flags (v2 thresholds) ---
 
-    // 1. Cognitive < 40% of 25 = 10 (only if cognitive items were tested)
-    if (items.some(i => i.domain === 'cognitive_ability')) {
+    // 1. Cognitive < 40% of 25 = 10
+    if (isDomainRelevant('cognitive_ability')) {
       const cogScore = domainScores.cognitive_ability?.earned_score ?? 0;
-      const cogMax = domainScores.cognitive_ability?.max_score || 25;
-      if (cogScore < cogMax * 0.4) {
+      if (cogScore < 10) {
         flags.push({
           id: 'FLAG_COGNITIVE_DEFICIENCY',
           type: 'critical',
@@ -125,8 +130,8 @@ export class PlacementEngine {
       }
     }
 
-    // 2. Functional Skills < 40% of 25 = 10 (only if functional items were tested)
-    if (items.some(i => i.domain === 'functional_skills')) {
+    // 2. Functional Skills < 40% of 25 = 10
+    if (isDomainRelevant('functional_skills')) {
       const funcScore = domainScores.functional_skills?.earned_score ?? 0;
       if (funcScore < 10) {
         flags.push({
@@ -140,8 +145,8 @@ export class PlacementEngine {
       }
     }
 
-    // 3. Communication < 35% of 20 = 7 (only if communication items were tested)
-    if (items.some(i => i.domain === 'communication_level')) {
+    // 3. Communication < 35% of 20 = 7
+    if (isDomainRelevant('communication_level')) {
       const commScore = domainScores.communication_level?.earned_score ?? 0;
       if (commScore < 7) {
         flags.push({
@@ -155,32 +160,32 @@ export class PlacementEngine {
       }
     }
 
-    // 4. Behavioral Readiness < 35% of 15 = 5.25 (only if behavioral items were tested)
-    if (items.some(i => i.domain === 'behavioral_readiness')) {
+    // 4. Behavioral Readiness < 35% of 15 = 5.25
+    if (isDomainRelevant('behavioral_readiness')) {
       const behScore = domainScores.behavioral_readiness?.earned_score ?? 0;
       if (behScore < 5.25) {
         flags.push({
           id: 'FLAG_BEHAVIORAL_ADAPTABILITY',
           type: 'warning',
-          title: 'Error Recovery & Resilience Support',
+          title: 'Frustration Tolerance & Persistence',
           description:
-            'Student showed hesitation or frustration during unexpected rule changes. ' +
-            'Guided error-recovery feedback and low-stakes practice challenges advised.',
+            'Short sessions with regular sensory breaks recommended. ' +
+            'Pair with mentor support to build confidence on complex tasks.',
         });
       }
     }
 
-    // 5. Fine Motor / Technology < 35% of 15 = 5.25 (only if fine motor items were tested)
-    if (items.some(i => i.domain === 'fine_motor_technology')) {
+    // 5. Fine Motor / Tech < 35% of 15 = 5.25
+    if (isDomainRelevant('fine_motor_technology')) {
       const motorScore = domainScores.fine_motor_technology?.earned_score ?? 0;
       if (motorScore < 5.25) {
         flags.push({
           id: 'FLAG_FINE_MOTOR_SUPPORT',
-          type: 'info',
-          title: 'Digital Navigation Practice',
+          type: 'warning',
+          title: 'Assistive Tech & Input Device Support',
           description:
-            'Drag-and-drop and target-precision practice recommended. ' +
-            'Assistive technology or alternative input devices may improve accessibility.',
+            'Recommend alternative input devices: trackball, switch access, or high-contrast interface. ' +
+            'Ensure adequate target sizes in all software interfaces.',
         });
       }
     }

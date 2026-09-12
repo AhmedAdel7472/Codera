@@ -13,7 +13,8 @@ import {
   QUESTION_BASELINES,
   COGNITIVE_ASSESSMENT_BASELINES,
   QuestionBaseline,
-  StudentMetricsContext
+  StudentMetricsContext,
+  cleanShapeText
 } from '../ai/activityGenerator';
 import { ScoringEngine, DOMAIN_CONFIG, TOTAL_BASE_QUESTIONS, PART_ONE_QUESTIONS } from '../engine/scoringEngine';
 import { PlacementEngine, PlacementResult } from '../engine/placementEngine';
@@ -23,36 +24,46 @@ import { CodingChallenge } from './CodingChallenge';
 import confetti from 'canvas-confetti';
 
 export interface StoredUserAnswer {
+  questionSlot: number;
   selectedAnswerIndex: number | null;
   robotSequence: string[];
   motorClicks: { x: number; y: number; dist: number }[];
-  attemptsCount: number;
-  hintsUsed: number;
-  timeSpentMs: number;
   isSolved: boolean;
-  timedOut: boolean;
+  timeSpentMs: number;
+  hintsUsed: number;
+  attemptsCount: number;
   answeredAt: number | null;
   responseLatencyMs: number | null;
   remainingTimeWhenAnsweredMs: number | null;
   breaksDuringQuestion: number;
+  timedOut?: boolean;
+}
+
+export interface BreakEvent {
+  breakIndex: number;
+  questionSlotAtPause: number;
+  domainAtPause: AssessmentDomain;
+  pauseStartTimestamp: number;
+  resumeTimestamp: number;
+  breakDurationMs: number;
+  countdownRemainingAtPause: number;
 }
 
 export interface SavedAssessmentSession {
-  schemaVersion: '2.0';
-  assessmentType?: 'cognitive_ability' | 'all';
   studentName: string;
   currentQuestionIndex: number;
+  assessmentType?: 'cognitive_ability' | 'all';
+  cachedActivities: (ActivityItem | null)[];
+  userAnswers: StoredUserAnswer[];
+  questionTimeRecords: QuestionTimeRecord[];
+  breakEvents: BreakEvent[];
+  partBreakRecord: PartBreakRecord | null;
   totalTimerSeconds: number;
   currentQuestionRemainingSeconds: number;
   isPaused: boolean;
   isOnPartBreak: boolean;
   partBreakRemainingSeconds: number;
   isTimerVisible: boolean;
-  cachedActivities: (ActivityItem | null)[];
-  userAnswers: StoredUserAnswer[];
-  questionTimeRecords: QuestionTimeRecord[];
-  breakEvents: BreakEvent[];
-  partBreakRecord: PartBreakRecord | null;
   savedAt: number;
 }
 
@@ -88,6 +99,11 @@ export class AssessmentRunner {
   private pauseDurationForCurrentQuestionMs: number = 0;
   private isPaused: boolean = false;
 
+  // Working Memory Disappearing Stimulus State (Tasks 1, 2, 3, 11)
+  private memoryInspectionRemainingSeconds: number = 5;
+  private memoryInspectionInterval: any = null;
+  private isMemoryStimulusHidden: boolean = false;
+
   // Part Break state
   private isOnPartBreak: boolean = false;
   private partBreakRemainingSeconds: number = AssessmentRunner.PART_BREAK_LIMIT_SEC;
@@ -107,6 +123,47 @@ export class AssessmentRunner {
   private motorTargetPos: { top: number; left: number } = { top: 80, left: 240 };
 
   private isExiting: boolean = false;
+
+  public isMemoryTask(slot: number): boolean {
+    if (this.assessmentType === 'cognitive_ability') {
+      return [1, 2, 3, 11].includes(slot);
+    }
+    return false;
+  }
+
+  private startMemoryInspectionTimer(initialSeconds: number = 5) {
+    this.clearMemoryInspectionTimer();
+    this.memoryInspectionRemainingSeconds = initialSeconds;
+    this.isMemoryStimulusHidden = false;
+
+    this.memoryInspectionInterval = setInterval(() => {
+      if (this.isPaused || this.isOnPartBreak) return;
+
+      this.memoryInspectionRemainingSeconds--;
+      const countdownEl = document.getElementById('memory-countdown-display');
+      const barEl = document.getElementById('memory-inspection-progress');
+      if (countdownEl) {
+        countdownEl.textContent = String(Math.max(0, this.memoryInspectionRemainingSeconds));
+      }
+      if (barEl) {
+        const pct = (this.memoryInspectionRemainingSeconds / 5) * 100;
+        barEl.style.width = `${pct}%`;
+      }
+
+      if (this.memoryInspectionRemainingSeconds <= 0) {
+        this.clearMemoryInspectionTimer();
+        this.isMemoryStimulusHidden = true;
+        this.render();
+      }
+    }, 1000);
+  }
+
+  private clearMemoryInspectionTimer() {
+    if (this.memoryInspectionInterval) {
+      clearInterval(this.memoryInspectionInterval);
+      this.memoryInspectionInterval = null;
+    }
+  }
 
   constructor(container: HTMLElement) {
     this.container = container;
@@ -470,6 +527,22 @@ export class AssessmentRunner {
 
     this.itemStartTimestamp = Date.now();
     this.saveSession(this.studentName);
+
+    const isMem = this.isMemoryTask(baseline.slot);
+    const alreadyAnswered = this.userAnswers[targetIndex]?.answeredAt !== null;
+
+    if (isMem) {
+      if (alreadyAnswered) {
+        this.isMemoryStimulusHidden = true;
+        this.clearMemoryInspectionTimer();
+      } else {
+        this.startMemoryInspectionTimer();
+      }
+    } else {
+      this.isMemoryStimulusHidden = false;
+      this.clearMemoryInspectionTimer();
+    }
+
     this.render();
 
     // Auto-speak audio prompt for picture_match questions ONLY if not muted
@@ -547,6 +620,7 @@ export class AssessmentRunner {
   public pauseAssessment() {
     if (this.isPaused || this.isOnPartBreak) return;
     this.isPaused = true;
+    this.clearMemoryInspectionTimer();
     this.currentPauseStartTimestamp = Date.now();
     const currentAns = this.userAnswers[this.currentQuestionIndex];
     if (currentAns) {
@@ -565,7 +639,7 @@ export class AssessmentRunner {
       const breakDuration = now - this.currentPauseStartTimestamp;
       this.pauseDurationForCurrentQuestionMs += breakDuration;
 
-      const baseline = QUESTION_BASELINES[this.currentQuestionIndex];
+      const baseline = this.activeBaselines[this.currentQuestionIndex] || QUESTION_BASELINES[this.currentQuestionIndex];
       this.breakEvents.push({
         breakIndex: this.breakEvents.length + 1,
         questionSlotAtPause: this.currentQuestionIndex + 1,
@@ -575,6 +649,10 @@ export class AssessmentRunner {
         breakDurationMs: breakDuration,
         countdownRemainingAtPause: this.questionTimerSecondsRemaining
       });
+
+      if (this.isMemoryTask(baseline.slot) && !this.isMemoryStimulusHidden && this.memoryInspectionRemainingSeconds > 0) {
+        this.startMemoryInspectionTimer(this.memoryInspectionRemainingSeconds);
+      }
     }
 
     this.isPaused = false;
@@ -742,6 +820,8 @@ export class AssessmentRunner {
 
   private advanceToNextQuestion() {
     this.isLoadingNextQuestion = true;
+    this.clearMemoryInspectionTimer();
+    this.isMemoryStimulusHidden = false;
 
     if (this.questionTimerInterval) {
       clearInterval(this.questionTimerInterval);
@@ -798,7 +878,7 @@ export class AssessmentRunner {
     const activity = this.cachedActivities[this.currentQuestionIndex];
     if (!activity) return;
 
-    const baseline = QUESTION_BASELINES[this.currentQuestionIndex];
+    const baseline = this.activeBaselines[this.currentQuestionIndex] || QUESTION_BASELINES[this.currentQuestionIndex];
     const domainConfig = DOMAIN_CONFIG[baseline.domain];
     const answerState = this.userAnswers[this.currentQuestionIndex];
 
@@ -848,12 +928,14 @@ export class AssessmentRunner {
           <div style="font-size:3.5rem; margin-bottom:0.75rem;">⚠️</div>
           <h2 style="font-size:1.7rem; font-weight:900; color:#1e293b; margin-bottom:0.4rem;">Exit &amp; Reset Assessment?</h2>
           <p style="color:#64748b; margin-bottom:1.75rem; font-size:0.92rem; line-height:1.5;">
-            Exiting will stop your current progress, clear all saved assessment cache, and restart from the beginning.
+            Are you sure you want to exit? Your current session and answers will be cleared.
           </p>
-          <div style="display:flex; gap:0.75rem; flex-wrap:wrap; justify-content:center;">
-            <button id="cancel-exit-btn" class="btn btn-secondary" style="padding:0.75rem 1.4rem; font-weight:800; cursor:pointer;">Cancel</button>
-            <button id="confirm-exit-btn" class="btn btn-primary" style="background:#ef4444; border-bottom:4px solid #dc2626; padding:0.75rem 1.4rem; font-weight:800; box-shadow:0 4px 15px rgba(239,68,68,0.35); cursor:pointer;">
-              🚪 Yes, Exit &amp; Reset
+          <div style="display:flex; gap:0.75rem; width:100%;">
+            <button id="cancel-exit-btn" class="btn btn-secondary" style="flex:1; padding:0.85rem; font-weight:800;">
+              Keep Going
+            </button>
+            <button id="confirm-exit-btn" class="btn btn-primary" style="flex:1; padding:0.85rem; font-weight:800; background:#ef4444; border-bottom:4px solid #dc2626; color:#fff;">
+              Exit &amp; Reset
             </button>
           </div>
         </div>
@@ -921,12 +1003,12 @@ export class AssessmentRunner {
             }
 
             return `
-              <div style="background:${cardBg}; border:2px solid ${borderColor}; border-bottom:${borderBottom}; border-radius:1rem; padding:0.75rem 0.85rem; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.3s ease;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
-                  <span style="font-size:0.78rem; font-weight:800; color:${textColor};">${d.icon} ${d.name}</span>
-                  ${isCompletedDomain ? '<span style="font-size:0.8rem; color:#10b981; font-weight:900;">✓</span>' : ''}
+              <div style="background:${cardBg}; border:2px solid ${borderColor}; border-bottom:${borderBottom}; border-radius:1rem; padding:0.6rem 0.75rem; text-align:center;">
+                <div style="font-size:1.2rem; margin-bottom:0.15rem;">${d.icon}</div>
+                <div style="font-size:0.75rem; font-weight:800; color:${textColor}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                  ${d.name}
                 </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; color:#64748b; margin-bottom:0.35rem; font-weight:700;">
+                <div style="font-size:0.65rem; color:#94a3b8; font-weight:700; margin:0.25rem 0; display:flex; justify-content:space-between;">
                   <span>${answeredInDomain}/${d.total} Qs</span>
                   <span style="font-weight:900; color:${textColor};">${pct}%</span>
                 </div>
@@ -1004,12 +1086,14 @@ export class AssessmentRunner {
             <button
               class="btn btn-primary"
               id="submit-answer-btn"
-              ${this.isLoadingNextQuestion ? 'disabled' : ''}
-              style="background: ${this.isLoadingNextQuestion ? '#94a3b8' : '#3b82f6'}; border: none; border-bottom: 6px solid ${this.isLoadingNextQuestion ? '#64748b' : '#2563eb'}; color: #ffffff; border-radius: 1.25rem; font-weight: 900; width: 100%; font-size: 1.15rem; padding: 1.1rem 2rem; transition: all 0.2s ease; cursor: pointer;"
+              ${(this.isLoadingNextQuestion || (this.isMemoryTask(baseline.slot) && !this.isMemoryStimulusHidden)) ? 'disabled' : ''}
+              style="background: ${(this.isLoadingNextQuestion || (this.isMemoryTask(baseline.slot) && !this.isMemoryStimulusHidden)) ? '#94a3b8' : '#3b82f6'}; border: none; border-bottom: 6px solid ${(this.isLoadingNextQuestion || (this.isMemoryTask(baseline.slot) && !this.isMemoryStimulusHidden)) ? '#64748b' : '#2563eb'}; color: #ffffff; border-radius: 1.25rem; font-weight: 900; width: 100%; font-size: 1.15rem; padding: 1.1rem 2rem; transition: all 0.2s ease; cursor: ${(this.isLoadingNextQuestion || (this.isMemoryTask(baseline.slot) && !this.isMemoryStimulusHidden)) ? 'not-allowed' : 'pointer'};"
             >
               ${this.isLoadingNextQuestion
                 ? '<span style="display:flex;align-items:center;justify-content:center;gap:0.6rem;"><span style="width:18px;height:18px;border-radius:50%;border:3px solid rgba(255,255,255,0.4);border-top-color:#fff;animation:spin 0.8s linear infinite;"></span> Loading Next Question...</span>'
-                : 'Confirm &amp; Next ➔'
+                : (this.isMemoryTask(baseline.slot) && !this.isMemoryStimulusHidden)
+                  ? `👀 Memorize Symbols (${this.memoryInspectionRemainingSeconds}s)...`
+                  : 'Confirm &amp; Next ➔'
               }
             </button>
           </div>
@@ -1030,7 +1114,7 @@ export class AssessmentRunner {
       let mapHtml = payload.routeMap || '';
       if (!mapHtml) {
         if (slot === 13) {
-          mapHtml = `[ 🤖 Robo ] ➔ ➡️ [ ◽ Path ] ➔ ➡️ [ ⭐ Star ]`;
+          mapHtml = `[ 🤖 Robo Cart ] ➔ ➡️ [ ◽ Path ] ➔ ➡️ [ ⭐ Star ]`;
         } else if (slot === 14 || slot === 15) {
           mapHtml = `[ 🤖 Robo ] ➔ ➡️ [ ◽ Walk Forward ] ➔ ⤵️ [ Turn Right ] ➔ 🦾 [ 💎 Gem ]`;
         } else if (slot === 16) {
@@ -1141,6 +1225,7 @@ export class AssessmentRunner {
       `;
     }
 
+    const isMemoryTask = this.isMemoryTask(activity.slot);
     let sequenceList = Array.isArray(payload.sequence) ? payload.sequence : null;
     let gridMatrix = Array.isArray(payload.grid) ? payload.grid : null;
 
@@ -1148,14 +1233,70 @@ export class AssessmentRunner {
       ? payload.options.slice(0, 3)
       : [{ label: 'Choice A' }, { label: 'Choice B' }, { label: 'Choice C' }];
 
+    // ─────────────────────────────────────────────────────────────────────────
+    // Phase 1 of Memory Tasks: INSPECT PHASE (Symbols visible for 5s, choices locked)
+    // ─────────────────────────────────────────────────────────────────────────
+    if (isMemoryTask && !this.isMemoryStimulusHidden) {
+      return `
+        <div style="background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%); border: 3px solid #3b82f6; border-radius: 1.5rem; padding: 1.5rem; margin-bottom: 1.5rem; text-align: center; box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.15);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.75rem;">
+            <span style="font-size: 1.05rem; font-weight: 900; color: #1d4ed8; display: flex; align-items: center; gap: 0.5rem;">
+              👀 Memorize the symbols shown below!
+            </span>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span style="background: #1e40af; color: #ffffff; padding: 0.35rem 0.85rem; border-radius: 20px; font-weight: 900; font-size: 0.95rem; display:inline-flex; align-items:center; gap:6px;">
+                ⏱️ Disappearing in: <span id="memory-countdown-display" style="font-size:1.15rem; font-family:monospace;">${this.memoryInspectionRemainingSeconds}</span>s
+              </span>
+              <button id="skip-memorize-btn" class="btn btn-primary" style="padding: 0.4rem 0.95rem; font-size: 0.85rem; font-weight: 800; border-radius: 12px; background: #2563eb; color: #fff; cursor: pointer; border: none; box-shadow: 0 4px 10px rgba(37,99,235,0.3);">
+                I'm Ready! Hide Now ➔
+              </button>
+            </div>
+          </div>
+
+          <div style="width: 100%; height: 8px; background: #bfdbfe; border-radius: 4px; overflow: hidden; margin-bottom: 1.5rem;">
+            <div id="memory-inspection-progress" style="width: ${(this.memoryInspectionRemainingSeconds / 5) * 100}%; height: 100%; background: #2563eb; transition: width 0.9s linear;"></div>
+          </div>
+
+          <div style="background: #ffffff; border: 2px solid #93c5fd; border-radius: 1.25rem; padding: 2rem 1rem; display: flex; justify-content: center; align-items: center; gap: 1.75rem; flex-wrap: wrap; box-shadow: inset 0 2px 5px rgba(0,0,0,0.03);">
+            ${(sequenceList || ['●', '▲', '★', '■']).map((item: string) => `
+              <span style="display:inline-flex; align-items:center; justify-content:center; min-width:65px; height:65px; background:#f8fafc; border:2px solid #e2e8f0; border-radius:16px; font-size:2.8rem; font-weight:900; box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+                ${cleanShapeText(item)}
+              </span>
+            `).join('')}
+          </div>
+        </div>
+
+        <div style="background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 1.5rem; padding: 2.5rem 1.5rem; text-align: center; color: #64748b;">
+          <span style="font-size: 2.5rem; display: block; margin-bottom: 0.5rem;">🔒</span>
+          <div style="font-weight: 800; font-size: 1.15rem; color: #334155;">Answer choices are locked</div>
+          <div style="font-size: 0.9rem; margin-top: 0.35rem; color: #64748b;">Focus on memorizing the symbols above. Choices will appear after they disappear!</div>
+        </div>
+      `;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Phase 2 of Memory Tasks: RECALL PHASE (Stimulus is HIDDEN, choices are active)
+    // ─────────────────────────────────────────────────────────────────────────
+    const memoryHiddenNoticeHtml = isMemoryTask && this.isMemoryStimulusHidden ? `
+      <div style="background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 1.5rem; padding: 1.25rem 1.75rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 1.25rem; flex-wrap: wrap; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+        <span style="font-size: 2.4rem;">🙈 🔒</span>
+        <div style="text-align: left;">
+          <div style="font-weight: 900; font-size: 1.1rem; color: #1e293b;">The symbols are now hidden!</div>
+          <div style="font-size: 0.92rem; color: #64748b; font-weight: 700;">Select the answer based on the symbols you remember:</div>
+        </div>
+      </div>
+    ` : '';
+
     return `
-      ${gridMatrix ? `
+      ${memoryHiddenNoticeHtml}
+
+      ${!isMemoryTask && gridMatrix ? `
         <div style="display:flex; justify-content:center; margin-bottom:1.5rem;">
           <div style="background: #ffffff; border: 2px solid #a7f3d0; padding: 1.25rem 1.75rem; border-radius: 1.5rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);">
             <div style="display:grid; grid-template-columns: repeat(${gridMatrix[0].length}, 1fr); gap: 0.85rem; text-align: center;">
               ${gridMatrix.map(row => row.map((cell: string) => `
                 <div style="font-size: 1.6rem; background: #f8fafc; padding: 0.85rem 1.4rem; border-radius: 12px; border: 2px solid #e2e8f0; color: ${cell.includes('❓') ? '#10b981' : '#1e293b'}; font-weight: 900;">
-                  ${cell}
+                  ${cleanShapeText(cell)}
                 </div>
               `).join('')).join('')}
             </div>
@@ -1163,20 +1304,34 @@ export class AssessmentRunner {
         </div>
       ` : ''}
 
-      ${sequenceList ? `
+      ${!isMemoryTask && sequenceList ? `
         <div style="font-size: 1.6rem; display: flex; gap: 0.85rem; margin-bottom: 1.5rem; background: #ffffff; border: 2px solid #e2e8f0; padding: 1.25rem 1.75rem; border-radius: 1.5rem; justify-content: center; align-items: center; flex-wrap: wrap; text-align: center; box-shadow: 0 6px 20px -5px rgba(0,0,0,0.04);">
-          ${sequenceList.map((item: string) => `<span style="background:#f8fafc; border:2px solid #e2e8f0; padding:0.5rem 1rem; border-radius:12px; font-weight:900; color:${item.includes('❓') ? '#10b981' : '#1e293b'}">${item}</span>`).join('')}
+          ${sequenceList.map((item: string) => `<span style="background:#f8fafc; border:2px solid #e2e8f0; padding:0.5rem 1rem; border-radius:12px; font-weight:900; color:${item.includes('❓') ? '#10b981' : '#1e293b'}">${cleanShapeText(item)}</span>`).join('')}
         </div>
       ` : ''}
 
       <div class="options-grid-3">
         ${optionsList.map((opt: any, idx: number) => {
-          const labelText = typeof opt === 'string' ? opt : (opt.label || opt.text || JSON.stringify(opt));
-          const emoji = typeof opt === 'object' && opt.emoji ? opt.emoji : '';
+          let labelText = typeof opt === 'string' ? opt : (opt.label || opt.text || '');
+          let emoji = typeof opt === 'object' && opt.emoji ? opt.emoji : '';
+
+          // Clean shape text (remove shape names like 'Square ⬛' and spoil hints)
+          labelText = cleanShapeText(labelText);
+
+          // If emoji is already inside labelText or matches labelText, do not show separate top emoji
+          if (emoji && (labelText.includes(emoji) || labelText === emoji)) {
+            emoji = '';
+          }
+
+          // Check if option label is pure symbols/shapes (e.g. '🔺' or '🔴 🔺 ⭐ ⬛' or '⭐ ➔ 🔴 ➔ 🔺 ➔ ⬛')
+          const isPureSymbol = /^[\s\p{Emoji}\p{Symbol}➔→➡️⬇️⬆️•·\-_,]+$/u.test(labelText) || (labelText.length <= 4 && !/[a-zA-Z]/.test(labelText));
+
           return `
             <button class="option-btn-3 ${answerState.selectedAnswerIndex === idx ? 'selected' : ''}" data-opt="${idx}">
               ${emoji ? `<span style="font-size: 2.3rem; display:block; margin-bottom:0.25rem;">${emoji}</span>` : ''}
-              <span style="font-size:1.05rem; font-weight:800;">${labelText}</span>
+              <span style="font-size: ${isPureSymbol ? '2.3rem' : '1.05rem'}; font-weight:800; letter-spacing: ${isPureSymbol ? '4px' : 'normal'}; display:inline-flex; align-items:center; justify-content:center; gap:0.4rem;">
+                ${labelText}
+              </span>
             </button>
           `;
         }).join('')}
@@ -1375,11 +1530,26 @@ export class AssessmentRunner {
       });
     }
 
+    // Memory Inspection "I'm Ready / Hide Now" button
+    const skipMemorizeBtn = this.container.querySelector('#skip-memorize-btn');
+    if (skipMemorizeBtn) {
+      skipMemorizeBtn.addEventListener('click', () => {
+        this.clearMemoryInspectionTimer();
+        this.isMemoryStimulusHidden = true;
+        this.memoryInspectionRemainingSeconds = 0;
+        this.render();
+      });
+    }
+
     // Confirm & Next Submit Button
     const submitAnswerBtn = this.container.querySelector('#submit-answer-btn');
     if (submitAnswerBtn) {
       submitAnswerBtn.addEventListener('click', () => {
         if (this.isLoadingNextQuestion) return;
+        const baseline = this.activeBaselines[this.currentQuestionIndex];
+        if (baseline && this.isMemoryTask(baseline.slot) && !this.isMemoryStimulusHidden) {
+          return; // Still in memorization phase
+        }
 
         // Playful celebratory confetti on answering
         try {

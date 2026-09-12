@@ -32,6 +32,20 @@ export interface QuestionBaseline {
   type: 'pattern_matrix' | 'robot_mission' | 'picture_match' | 'rule_shift' | 'motor_target';
 }
 
+// Clean shape text (remove shape names like 'Square ⬛' and spoil hints)
+export function cleanShapeText(text: string): string {
+  if (!text) return text;
+  let cleaned = text;
+  // Remove parenthetical spoil/hint notes like (Original 4 Symbols), (Completes Pattern), etc.
+  cleaned = cleaned.replace(/\s*\([^)]*(?:pattern|original|rule|distractor|wrong|correct|same|new symbol|new rule|old rule)[^)]*\)/gi, '');
+  // Remove standalone shape name words next to symbols: "🔴 Circle" -> "🔴", "Triangle 🔺" -> "🔺"
+  cleaned = cleaned.replace(/^\s*(?:circle|triangle|square|star|diamond|rectangle|hexagon)\s*([🔴🔵🟢🟡🟣🟨🟩🟦🟥⬛⬜🔺▲●■★◆◇○⬡⬢])\s*$/gi, '$1');
+  cleaned = cleaned.replace(/^\s*([🔴🔵🟢🟡🟣🟨🟩🟦🟥⬛⬜🔺▲●■★◆◇○⬡⬢])\s*(?:circle|triangle|square|star|diamond|rectangle|hexagon)\s*$/gi, '$1');
+  cleaned = cleaned.replace(/\b(circle|triangle|square|star|diamond|rectangle|hexagon)\s*([🔴🔵🟢🟡🟣🟨🟩🟦🟥⬛⬜🔺▲●■★◆◇○⬡⬢])/gi, '$2');
+  cleaned = cleaned.replace(/([🔴🔵🟢🟡🟣🟨🟩🟦🟥⬛⬜🔺▲●■★◆◇○⬡⬢])\s*(circle|triangle|square|star|diamond|rectangle|hexagon)\b/gi, '$1');
+  return cleaned.trim();
+}
+
 // ---------------------------------------------------------------------------
 // Cognitive Assessment (Assessment 1) — 25 Task Baselines
 // Mapped 1-to-1 from Cognitive_Assessment_25_Tasks.pdf
@@ -559,254 +573,254 @@ export const COGNITIVE_25_TASK_CONFIGS: Record<
   }
 > = {
   1: {
-    instructions: 'Task 1 — Visual Recall: Look at the symbols shown: [🔴 Circle, 🔺 Triangle, ⭐ Star, ⬛ Square]. Select the group containing the exact symbols you saw before.',
-    sequence: ['Original Symbols:', '🔴 Circle', '🔺 Triangle', '⭐ Star', '⬛ Square'],
+    instructions: 'Task 1 — Visual Recall: Look at the symbols below and memorize them. After 5 seconds they will disappear, then select the symbols you saw.',
+    sequence: ['🔴', '🔺', '⭐', '⬛'],
     options: [
-      { label: '🔴 🔺 ⭐ ⬛ (Original 4 Symbols)', emoji: '⭐', correct: true },
-      { label: '🔴 🔷 ☀️ ⬛ (Contains Distractors)', emoji: '🔷', correct: false },
-      { label: '🔺 ⭐ 🌙 🟢 (Wrong Items)', emoji: '🌙', correct: false }
+      { label: '🔴  🔺  ⭐  ⬛', correct: true },
+      { label: '🔴  🔷  ☀️  ⬛', correct: false },
+      { label: '🔺  ⭐  🌙  🟢', correct: false }
     ],
-    hint: 'Recall the 4 symbols shown at the start: Circle, Triangle, Star, Square.'
+    hint: 'Recall the 4 symbols shown at the start.'
   },
   2: {
-    instructions: 'Task 2 — Sequential Memory: Symbols were shown in this exact order: [⭐ Star → 🔴 Circle → 🔺 Triangle → ⬛ Square]. Which option restores the original order?',
-    sequence: ['Scrambled Items: ⬛ Square, 🔺 Triangle, ⭐ Star, 🔴 Circle', 'Target: Restore Original Sequence'],
+    instructions: 'Task 2 — Sequential Memory: Remember the exact sequence of symbols. After 5 seconds they will disappear, then choose the original order.',
+    sequence: ['⭐ ➔ 🔴 ➔ 🔺 ➔ ⬛'],
     options: [
-      { label: '⭐ → 🔴 → 🔺 → ⬛ (Original Order)', emoji: '⭐', correct: true },
-      { label: '⬛ → 🔺 → 🔴 → ⭐ (Reversed)', emoji: '⬛', correct: false },
-      { label: '🔴 → ⭐ → ⬛ → 🔺 (Scrambled)', emoji: '🔴', correct: false }
+      { label: '⭐  ➔  🔴  ➔  🔺  ➔  ⬛', correct: true },
+      { label: '⬛  ➔  🔺  ➔  🔴  ➔  ⭐', correct: false },
+      { label: '🔴  ➔  ⭐  ➔  ⬛  ➔  🔺', correct: false }
     ],
-    hint: 'The sequence started with Star ⭐ and ended with Square ⬛!'
+    hint: 'The sequence started with ⭐ and ended with ⬛!'
   },
   3: {
-    instructions: 'Task 3 — Remember & Follow: Remember these 3 steps: [1. Click Red Circle 🔴 → 2. Move to Blue Box 📦 → 3. Press Green Button 🟢]. Which sequence is correct?',
-    sequence: ['Step 1: Click 🔴', 'Step 2: Move to 📦', 'Step 3: Press 🟢'],
+    instructions: 'Task 3 — Remember & Follow: Remember these 3 steps in order. After 5 seconds they will disappear, then choose the correct sequence.',
+    sequence: ['1. 🔴 ➔ 2. 📦 ➔ 3. 🟢'],
     options: [
-      { label: '🔴 Circle → 📦 Box → 🟢 Button (Correct Order)', emoji: '🟢', correct: true },
-      { label: '🟢 Button → 🔴 Circle → 📦 Box (Wrong Order)', emoji: '🔴', correct: false },
-      { label: '📦 Box → 🟢 Button → 🔴 Circle (Wrong Order)', emoji: '📦', correct: false }
+      { label: '🔴  ➔  📦  ➔  🟢', correct: true },
+      { label: '🟢  ➔  🔴  ➔  📦', correct: false },
+      { label: '📦  ➔  🟢  ➔  🔴', correct: false }
     ],
-    hint: 'Remember: Red Circle first, then Box, then Green Button!'
+    hint: 'Remember: 🔴 first, then 📦, then 🟢!'
   },
   4: {
-    instructions: 'Task 4 — Pattern Recognition: Identify the repeating pattern: [🔴 🔺 🔴 🔺 🔴 ❓]. Choose what comes next!',
-    sequence: ['🔴 Circle', '🔺 Triangle', '🔴 Circle', '🔺 Triangle', '🔴 Circle', '❓ Next Symbol'],
+    instructions: 'Task 4 — Pattern Recognition: Complete the visual pattern. Choose what comes next:',
+    sequence: ['🔴', '🔺', '🔴', '🔺', '🔴', '❓'],
     options: [
-      { label: '🔺 Triangle (Completes Pattern)', emoji: '🔺', correct: true },
-      { label: '🔴 Circle (Repeats Same)', emoji: '🔴', correct: false },
-      { label: '⬛ Square (New Symbol)', emoji: '⬛', correct: false }
+      { label: '🔺', correct: true },
+      { label: '🔴', correct: false },
+      { label: '⬛', correct: false }
     ],
-    hint: 'The pattern alternates between Circle 🔴 and Triangle 🔺!'
+    hint: 'The pattern alternates between 🔴 and 🔺!'
   },
   5: {
-    instructions: 'Task 5 — Rule Detection: Notice the transformation rule: [🔴 → 🔺 → ⬛] and [🔺 → ⬛ → ⭐]. What comes next in: [⬛ → ⭐ → ❓]?',
-    sequence: ['Example 1: 🔴 → 🔺 → ⬛', 'Example 2: 🔺 → ⬛ → ⭐', 'Solve: ⬛ → ⭐ → ❓'],
+    instructions: 'Task 5 — Rule Detection: What shape completes the transformation rule?',
+    sequence: ['●  ➔  ▲  ➔  ■', '▲  ➔  ■  ➔  ★', '■  ➔  ★  ➔  ❓'],
     options: [
-      { label: '💎 Diamond (Next in Series)', emoji: '💎', correct: true },
-      { label: '🔴 Circle (Old Symbol)', emoji: '🔴', correct: false },
-      { label: '🔺 Triangle (Previous)', emoji: '🔺', correct: false }
+      { label: '◆', correct: true },
+      { label: '●', correct: false },
+      { label: '▲', correct: false }
     ],
-    hint: 'Each sequence shifts one step forward in the symbol series!'
+    hint: 'Each sequence shifts one step forward in the series!'
   },
   6: {
-    instructions: 'Task 6 — Problem Solving: A delivery robot\'s main path to the charging pad is blocked by a safety fence 🚧. Which action safely reaches the goal?',
+    instructions: 'Task 6 — Problem Solving: The robot\'s direct path is blocked by a safety fence 🚧. Which action safely reaches the goal?',
     sequence: ['Path A: Direct (Blocked by 🚧)', 'Path B: Side Corridor (Clear ✅)', 'Path C: Stairs (Inaccessible 🚫)'],
     options: [
-      { label: 'Take Side Corridor B around fence ✅', emoji: '✅', correct: true },
-      { label: 'Attempt to push through safety fence 🚧', emoji: '🚧', correct: false },
-      { label: 'Turn off and wait indefinitely 🛑', emoji: '🛑', correct: false }
+      { label: 'Take Side Corridor B around fence ✅', correct: true },
+      { label: 'Attempt to push through safety fence 🚧', correct: false },
+      { label: 'Turn off and wait indefinitely 🛑', correct: false }
     ],
     hint: 'Find the open, unobstructed detour path!'
   },
   7: {
-    instructions: 'Task 7 — Rule Switching: Round 1 was \'Sort by COLOR (Red)\'. Round 2 NEW RULE: \'Sort by SHAPE (Stars only, any color)\'. Which item follows the NEW rule?',
-    sequence: ['Old Rule: Sort by COLOR 🔴', 'NEW RULE: Sort by SHAPE ⭐ (Stars)', 'Select the item matching the NEW rule:'],
+    instructions: 'Task 7 — Rule Switching: Round 1 was Sort by COLOR 🔴. NEW RULE: Sort by SHAPE ⭐ (Stars only). Which item follows the NEW rule?',
+    sequence: ['Old Rule: COLOR 🔴', 'NEW RULE: SHAPE ⭐', '❓ Next Item: '],
     options: [
-      { label: '🔵 Blue Star (Matches Shape Rule) ⭐', emoji: '⭐', correct: true },
-      { label: '🔴 Red Circle (Follows Old Rule) 🔴', emoji: '🔴', correct: false },
-      { label: '🟩 Green Square (Neither) 🟩', emoji: '🟩', correct: false }
+      { label: '🔵 ⭐', correct: true },
+      { label: '🔴 ●', correct: false },
+      { label: '🟩 ■', correct: false }
     ],
-    hint: 'Ignore the old color rule! Switch to the new rule: choose the Star ⭐!'
+    hint: 'Ignore the old color rule! Switch to the new rule: choose the star ⭐!'
   },
   8: {
-    instructions: 'Task 8 — Visual Matching: Target Shape: [ Hexagon ⬡ with a center dot • ]. Find the identical matching shape among the options:',
-    sequence: ['Target: ⬡ [Hexagon + Center Dot •]', 'Examine all features carefully!'],
+    instructions: 'Task 8 — Visual Matching: Find the shape that identically matches the target shape.',
+    sequence: ['Target: ◆'],
     options: [
-      { label: '⬡ [Hexagon with Center Dot •] (Exact Match)', emoji: '⬡', correct: true },
-      { label: '⬡ [Hexagon without Dot] (Missing Feature)', emoji: '⬡', correct: false },
-      { label: '⬢ [Solid Filled Hexagon] (Wrong Fill)', emoji: '⬢', correct: false }
+      { label: '◆', correct: true },
+      { label: '◇', correct: false },
+      { label: '○', correct: false }
     ],
-    hint: 'Check both the outline shape and the internal dot!'
+    hint: 'Look for the exact solid matching shape!'
   },
   9: {
-    instructions: 'Task 9 — Mental Rotation: Target shape is an \'L-bracket\' ⌐ pointing Top-Right. If rotated 90° clockwise ↻, which option represents the rotated shape?',
-    sequence: ['Original: ⌐ (Top-Right)', 'Rotation: 90° Clockwise ↻', 'Candidate = ❓'],
+    instructions: 'Task 9 — Mental Rotation: If the target shape is rotated 90° clockwise ↻, which option represents it?',
+    sequence: ['Target: └', '↻ Rotate 90° Clockwise'],
     options: [
-      { label: '¬ (Bottom-Right) [90° Clockwise] ↻', emoji: '¬', correct: true },
-      { label: '⌐ (Unchanged) [0°]', emoji: '⌐', correct: false },
-      { label: 'L (180° Inverted)', emoji: 'L', correct: false }
+      { label: '┌', correct: true },
+      { label: '┐', correct: false },
+      { label: '─', correct: false }
     ],
-    hint: 'Imagine turning the shape a quarter-turn to the right!'
+    hint: 'Imagine turning the corner a quarter-turn to the right!'
   },
   10: {
-    instructions: 'Task 10 — Spatial Relationships: A blue circle 🔵 is INSIDE a yellow square 🟨, and a green triangle 🔺 is ABOVE the yellow square. Which statement is correct?',
-    sequence: ['🔺 Green Triangle (Above)', '🟨 Yellow Square', '🔵 Blue Circle (Inside Square)'],
+    instructions: 'Task 10 — Spatial Relationships: ● is placed above ■. Where is ■ relative to ●?',
+    sequence: ['●', '⬇️', '■'],
     options: [
-      { label: 'Blue circle 🔵 is inside yellow square 🟨', emoji: '🔵', correct: true },
-      { label: 'Green triangle 🔺 is inside blue circle 🔵', emoji: '🔺', correct: false },
-      { label: 'Yellow square 🟨 is above green triangle 🔺', emoji: '🟨', correct: false }
+      { label: 'Below ⬇️', correct: true },
+      { label: 'Above ⬆️', correct: false },
+      { label: 'Beside ➡️', correct: false }
     ],
-    hint: 'Look at the nested description: Blue is INSIDE Yellow!'
+    hint: '■ is located underneath ●!'
   },
   11: {
-    instructions: 'Task 11 — Spatial Construction: To assemble the robotic arm, which 3 parts must be joined in order: [Base Plate 🔩 → Swivel Joint ⚙️ → Gripper Hand 🦾]?',
-    sequence: ['Target: Functional Robot Arm', 'Parts: 🦾 Gripper, 🔩 Base, ⚙️ Joint'],
+    instructions: 'Task 11 — Spatial Construction: Memorize the arrangement of shapes. After 5 seconds it will disappear, then select the exact arrangement.',
+    sequence: ['●', '▲', '■', '★'],
     options: [
-      { label: '1. 🔩 Base Plate → 2. ⚙️ Joint → 3. 🦾 Gripper', emoji: '🦾', correct: true },
-      { label: '1. 🦾 Gripper → 2. 🔩 Base Plate → 3. ⚙️ Joint', emoji: '⚙️', correct: false },
-      { label: '1. ⚙️ Joint → 2. 🦾 Gripper → 3. 🔩 Base Plate', emoji: '🔩', correct: false }
+      { label: '●  ▲  ■  ★', correct: true },
+      { label: '■  ●  ★  ▲', correct: false },
+      { label: '▲  ★  ●  ■', correct: false }
     ],
-    hint: 'Always build upward starting from the Base Plate 🔩!'
+    hint: 'Remember the sequence from left to right: ● then ▲ then ■ then ★!'
   },
   12: {
-    instructions: 'Task 12 — Visual Search: Scan the items below and count how many Target Stars ⭐ appear among the distractors: [⭐ 🔴 ⭐ 🔷 ⭐ 🟢 ⬛]?',
-    sequence: ['Display: ⭐  🔴  ⭐  🔷  ⭐  🟢  ⬛', 'Target to Count: ⭐ Stars'],
+    instructions: 'Task 12 — Visual Search: Count how many times the target symbol ★ appears below:',
+    sequence: ['Target: ★', '★  ●  ▲  ★  ■  ★  ◆'],
     options: [
-      { label: 'Exactly 3 Stars ⭐', emoji: '⭐', correct: true },
-      { label: 'Only 2 Stars ⭐', emoji: '2️⃣', correct: false },
-      { label: '4 Stars ⭐', emoji: '4️⃣', correct: false }
+      { label: '3', correct: true },
+      { label: '2', correct: false },
+      { label: '4', correct: false }
     ],
     hint: 'Count each star: first one, middle one, third one = 3!'
   },
   13: {
-    instructions: 'Task 13 — Symbol Matching Speed: Fast Match! Do these two symbols match exactly: [ 🛡️ Shield ] vs [ 🛡️ Shield ]?',
-    sequence: ['Left Symbol: 🛡️', 'Right Symbol: 🛡️', 'Do they match?'],
+    instructions: 'Task 13 — Symbol Matching Speed: Fast Match! Does the target symbol appear in the set below?',
+    sequence: ['Target: ★', 'Set: ●  ▲  ★  ■'],
     options: [
-      { label: 'YES — Exact Match ✅', emoji: '✅', correct: true },
-      { label: 'NO — Different ❌', emoji: '❌', correct: false },
-      { label: 'Cannot Determine ❓', emoji: '❓', correct: false }
+      { label: 'YES', emoji: '✅', correct: true },
+      { label: 'NO', emoji: '❌', correct: false },
+      { label: 'Unsure', emoji: '❓', correct: false }
     ],
-    hint: 'Both items are the identical Shield 🛡️ symbol!'
+    hint: 'Look closely at the 3rd symbol in the set!'
   },
   14: {
-    instructions: 'Task 14 — Target Detection: Keep attention on this stream of items: [ 🚗 🚲 ✈️ 🚗 🚀 🚗 🚢 ]. Whenever you see the Target CAR 🚗, mark it. How many times did 🚗 appear?',
-    sequence: ['Item Stream: 🚗 🚲 ✈️ 🚗 🚀 🚗 🚢', 'Target: 🚗'],
+    instructions: 'Task 14 — Target Detection: Count how many times the target 🚗 appears in the stream:',
+    sequence: ['Target: 🚗', 'Stream: 🚗  🚲  ✈️  🚗  🚀  🚗  🚢'],
     options: [
-      { label: 'Detected 3 times 🚗', emoji: '🚗', correct: true },
-      { label: 'Detected 1 time 🚗', emoji: '1️⃣', correct: false },
-      { label: 'Detected 5 times 🚗', emoji: '5️⃣', correct: false }
+      { label: '3', correct: true },
+      { label: '1', correct: false },
+      { label: '5', correct: false }
     ],
-    hint: 'Item 1 is 🚗, Item 4 is 🚗, Item 6 is 🚗: 3 occurrences!'
+    hint: 'Position 1 is 🚗, Position 4 is 🚗, Position 6 is 🚗: 3 times!'
   },
   15: {
-    instructions: 'Task 15 — Attention Over Time: Over an 8-stage sequence, a beacon flashed [🟢 🟢 🟢 🔴 🟢 🟢 🔴 🟢]. Which stages had the RED alert 🔴?',
-    sequence: ['Stages 1-4: 🟢 🟢 🟢 🔴', 'Stages 5-8: 🟢 🟢 🔴 🟢'],
+    instructions: 'Task 15 — Attention Over Time: In the sequence below, which positions contain the alert 🔴?',
+    sequence: ['Positions 1-4: 🟢  🟢  🟢  🔴', 'Positions 5-8: 🟢  🟢  🔴  🟢'],
     options: [
-      { label: 'Stage 4 and Stage 7 🔴', emoji: '🔴', correct: true },
-      { label: 'Stage 1 and Stage 8 🟢', emoji: '🟢', correct: false },
-      { label: 'Stage 3 and Stage 5 🟡', emoji: '🟡', correct: false }
+      { label: 'Position 4 and 7', correct: true },
+      { label: 'Position 1 and 8', correct: false },
+      { label: 'Position 3 and 5', correct: false }
     ],
-    hint: 'Count the positions of the red alerts: 4th and 7th!'
+    hint: 'Count the positions where the red alerts appear: 4th and 7th!'
   },
   16: {
-    instructions: 'Task 16 — Selective Attention: Find the KEY 🔑 located in the center of the cluttered toolbox, ignoring surrounding wires 🔌, nuts 🔩, and screws 🪛.',
-    sequence: ['Surrounding: 🔩 🪛 🔌 🔩 🪛', 'Target in Center: 🔑', 'Filter out the noise!'],
+    instructions: 'Task 16 — Selective Attention: Select the item that satisfies BOTH conditions: BLUE + LARGE.',
+    sequence: ['Condition 1: BLUE 🔵', 'Condition 2: LARGE 🔷'],
     options: [
-      { label: 'Center Key 🔑 (Target Identified)', emoji: '🔑', correct: true },
-      { label: 'Corner Nut 🔩 (Distractor)', emoji: '🔩', correct: false },
-      { label: 'Wire Clutter 🔌 (Distractor)', emoji: '🔌', correct: false }
+      { label: '🔷', correct: true },
+      { label: '🔹', correct: false },
+      { label: '🔶', correct: false }
     ],
-    hint: 'Focus only on the key 🔑 and ignore all background clutter!'
+    hint: 'It must be both blue AND large!'
   },
   17: {
-    instructions: 'Task 17 — Change the Sorting Rule: The sorting rule just changed from \'Sort by Size\' to \'Sort by Color: BLUE\'. Which item goes into the bin?',
-    sequence: ['Old Category: Large Items', 'NEW CATEGORY: BLUE Items 🔵', 'Candidate Items: [🔴 Big Red Ball, 🔵 Small Blue Gem, 🟩 Big Green Box]'],
+    instructions: 'Task 17 — Change the Sorting Rule: The rule just changed to Color: BLUE 🔵. Which item matches?',
+    sequence: ['Old Rule: Sort by Size', 'NEW RULE: BLUE 🔵'],
     options: [
-      { label: '🔵 Small Blue Gem (Matches New Color Rule)', emoji: '🔵', correct: true },
-      { label: '🔴 Big Red Ball (Follows Old Size Rule)', emoji: '🔴', correct: false },
-      { label: '🟩 Big Green Box (Wrong Color)', emoji: '🟩', correct: false }
+      { label: '🔵', correct: true },
+      { label: '🔴', correct: false },
+      { label: '🟩', correct: false }
     ],
-    hint: 'Size does not matter now! Only the color Blue 🔵 counts!'
+    hint: 'Size no longer matters! Only the color Blue 🔵 counts!'
   },
   18: {
-    instructions: 'Task 18 — Switch Between Rules: Alternate rules: Item 1 = Color (Yellow 🟡), Item 2 = Shape (Triangle 🔺), Item 3 = Color (Yellow 🟡). What rule applies to Item 4?',
-    sequence: ['Item 1: Color Rule 🟡', 'Item 2: Shape Rule 🔺', 'Item 3: Color Rule 🟡', 'Item 4: ❓ Which Rule?'],
+    instructions: 'Task 18 — Switch Between Rules: The rules alternate: Color ➔ Shape ➔ Color ➔ ?',
+    sequence: ['Item 1: Color (🟡)', 'Item 2: Shape (🔺)', 'Item 3: Color (🟡)', 'Item 4: ❓ Which Rule?'],
     options: [
-      { label: 'Shape Rule 🔺 (Alternating Pattern)', emoji: '🔺', correct: true },
-      { label: 'Color Rule 🟡 (Break in Pattern)', emoji: '🟡', correct: false },
-      { label: 'Sound Rule 🔊 (Unrelated)', emoji: '🔊', correct: false }
+      { label: 'Shape (🔺)', correct: true },
+      { label: 'Color (🟡)', correct: false },
+      { label: 'Sound (🔊)', correct: false }
     ],
-    hint: 'The rules switch back and forth: Color → Shape → Color → Shape!'
+    hint: 'The rules alternate back and forth: Color ➔ Shape ➔ Color ➔ Shape!'
   },
   19: {
-    instructions: 'Task 19 — Find the Best Route: Robo needs to get from Start [A] to Goal [D]. Route 1 is 3 steps (clean). Route 2 is 5 steps with traffic. Route 3 is blocked. Which is best?',
-    sequence: ['Route 1: A → B → D (3 steps, Clear ✅)', 'Route 2: A → C → E → F → D (5 steps ⏳)', 'Route 3: A → G → D (Blocked ⛔)'],
+    instructions: 'Task 19 — Find the Best Route: Which route is the fastest unobstructed path from Start [A] to Goal [D]?',
+    sequence: ['Route 1: A ➔ B ➔ D (3 steps, Clear ✅)', 'Route 2: A ➔ C ➔ E ➔ F ➔ D (5 steps ⏳)', 'Route 3: A ➔ G ➔ D (Blocked ⛔)'],
     options: [
-      { label: 'Route 1: 3 steps, fastest and clear 🚀', emoji: '🚀', correct: true },
-      { label: 'Route 2: 5 steps with traffic 🐢', emoji: '🐢', correct: false },
-      { label: 'Route 3: Blocked path ⛔', emoji: '⛔', correct: false }
+      { label: 'Route 1 (3 steps, Clear) ✅', correct: true },
+      { label: 'Route 2 (5 steps) ⏳', correct: false },
+      { label: 'Route 3 (Blocked) ⛔', correct: false }
     ],
-    hint: 'Route 1 is both clear and the shortest number of steps!'
+    hint: 'Route 1 is both clear and the shortest path!'
   },
   20: {
-    instructions: 'Task 20 — Solve the Problem: The program crashed because input variable \'age\' received text instead of a number. What action solves the bug?',
-    sequence: ['Bug: Type Error (Expected number, got string)', 'Root Cause: No data type validation', 'Solution = ❓'],
+    instructions: 'Task 20 — Solve the Problem: The program crashed because the number field received text. What action solves this?',
+    sequence: ['Bug: Type mismatch', 'Cause: Text entered in number field', 'Solution = ❓'],
     options: [
-      { label: 'Convert input to integer before processing 🔢', emoji: '🔢', correct: true },
-      { label: 'Delete the whole program and restart ❌', emoji: '❌', correct: false },
-      { label: 'Ignore the error and run anyway ⚠️', emoji: '⚠️', correct: false }
+      { label: 'Convert text to number before processing', correct: true },
+      { label: 'Delete the entire program and restart', correct: false },
+      { label: 'Ignore error and run anyway', correct: false }
     ],
-    hint: 'Converting the input text into a number resolves the type mismatch!'
+    hint: 'Converting text to a number resolves the type mismatch!'
   },
   21: {
-    instructions: 'Task 21 — Find an Alternative: The primary printer is out of paper 📄❌. You have an urgent handout to print for class. What is the best alternative plan?',
-    sequence: ['Goal: Print urgent class handout', 'Problem: Primary printer out of paper', 'Alternative Action = ❓'],
+    instructions: 'Task 21 — Find an Alternative: The classroom printer is out of paper. You have an urgent handout to print. What is the best alternative?',
+    sequence: ['Goal: Print urgent handout', 'Problem: Printer out of paper', 'Alternative = ❓'],
     options: [
-      { label: 'Send job to the Library network printer down the hall 🖨️', emoji: '🖨️', correct: true },
-      { label: 'Cancel class and do not print 🚫', emoji: '🚫', correct: false },
-      { label: 'Keep pressing print on empty printer 🔄', emoji: '🔄', correct: false }
+      { label: 'Print to the library network printer down the hall', correct: true },
+      { label: 'Cancel class entirely', correct: false },
+      { label: 'Keep pressing print on empty printer', correct: false }
     ],
     hint: 'Find another available printer to complete the task on time!'
   },
   22: {
-    instructions: 'Task 22 — Multiple Rules: Select the item that satisfies ALL 3 rules: [1. Must be BLUE 🔵] AND [2. Must be a STAR ⭐] AND [3. Must have a BORDER 🔲].',
-    sequence: ['Rule 1: BLUE 🔵', 'Rule 2: STAR ⭐', 'Rule 3: BORDER 🔲'],
+    instructions: 'Task 22 — Multiple Rules: Select the item that is BLUE 🔵 AND a STAR ⭐ (NOT a Circle).',
+    sequence: ['Rule 1: BLUE 🔵', 'Rule 2: STAR ⭐', 'Rule 3: NOT Circle'],
     options: [
-      { label: 'Blue Star with Border 🔲⭐ (All 3 Rules Satisfied)', emoji: '⭐', correct: true },
-      { label: 'Blue Circle with Border 🔲🔵 (Fails Shape Rule)', emoji: '🔵', correct: false },
-      { label: 'Yellow Star with Border 🔲⭐ (Fails Color Rule)', emoji: '🟡', correct: false }
+      { label: '🔵 ⭐', correct: true },
+      { label: '🔵 ●', correct: false },
+      { label: '🟡 ⭐', correct: false }
     ],
-    hint: 'Must be Blue AND Star AND Bordered: only one item has all three!'
+    hint: 'Must be Blue AND Star, but NOT circle!'
   },
   23: {
-    instructions: 'Task 23 — Multi-Step Instructions: Follow carefully: \'First open Folder A 📁, THEN copy File 1 📄, THEN rename it to Final.doc ✏️, FINALLY upload to Cloud ☁️\'. Which step is Step 3?',
-    sequence: ['1. Open Folder A 📁', '2. Copy File 1 📄', '3. Rename to Final.doc ✏️', '4. Upload to Cloud ☁️'],
+    instructions: 'Task 23 — Multi-Step Instructions: Follow steps: 1. Open Folder 📁 ➔ 2. Copy File 📄 ➔ 3. Rename File ✏️ ➔ 4. Upload ☁️. Which is Step 3?',
+    sequence: ['1. 📁 Open Folder', '2. 📄 Copy File', '3. ✏️ Rename File', '4. ☁️ Upload Cloud'],
     options: [
-      { label: 'Rename it to Final.doc ✏️ (Step 3)', emoji: '✏️', correct: true },
-      { label: 'Copy File 1 📄 (Step 2)', emoji: '📄', correct: false },
-      { label: 'Upload to Cloud ☁️ (Step 4)', emoji: '☁️', correct: false }
+      { label: '3. ✏️ Rename File', correct: true },
+      { label: '2. 📄 Copy File', correct: false },
+      { label: '4. ☁️ Upload Cloud', correct: false }
     ],
-    hint: 'Look at the 3rd step in the sequence: Rename!'
+    hint: 'Look at step 3 in the numbered sequence!'
   },
   24: {
-    instructions: 'Task 24 — Multiple Conditions: From the student table, find the candidate who: [Grade = 10] AND [Club = Robotics 🤖] AND [Status = Active ✅].',
-    sequence: ['Sam: Grade 9, Robotics, Active', 'Alex: Grade 10, Robotics, Active ✅', 'Jordan: Grade 10, Art, Active'],
+    instructions: 'Task 24 — Multiple Conditions: From the student records, find the student who is: Grade 10 + Robotics Club + Active.',
+    sequence: ['Alex: Grade 10 | Robotics | Active', 'Sam: Grade 9 | Robotics | Active', 'Jordan: Grade 10 | Art | Active'],
     options: [
-      { label: 'Alex (Grade 10, Robotics 🤖, Active ✅)', emoji: '🤖', correct: true },
-      { label: 'Sam (Grade 9 — wrong grade)', emoji: '👤', correct: false },
-      { label: 'Jordan (Art Club — wrong club)', emoji: '🎨', correct: false }
+      { label: 'Alex (Grade 10, Robotics, Active)', correct: true },
+      { label: 'Sam (Grade 9)', correct: false },
+      { label: 'Jordan (Art Club)', correct: false }
     ],
     hint: 'Alex matches all three requirements: Grade 10, Robotics, Active!'
   },
   25: {
-    instructions: 'Task 25 — Choose the Best Option: You are working on a coding project and get completely stuck on a syntax error after trying for 15 minutes. What is the best decision?',
-    sequence: ['Situation: Stuck on syntax error for 15 mins', 'Goal: Learn and make progress', 'Decision = ❓'],
+    instructions: 'Task 25 — Choose the Best Option: You have tried solving a code syntax error for 15 minutes and cannot find it. What is the best decision?',
+    sequence: ['Status: Stuck on syntax error for 15 mins', 'Goal: Learn and fix code', 'Best Action = ❓'],
     options: [
-      { label: 'Check the documentation or ask the mentor for guidance 🙋', emoji: '🙋', correct: true },
-      { label: 'Give up and close the laptop for the day 🚪', emoji: '🚪', correct: false },
-      { label: 'Copy-paste random code without reading it 🎲', emoji: '🎲', correct: false }
+      { label: 'Check documentation or ask mentor for guidance 🙋', correct: true },
+      { label: 'Give up and close laptop 🚪', correct: false },
+      { label: 'Copy-paste random code without reading 🎲', correct: false }
     ],
-    hint: 'Asking for help after trying independently is the smart, professional decision!'
+    hint: 'Asking for help after trying independently is the smart decision!'
   }
 };
 
@@ -1358,22 +1372,24 @@ export class ActivityGenerator {
         blueprint
           ? '1a. APPLY the Assessment 1 cognitive blueprint above — the concept is fixed, only the surface content changes'
           : '',
-        '2. The "sequence" array shows the visual puzzle to the student (2-5 short emoji+text items)',
+        '2. CRITICAL VISUAL RULES FOR SHAPES AND SYMBOLS:',
+        '   - NEVER write the text names of shapes next to shapes (do NOT write "Square ⬛", "Triangle 🔺", "Circle 🔴", or "⭐ Star"). Use ONLY the symbols/emojis themselves.',
+        '   - For visual patterns and sequences, provide ONLY pure symbols/emojis in the "sequence" array (e.g. ["🔴", "🔺", "🔴", "🔺", "🔴", "❓"]).',
+        '   - In options for visual questions, provide ONLY the clean symbols (e.g. label: "🔺" or label: "🔴 🔺 ⭐ ⬛"). DO NOT add explanations like "(Completes Pattern)" or "(Original Symbols)" into the label.',
         '3. Provide EXACTLY 3 answer options',
         '4. Mark EXACTLY 1 option as correct (correct: true), the other 2 must be false',
         '5. Options must directly and logically answer the question in "instructions"',
-        '6. Use simple language and supportive emojis',
-        '7. Output ONLY valid JSON — no markdown fences, no text outside the JSON',
+        '6. Output ONLY valid JSON — no markdown fences, no text outside the JSON',
         '',
         'JSON format:',
         '{',
         '  "title": "short title (max 6 words)",',
         '  "instructions": "the full question text shown to student",',
-        '  "sequence": ["emoji + text 1", "emoji + text 2", "emoji + ?"],',
+        '  "sequence": ["symbol 1", "symbol 2", "❓"],',
         '  "options": [',
-        '    { "label": "correct answer text", "emoji": "emoji", "correct": true },',
-        '    { "label": "wrong answer 1", "emoji": "emoji", "correct": false },',
-        '    { "label": "wrong answer 2", "emoji": "emoji", "correct": false }',
+        '    { "label": "correct answer symbol or text", "correct": true },',
+        '    { "label": "wrong answer 1", "correct": false },',
+        '    { "label": "wrong answer 2", "correct": false }',
         '  ],',
         '  "hintText": "one short helpful hint"',
         '}'
@@ -1426,14 +1442,14 @@ export class ActivityGenerator {
         return fallbackItem;
       }
 
-      // ── Step 5: Build coherent AI item ───────────────────────────────────
+      // ── Step 5: Build coherent AI item with sanitized shape text ─────────
       const aiPayload = {
         instructions: parsed.instructions.trim(),
         sequence: Array.isArray(parsed.sequence) && parsed.sequence.length > 0
-          ? (parsed.sequence as any[]).slice(0, 6).map(String)
-          : (fallbackPayload.sequence || []),
+          ? (parsed.sequence as any[]).slice(0, 6).map(s => cleanShapeText(String(s)))
+          : (fallbackPayload.sequence || []).map((s: string) => cleanShapeText(s)),
         options: (parsed.options as any[]).map(o => ({
-          label:   String(o.label).trim(),
+          label:   cleanShapeText(String(o.label).trim()),
           emoji:   typeof o.emoji === 'string' ? o.emoji : '',
           correct: o.correct === true
         })),
