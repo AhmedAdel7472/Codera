@@ -78,6 +78,38 @@ export const COGNITIVE_ASSESSMENT_BASELINES: QuestionBaseline[] = [
   { slot: 25, domain: 'cognitive_ability', skill: 'problem_solving', format: 'structured', subSkill: 'Decision Making — Choose Best Option', title: 'Task 25: Choose Best Option', baselinePrompt: 'Weigh practical options and select the most sensible, safe decision.', maxPoints: 2, difficulty: 3, type: 'pattern_matrix' }
 ];
 
+// ---------------------------------------------------------------------------
+// Functional Assessment (Assessment 2) — 25 Task Baselines
+// Mapped 1-to-1 from Functional_Assessment_25_Tasks.pdf
+// ---------------------------------------------------------------------------
+export const FUNCTIONAL_ASSESSMENT_BASELINES: QuestionBaseline[] = [
+  { slot: 1, domain: 'functional_skills', skill: 'organization', format: 'structured', subSkill: 'Organization — Workstation Setup', title: 'Task 1: Workstation Setup', baselinePrompt: 'Place work tools and items in their designated organizational locations.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
+  { slot: 2, domain: 'functional_skills', skill: 'sequencing', format: 'performance', subSkill: 'Sequencing — Task Step Sequencing', title: 'Task 2: Task Step Sequencing', baselinePrompt: 'Sequence everyday workplace and study routine steps in logical order.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
+  { slot: 3, domain: 'functional_skills', skill: 'following_instructions', format: 'structured', subSkill: 'Task Preparation — Tool Selection', title: 'Task 3: Tool Selection', baselinePrompt: 'Select the required tools and materials needed to perform a specified task.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
+  { slot: 4, domain: 'functional_skills', skill: 'logical_reasoning', format: 'structured', subSkill: 'Functional Understanding — Tool Functions', title: 'Task 4: Match Tool & Function', baselinePrompt: 'Match each workplace tool with its intended practical function.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
+  { slot: 5, domain: 'functional_skills', skill: 'following_instructions', format: 'structured', subSkill: 'Following Instructions — 1-Step Direction', title: 'Task 5: Simple Direction', baselinePrompt: 'Accurately execute a single straightforward workplace direction.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
+  { slot: 6, domain: 'functional_skills', skill: 'following_instructions', format: 'structured', subSkill: 'Following Instructions — 2-Step Direction', title: 'Task 6: 2-Step Direction', baselinePrompt: 'Execute a sequential two-step workplace instruction in the right order.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
+  { slot: 7, domain: 'functional_skills', skill: 'problem_solving', format: 'structured', subSkill: 'Task Initiation — Identify First Step', title: 'Task 7: Task Initiation', baselinePrompt: 'Identify the essential preliminary step before starting a workplace action.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
+  { slot: 8, domain: 'functional_skills', skill: 'sequencing', format: 'structured', subSkill: 'Task Continuation — Identify Next Step', title: 'Task 8: Task Continuation', baselinePrompt: 'Identify the next logical action when in the middle of a routine task.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
+  { slot: 9, domain: 'functional_skills', skill: 'organization', format: 'performance', subSkill: 'Task Completion — End-to-End Routine', title: 'Task 9: Complete Full Routine', baselinePrompt: 'Carry out and complete a multi-step workplace sorting and filing routine.', maxPoints: 2, difficulty: 2, type: 'pattern_matrix' },
+  { slot: 10, domain: 'functional_skills', skill: 'attention', format: 'structured', subSkill: 'Self-Monitoring — Workplace Quality Check', title: 'Task 10: Quality Check', baselinePrompt: 'Inspect completed work to spot misplaced items or errors.', maxPoints: 2, difficulty: 2, type: 'pattern_matrix' },
+  { slot: 11, domain: 'functional_skills', skill: 'problem_solving', format: 'structured', subSkill: 'Error Correction — Fix Misplaced Item', title: 'Task 11: Error Correction', baselinePrompt: 'Take the corrective action to resolve a detected error or misplaced item.', maxPoints: 2, difficulty: 2, type: 'pattern_matrix' },
+  { slot: 12, domain: 'functional_skills', skill: 'problem_solving', format: 'structured', subSkill: 'Problem Solving — Workplace Obstacle', title: 'Task 12: Problem Solving', baselinePrompt: 'Resolve a common workplace barrier like finding a missing document or file.', maxPoints: 2, difficulty: 2, type: 'pattern_matrix' },
+  { slot: 13, domain: 'functional_skills', skill: 'communication', format: 'structured', subSkill: 'Help-Seeking — Protocol When Blocked', title: 'Task 13: Help-Seeking Protocol', baselinePrompt: 'Seek appropriate help when faced with a system failure or roadblock.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
+  { slot: 14, domain: 'functional_skills', skill: 'communication', format: 'structured', subSkill: 'Communication — Identify Person for Help', title: 'Task 14: Appropriate Person for Help', baselinePrompt: 'Identify which personnel (supervisor, mentor, technician) to ask for help.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
+  { slot: 15, domain: 'functional_skills', skill: 'visual_memory', format: 'structured', subSkill: 'Schedule Following — Read Digital Schedule', title: 'Task 15: Read Digital Schedule', baselinePrompt: 'Read and interpret a digital timetable to identify scheduled activities.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
+  { slot: 16, domain: 'functional_skills', skill: 'sequencing', format: 'structured', subSkill: 'Schedule Management — Identify Next Activity', title: 'Task 16: Next Activity on Schedule', baselinePrompt: 'Identify the upcoming activity on a daily schedule following current events.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
+  { slot: 17, domain: 'functional_skills', skill: 'attention', format: 'structured', subSkill: 'Time Awareness — Digital Clock Reading', title: 'Task 17: Time Awareness', baselinePrompt: 'Read digital clock displays accurately to align with schedule times.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
+  { slot: 18, domain: 'functional_skills', skill: 'logical_reasoning', format: 'structured', subSkill: 'Time Management — Calculate Duration', title: 'Task 18: Calculate Duration', baselinePrompt: 'Calculate the elapsed time and duration between task start and end times.', maxPoints: 2, difficulty: 2, type: 'pattern_matrix' },
+  { slot: 19, domain: 'functional_skills', skill: 'organization', format: 'structured', subSkill: 'Organization — Workstation Cleanup', title: 'Task 19: Workstation Cleanup', baselinePrompt: 'Organize personal vs professional items into appropriate designated zones.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
+  { slot: 20, domain: 'functional_skills', skill: 'problem_solving', format: 'structured', subSkill: 'Safety Awareness — Hazard Identification', title: 'Task 20: Workplace Safety', baselinePrompt: 'Identify physical workplace hazards and choose safe, preventative responses.', maxPoints: 2, difficulty: 2, type: 'pattern_matrix' },
+  { slot: 21, domain: 'functional_skills', skill: 'flexibility', format: 'structured', subSkill: 'Flexibility — Schedule Disruption', title: 'Task 21: Handling Disruption', baselinePrompt: 'Adapt flexibly when routine facilities or rooms become temporarily unavailable.', maxPoints: 2, difficulty: 2, type: 'pattern_matrix' },
+  { slot: 22, domain: 'functional_skills', skill: 'flexibility', format: 'structured', subSkill: 'Patience — Waiting for Shared Resources', title: 'Task 22: Waiting for Resources', baselinePrompt: 'Demonstrate patience and workplace etiquette when shared equipment is in use.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
+  { slot: 23, domain: 'functional_skills', skill: 'following_instructions', format: 'structured', subSkill: 'Workplace Functioning — Supervisor Request', title: 'Task 23: Supervisor Request', baselinePrompt: 'Execute a direct instruction given by a workplace supervisor accurately.', maxPoints: 2, difficulty: 2, type: 'pattern_matrix' },
+  { slot: 24, domain: 'functional_skills', skill: 'task_completion', format: 'performance', subSkill: 'Task Completion — Digital Workflow', title: 'Task 24: Digital Workflow Execution', baselinePrompt: 'Complete an end-to-end digital file management sequence.', maxPoints: 2, difficulty: 2, type: 'pattern_matrix' },
+  { slot: 25, domain: 'functional_skills', skill: 'problem_solving', format: 'structured', subSkill: 'Troubleshooting — On-the-Fly Fix', title: 'Task 25: Workplace Troubleshooting', baselinePrompt: 'Diagnose and correct a misplaced file or common operational error.', maxPoints: 2, difficulty: 2, type: 'pattern_matrix' }
+];
+
 export const QUESTION_BASELINES: QuestionBaseline[] = [
   // --- DOMAIN 1: COGNITIVE ABILITIES (Q1 - Q12 | 25 Pts) ---
   { slot: 1, domain: 'cognitive_ability', skill: 'classification', format: 'structured', subSkill: 'Rule-Based Grouping', title: 'Logical Grouping', baselinePrompt: 'Identify which candidate follows the group classification rule.', maxPoints: 2, difficulty: 1, type: 'pattern_matrix' },
@@ -825,6 +857,271 @@ export const COGNITIVE_25_TASK_CONFIGS: Record<
 };
 
 // ---------------------------------------------------------------------------
+// 25 Dedicated Functional Task Procedural Fallback Configurations
+// 1-to-1 match for Tasks 1 to 25 from Functional_Assessment_25_Tasks.pdf
+// ---------------------------------------------------------------------------
+export const FUNCTIONAL_25_TASK_CONFIGS: Record<
+  number,
+  {
+    instructions: string;
+    sequence?: string[];
+    options: Array<{ label: string; emoji?: string; correct: boolean }>;
+    hint: string;
+  }
+> = {
+  1: {
+    instructions: 'Task 1 — Workstation Setup: Organize your workspace properly. Place the items in their designated spots: Pen goes into the Pencil Holder, ID goes into the ID Holder. Where does the Notebook go?',
+    sequence: ['Pen ➔ ✏️ Pencil Holder', 'ID Badge ➔ 🪪 ID Holder', 'Notebook ➔ ❓ Where does it go?'],
+    options: [
+      { label: 'Inside your Work Bag 🎒', correct: true },
+      { label: 'Into the Trash Bin 🗑️', correct: false },
+      { label: 'On the Walkway Floor ⬇️', correct: false }
+    ],
+    hint: 'Notebooks belong safely inside your work bag or drawer!'
+  },
+  2: {
+    instructions: 'Task 2 — Task Step Sequencing: Arrange the daily study routine steps in the correct logical order.',
+    sequence: ['1. Open Bag 🎒', '2. Take Notebook 📓', '3. Write Notes ✍️', '4. ❓ Next Step'],
+    options: [
+      { label: 'Put Notebook Back in Bag 🎒', correct: true },
+      { label: 'Tear up the notebook paper 📄', correct: false },
+      { label: 'Leave the desk immediately 🏃', correct: false }
+    ],
+    hint: 'Always return materials to your bag when done writing!'
+  },
+  3: {
+    instructions: 'Task 3 — Tool Selection: You need to prepare materials for a writing assignment. Which toolset do you select?',
+    sequence: ['Task Goal: Writing Assignment 📝', 'Required Items = ❓'],
+    options: [
+      { label: 'Pen & Notebook 🖊️📓', correct: true },
+      { label: 'Headphones & Game Controller 🎧🎮', correct: false },
+      { label: 'Screwdriver & Wrench 🪛🔧', correct: false }
+    ],
+    hint: 'Writing tasks require a pen and paper or notebook!'
+  },
+  4: {
+    instructions: 'Task 4 — Match Tool with Function: Match each tool with its correct workplace function.',
+    sequence: ['Keyboard ➔ Typing ⌨️', 'Scissors ➔ Cutting ✂️', 'Clock ➔ ❓'],
+    options: [
+      { label: 'Checking the Time 🕒', correct: true },
+      { label: 'Playing Music 🎵', correct: false },
+      { label: 'Sweeping Floor 🧹', correct: false }
+    ],
+    hint: 'A clock is used to check the time!'
+  },
+  5: {
+    instructions: 'Task 5 — Execute 1-Step Workplace Direction: Follow the instruction: "Place the client document into the Green Folder 📁".',
+    sequence: ['Supervisor: "Put the document in the Green Folder"', 'Your Action = ❓'],
+    options: [
+      { label: 'Place document into Green Folder 📁', correct: true },
+      { label: 'Shred the document 🗄️', correct: false },
+      { label: 'Leave document on hallway floor 🚪', correct: false }
+    ],
+    hint: 'Follow the single direction: put it in the Green Folder!'
+  },
+  6: {
+    instructions: 'Task 6 — Execute 2-Step Sequential Direction: Follow the two steps: "1. Select document 📄 ➔ 2. Move to Work Folder 📁". Which order is correct?',
+    sequence: ['Step 1: Select document 📄', 'Step 2: Move to Work Folder 📁'],
+    options: [
+      { label: 'Select document 📄 ➔ Move to Work Folder 📁', correct: true },
+      { label: 'Move folder first 📁 ➔ Select document 📄', correct: false },
+      { label: 'Delete file 🗑️ ➔ Open browser 🌐', correct: false }
+    ],
+    hint: 'Complete Step 1 first, then Step 2!'
+  },
+  7: {
+    instructions: 'Task 7 — Task Initiation (First Step): You need to send an important project report by email. What must you do FIRST?',
+    sequence: ['Goal: Send project report ✉️', 'What is the FIRST step? ❓'],
+    options: [
+      { label: 'Review and verify the document 🔍', correct: true },
+      { label: 'Click send immediately without looking 📤', correct: false },
+      { label: 'Shut down the computer 🔌', correct: false }
+    ],
+    hint: 'Always review your document before sending!'
+  },
+  8: {
+    instructions: 'Task 8 — Task Continuation (Next Step): You have just opened a new blank document. What is the next logical step to continue the task?',
+    sequence: ['Step 1 Done: Blank document opened 📄', 'Next Step = ❓'],
+    options: [
+      { label: 'Enter project information ✍️', correct: true },
+      { label: 'Turn off monitor screen 🖥️', correct: false },
+      { label: 'Print empty blank page 🖨️', correct: false }
+    ],
+    hint: 'Now that the document is open, enter the required text!'
+  },
+  9: {
+    instructions: 'Task 9 — Complete Full Routine: Complete the file sorting routine. Where should technical bug reports be filed?',
+    sequence: ['Invoices ➔ Finance Folder 💼', 'Resumes ➔ HR Folder 👥', 'Bug Reports ➔ ❓'],
+    options: [
+      { label: 'IT / Engineering Folder 💻', correct: true },
+      { label: 'Trash Bin 🗑️', correct: false },
+      { label: 'Cafeteria Menu 🍽️', correct: false }
+    ],
+    hint: 'Software bug reports belong to IT / Engineering!'
+  },
+  10: {
+    instructions: 'Task 10 — Workplace Self-Monitoring: Check this completed folder. Identify the file that does not belong:',
+    sequence: ['Folder [Client Invoices]: Invoice_01.pdf ✅', 'Folder [Client Invoices]: Invoice_02.pdf ✅', 'Folder [Client Invoices]: Vacation_Photo.jpg ❓'],
+    options: [
+      { label: 'Vacation_Photo.jpg is in the wrong folder ⚠️', correct: true },
+      { label: 'All files belong in this folder ✅', correct: false },
+      { label: 'Invoice_01.pdf needs to be removed ❌', correct: false }
+    ],
+    hint: 'A vacation photo does not belong in business client invoices!'
+  },
+  11: {
+    instructions: 'Task 11 — Error Correction: You found "Vacation_Photo.jpg" inside the Client Invoices folder. What is the correct way to fix this error?',
+    sequence: ['Issue: Vacation_Photo.jpg in Client Invoices folder', 'Correction = ❓'],
+    options: [
+      { label: 'Move Vacation_Photo.jpg to Personal Photos folder 🖼️', correct: true },
+      { label: 'Delete all client invoices 🗑️', correct: false },
+      { label: 'Ignore it and do nothing 🙈', correct: false }
+    ],
+    hint: 'Move the misplaced photo to its proper personal folder!'
+  },
+  12: {
+    instructions: 'Task 12 — Workplace Problem Solving: You cannot find "Project_Summary.docx" on your desktop. What is the best action to take?',
+    sequence: ['Problem: File not found on desktop 📄', 'Best action = ❓'],
+    options: [
+      { label: 'Use the system search bar to look for the file name 🔍', correct: true },
+      { label: 'Format and erase the computer hard drive ⚠️', correct: false },
+      { label: 'Assume the file was never created 🤷', correct: false }
+    ],
+    hint: 'Use the search feature to find files by name!'
+  },
+  13: {
+    instructions: 'Task 13 — Help-Seeking Protocol: Your coding software froze and shows an error message. What is the appropriate protocol?',
+    sequence: ['Situation: Software frozen and not responding ⚠️', 'Appropriate response = ❓'],
+    options: [
+      { label: 'Inform trainer or supervisor and request technical assistance 🙋', correct: true },
+      { label: 'Bang on the keyboard repeatedly ⌨️💥', correct: false },
+      { label: 'Walk out of the classroom silently 🚪', correct: false }
+    ],
+    hint: 'Calmly report the issue and ask for technical assistance!'
+  },
+  14: {
+    instructions: 'Task 14 — Identify Person for Help: You do not understand what is required for your assigned workplace task. Who should you ask?',
+    sequence: ['Situation: Unclear about task instructions', 'Who to ask = ❓'],
+    options: [
+      { label: 'Supervisor or Mentor 👨‍🏫', correct: true },
+      { label: 'A random visitor passing by 🚶', correct: false },
+      { label: 'No one — guess and risk mistakes ❓', correct: false }
+    ],
+    hint: 'Your supervisor or mentor is responsible for clarifying tasks!'
+  },
+  15: {
+    instructions: 'Task 15 — Read Digital Schedule: According to the daily timetable, what activity starts at 10:15?',
+    sequence: ['09:00 - File Sorting 📁', '10:00 - Morning Break ☕', '10:15 - Computer Task 💻', 'Scheduled at 10:15 = ❓'],
+    options: [
+      { label: 'Computer Task 💻', correct: true },
+      { label: 'File Sorting 📁', correct: false },
+      { label: 'Lunch Break 🥪', correct: false }
+    ],
+    hint: 'Look at the 10:15 line on the schedule!'
+  },
+  16: {
+    instructions: 'Task 16 — Schedule Management (Next Activity): It is 10:14 and morning break is ending. What activity should you transition to next?',
+    sequence: ['Schedule: Sorting (9:00) ➔ Break (10:00) ➔ Computer Task (10:15)', 'Current Time: 10:14 ☕', 'Next Activity = ❓'],
+    options: [
+      { label: 'Computer Task at 10:15 💻', correct: true },
+      { label: 'Go home for the day 🏠', correct: false },
+      { label: 'Restart morning sorting 📁', correct: false }
+    ],
+    hint: 'The schedule transitions directly to Computer Task after break!'
+  },
+  17: {
+    instructions: 'Task 17 — Time Awareness: Your afternoon robotics workshop starts at half past nine (09:30). Which digital clock shows this start time?',
+    sequence: ['Target Start Time: Half past nine (09:30)', 'Which clock matches? ❓'],
+    options: [
+      { label: '09:30 ⏰', correct: true },
+      { label: '12:00 🕛', correct: false },
+      { label: '06:15 🕕', correct: false }
+    ],
+    hint: '09:30 matches half past nine!'
+  },
+  18: {
+    instructions: 'Task 18 — Time Management: A data entry task started at 09:00 and was completed at 09:30. How long did the task take?',
+    sequence: ['Start: 09:00 🕘', 'End: 09:30 🕤', 'Duration = ❓'],
+    options: [
+      { label: '30 Minutes ⏱️', correct: true },
+      { label: '10 Minutes ⏱️', correct: false },
+      { label: '2 Hours ⏱️', correct: false }
+    ],
+    hint: 'From 9:00 to 9:30 is exactly 30 minutes!'
+  },
+  19: {
+    instructions: 'Task 19 — Workstation Cleanup & Organization: Clean your workstation. Separate official documents from personal items. Where should your personal lunch box go?',
+    sequence: ['Zone A: Official Documents 📁', 'Zone B: Personal Items 🎒', 'Item: Lunch Box 🥪 ➔ ❓'],
+    options: [
+      { label: 'Zone B: Personal Items 🎒', correct: true },
+      { label: 'Zone A: Official Documents 📁', correct: false },
+      { label: 'Server Rack 🖥️', correct: false }
+    ],
+    hint: 'A lunch box is a personal item and belongs in Zone B!'
+  },
+  20: {
+    instructions: 'Task 20 — Workplace Safety Awareness: You notice a thick power cable stretched loosely across a busy corridor walkway. What is the safest response?',
+    sequence: ['Hazard: Cable across hallway walkway 🔌⚠️', 'Safe response = ❓'],
+    options: [
+      { label: 'Carefully walk around it and report the tripping hazard ⚠️', correct: true },
+      { label: 'Run and jump over the wire quickly 🏃', correct: false },
+      { label: 'Yank the cable out of the wall socket 🔌', correct: false }
+    ],
+    hint: 'Avoid the tripping hazard and notify building safety/supervisor!'
+  },
+  21: {
+    instructions: 'Task 21 — Handling Schedule Disruption: Computer Lab A is closed today for urgent network maintenance. How should you adapt?',
+    sequence: ['Notice: Lab A unavailable due to maintenance 🚧', 'Best adaptation = ❓'],
+    options: [
+      { label: 'Check the alternative schedule and use Computer Lab B 💻', correct: true },
+      { label: 'Cancel your entire school day and leave 🏠', correct: false },
+      { label: 'Force the locked Lab A door open 🚪', correct: false }
+    ],
+    hint: 'Switching to the backup room keeps your learning on track!'
+  },
+  22: {
+    instructions: 'Task 22 — Waiting for Shared Resources: A colleague is currently using the shared office printer for a 2-minute print job. What should you do?',
+    sequence: ['Status: Printer busy with colleague\'s print job 🖨️', 'What should you do? ❓'],
+    options: [
+      { label: 'Wait patiently for your turn nearby ⏳', correct: true },
+      { label: 'Press Cancel on their active print job 🚫', correct: false },
+      { label: 'Unplug the printer immediately 🔌', correct: false }
+    ],
+    hint: 'Waiting respectfully allows everyone to use shared resources smoothly!'
+  },
+  23: {
+    instructions: 'Task 23 — Execute Supervisor Request: Your supervisor says: "Please transfer the finalized reports into the [Completed] archive folder." What action do you take?',
+    sequence: ['Supervisor Request: Move finalized reports to [Completed] folder 📁', 'Your action = ❓'],
+    options: [
+      { label: 'Move finalized reports into [Completed] archive folder 📁', correct: true },
+      { label: 'Leave reports loose on the desktop 🖥️', correct: false },
+      { label: 'Delete the finalized reports 🗑️', correct: false }
+    ],
+    hint: 'Follow the specific instruction to move reports to [Completed]!'
+  },
+  24: {
+    instructions: 'Task 24 — Digital Workflow Execution: Follow the 3-step digital routine: 1. Open file 📄 ➔ 2. Rename to "Final_Report" ✏️ ➔ 3. Which action completes this workflow?',
+    sequence: ['1. Open file 📄', '2. Rename to "Final_Report" ✏️', '3. ❓ What completes the routine?'],
+    options: [
+      { label: 'Save file in the project folder 💾', correct: true },
+      { label: 'Close without saving changes ❌', correct: false },
+      { label: 'Delete the file 🗑️', correct: false }
+    ],
+    hint: 'Saving the renamed file finishes the digital workflow!'
+  },
+  25: {
+    instructions: 'Task 25 — Workplace Troubleshooting: An accounting spreadsheet was accidentally saved inside the Marketing folder. How do you resolve this error?',
+    sequence: ['Issue: Accounting file misplaced in Marketing folder 📂', 'How to resolve? ❓'],
+    options: [
+      { label: 'Move the file into the Accounting folder 📁', correct: true },
+      { label: 'Delete the accounting spreadsheet permanently 🗑️', correct: false },
+      { label: 'Restart the computer without fixing it 🔄', correct: false }
+    ],
+    hint: 'Moving the file to its correct department folder fixes the problem cleanly!'
+  }
+};
+
+// ---------------------------------------------------------------------------
 // ASSESSMENT 1 — PDF Task Blueprints (25 Cognitive Task Types)
 //
 // Each entry defines:
@@ -1225,6 +1522,324 @@ export const ASSESSMENT1_SLOT_TO_TASK: Record<number, number> = {
 };
 
 // ---------------------------------------------------------------------------
+// ASSESSMENT 2 — PDF Task Blueprints (25 Functional Task Types)
+// Mapped 1-to-1 from Functional_Assessment_25_Tasks.pdf
+// ---------------------------------------------------------------------------
+export interface Assessment2TaskBlueprint {
+  taskNumber: number;
+  taskName: string;
+  skillArea: string;
+  cognitiveBlueprint: string;
+  variationStrategy: string;
+  slotMapping: number[];
+}
+
+export const ASSESSMENT2_TASK_BLUEPRINTS: Assessment2TaskBlueprint[] = [
+  {
+    taskNumber: 1,
+    taskName: 'Workstation Setup & Tool Organization',
+    skillArea: 'Organization',
+    cognitiveBlueprint:
+      'Present tools/items and their designated functional locations. The student identifies where a specific target item must be placed. ' +
+      'Tests organization and systematic workspace setup.',
+    variationStrategy:
+      'Vary workplace/classroom items (stationery, electronics, safety gear) and designated holders/zones. ' +
+      'Present 3 options: correct holder, clearly improper location (trash/floor), and unrelated container.',
+    slotMapping: [1]
+  },
+  {
+    taskNumber: 2,
+    taskName: 'Task Step Sequencing',
+    skillArea: 'Sequencing',
+    cognitiveBlueprint:
+      'Present steps in a routine work or study sequence. The student determines the next logical action or identifies the proper order. ' +
+      'Tests procedural sequencing and order of operations.',
+    variationStrategy:
+      'Vary everyday routines (taking notes, starting computer session, cleaning up). ' +
+      'Present 3 options: correct logical continuation, an action that destroys work, and premature termination.',
+    slotMapping: [2]
+  },
+  {
+    taskNumber: 3,
+    taskName: 'Tool Selection for Required Task',
+    skillArea: 'Task Preparation',
+    cognitiveBlueprint:
+      'State a specific workplace or school task. The student selects the appropriate set of tools required to execute it. ' +
+      'Tests preparatory reasoning and tool utility understanding.',
+    variationStrategy:
+      'Vary the task goal (drafting document, repairing cord, measuring distance, testing code). ' +
+      'Present 3 options: correct toolset, recreational/unrelated items, and mismatched trade tools.',
+    slotMapping: [3]
+  },
+  {
+    taskNumber: 4,
+    taskName: 'Match Tool with its Function',
+    skillArea: 'Functional Understanding',
+    cognitiveBlueprint:
+      'Provide workplace tools and their direct real-world functions. The student matches the target tool to what it accomplishes. ' +
+      'Tests functional comprehension and object affordances.',
+    variationStrategy:
+      'Vary digital or physical tools (mouse, barcode scanner, timer, headphones, paper shredder). ' +
+      'Present 3 options: correct function, completely absurd activity, and unrelated chore.',
+    slotMapping: [4]
+  },
+  {
+    taskNumber: 5,
+    taskName: 'Execute Simple 1-Step Workplace Direction',
+    skillArea: 'Following Instructions',
+    cognitiveBlueprint:
+      'A supervisor or system gives a single direct, clear command. The student identifies the exact complying action. ' +
+      'Tests single-step verbal/text comprehension and direct execution.',
+    variationStrategy:
+      'Vary the instruction (filing a folder, handing an item, pressing save, attaching a cable). ' +
+      'Present 3 options: exact compliance, opposite/destructive action, and passive neglect.',
+    slotMapping: [5]
+  },
+  {
+    taskNumber: 6,
+    taskName: 'Execute 2-Step Sequential Workplace Direction',
+    skillArea: 'Following Instructions',
+    cognitiveBlueprint:
+      'A directive contains two dependent sequential steps (First do A, then do B). The student identifies the correct ordered sequence. ' +
+      'Tests sequential compliance and working memory for directives.',
+    variationStrategy:
+      'Vary the 2-step workplace action (e.g., select item then move, open app then log in, format disk then eject). ' +
+      'Present 3 options: correct ordered pair, inverted order (B before A), and irrelevant action.',
+    slotMapping: [6]
+  },
+  {
+    taskNumber: 7,
+    taskName: 'Task Initiation — Identify First Step',
+    skillArea: 'Task Initiation',
+    cognitiveBlueprint:
+      'Given an objective or workflow, the student determines the necessary preliminary or first step before executing subsequent actions. ' +
+      'Tests task initiation, foresight, and preparation.',
+    variationStrategy:
+      'Vary project scenarios (sending report, baking, coding robot, presenting slides). ' +
+      'Present 3 options: essential preliminary check/first step, premature final action, and abrupt shutdown.',
+    slotMapping: [7]
+  },
+  {
+    taskNumber: 8,
+    taskName: 'Task Continuation — Identify Next Step',
+    skillArea: 'Task Continuation',
+    cognitiveBlueprint:
+      'Given an in-progress workflow where Step 1 is already complete, the student determines what step comes next. ' +
+      'Tests mid-task momentum and ongoing procedural continuity.',
+    variationStrategy:
+      'Vary multi-step tasks (document editing, assembly, data entry). ' +
+      'Present 3 options: correct continuation step, resetting everything, and skipping to finish without completing work.',
+    slotMapping: [8]
+  },
+  {
+    taskNumber: 9,
+    taskName: 'Complete Full End-to-End Routine',
+    skillArea: 'Task Completion',
+    cognitiveBlueprint:
+      'Present a comprehensive workplace sorting or filing routine with established category mappings. The student maps the final item. ' +
+      'Tests comprehensive routine execution and categorization consistency.',
+    variationStrategy:
+      'Vary department folders (Finance, HR, Engineering, Operations, Legal) or warehouse bins. ' +
+      'Present 3 options: correct category, trash/recycling, and random non-work venue.',
+    slotMapping: [9]
+  },
+  {
+    taskNumber: 10,
+    taskName: 'Workplace Self-Monitoring & Quality Check',
+    skillArea: 'Self-Monitoring',
+    cognitiveBlueprint:
+      'Display a batch of completed work where one element is flawed or misplaced. The student identifies which item needs correction. ' +
+      'Tests quality control, attention to detail, and self-auditing.',
+    variationStrategy:
+      'Vary the item list (filenames in folder, tools in toolkit, parts in bin). One item is an obvious outlier. ' +
+      'Present 3 options: correctly identified outlier, declaring everything perfect, and flagging an innocent valid item.',
+    slotMapping: [10]
+  },
+  {
+    taskNumber: 11,
+    taskName: 'Error Correction',
+    skillArea: 'Error Correction',
+    cognitiveBlueprint:
+      'Given a recognized mistake or misplaced workplace item, the student selects the correct remedy to resolve it without collateral damage. ' +
+      'Tests targeted correction and restraint.',
+    variationStrategy:
+      'Vary the detected error (misplaced file, mislabeled box, wrong cable plugged in). ' +
+      'Present 3 options: proper corrective fix, indiscriminate mass deletion, and passive ignorance.',
+    slotMapping: [11]
+  },
+  {
+    taskNumber: 12,
+    taskName: 'Workplace Problem Solving',
+    skillArea: 'Problem Solving',
+    cognitiveBlueprint:
+      'Present a realistic workplace roadblock (e.g., cannot find a file, tool missing, low battery). The student chooses the practical solution. ' +
+      'Tests everyday applied problem solving.',
+    variationStrategy:
+      'Vary the roadblock scenario (searching files, locating charger, finding replacement toner). ' +
+      'Present 3 options: standard effective tool/procedure, drastic destructive reaction, and giving up.',
+    slotMapping: [12]
+  },
+  {
+    taskNumber: 13,
+    taskName: 'Workplace Help-Seeking Protocol',
+    skillArea: 'Help-Seeking',
+    cognitiveBlueprint:
+      'An unexpected technical failure or persistent blocker occurs. The student chooses the calm, constructive protocol for seeking assistance. ' +
+      'Tests self-advocacy, professional communication, and emotional regulation.',
+    variationStrategy:
+      'Vary technical snags (frozen screen, broken tool, missing credentials). ' +
+      'Present 3 options: calm notification of supervisor/IT, physical frustration/tantrum, and abandonment.',
+    slotMapping: [13]
+  },
+  {
+    taskNumber: 14,
+    taskName: 'Identify Appropriate Person for Help',
+    skillArea: 'Functional Communication',
+    cognitiveBlueprint:
+      'Present a workplace role-specific question or issue. The student identifies the correct designated personnel to consult. ' +
+      'Tests institutional awareness and social navigational competence.',
+    variationStrategy:
+      'Vary role types (Supervisor for instructions, IT Admin for passwords, Custodian for spills, Nurse for first aid). ' +
+      'Present 3 options: designated professional, random outsider/passerby, and keeping silent.',
+    slotMapping: [14]
+  },
+  {
+    taskNumber: 15,
+    taskName: 'Read Digital Schedule',
+    skillArea: 'Schedule Following',
+    cognitiveBlueprint:
+      'Display a digital daily schedule table with times and event names. The student answers what occurs at a given timestamp. ' +
+      'Tests schedule reading, digital timetable fluency, and temporal matching.',
+    variationStrategy:
+      'Vary daily timetable entries, activities, and target times. ' +
+      'Present 3 options: correct scheduled activity, activity from different time slot, and unscheduled activity.',
+    slotMapping: [15]
+  },
+  {
+    taskNumber: 16,
+    taskName: 'Schedule Management — Identify Next Activity',
+    skillArea: 'Schedule Management',
+    cognitiveBlueprint:
+      'Given current progress or completion of one scheduled block, the student determines what event immediately follows. ' +
+      'Tests daily schedule management and activity transition readiness.',
+    variationStrategy:
+      'Vary schedule sequences and current timestamp cues. ' +
+      'Present 3 options: correct subsequent activity, looping back to start of day, and leaving premises.',
+    slotMapping: [16]
+  },
+  {
+    taskNumber: 17,
+    taskName: 'Time Awareness — Digital Clock Reading',
+    skillArea: 'Time Awareness',
+    cognitiveBlueprint:
+      'Provide a target verbal time (e.g. "half past nine", "quarter to two"). The student matches the correct digital clock readout. ' +
+      'Tests time interpretation and digital literacy.',
+    variationStrategy:
+      'Vary target times across standard work hours (morning standup, noon lunch, afternoon wrap-up). ' +
+      'Present 3 options: matching digital clock, reversed numbers or distractor clock times.',
+    slotMapping: [17]
+  },
+  {
+    taskNumber: 18,
+    taskName: 'Time Management — Calculate Task Duration',
+    skillArea: 'Time Management',
+    cognitiveBlueprint:
+      'Specify start time and end time for a workplace task. The student calculates the elapsed duration in minutes/hours. ' +
+      'Tests practical time math and temporal estimation.',
+    variationStrategy:
+      'Vary start and end times (e.g., 9:00 to 9:30, 10:15 to 11:00, 1:00 to 1:45). ' +
+      'Present 3 options: correct calculated elapsed duration, off-by-half-hour calculation, and absurd duration.',
+    slotMapping: [18]
+  },
+  {
+    taskNumber: 19,
+    taskName: 'Workstation Cleanup & Organization',
+    skillArea: 'Organization',
+    cognitiveBlueprint:
+      'Display distinct workstation zones (e.g., Official Documents vs Personal Items). The student sorts a given item into its proper zone. ' +
+      'Tests workspace sanitation, compartmentalization, and boundary maintenance.',
+    variationStrategy:
+      'Vary items (water bottle, client contract, jacket, project circuit board, snack). ' +
+      'Present 3 options: correct zone, opposite inappropriate zone, and hazard zone.',
+    slotMapping: [19]
+  },
+  {
+    taskNumber: 20,
+    taskName: 'Workplace Safety Awareness',
+    skillArea: 'Safety Awareness',
+    cognitiveBlueprint:
+      'Present a potential physical workplace or lab hazard (e.g., cable across walkway, spilled liquid, blocked fire exit). ' +
+      'The student chooses the safe, protocol-compliant response. ' +
+      'Tests environmental safety awareness and proactive prevention.',
+    variationStrategy:
+      'Vary hazards (loose cord, wet floor, heavy box on edge, ungrounded plug). ' +
+      'Present 3 options: safe navigation + reporting hazard, reckless action, and aggravating the risk.',
+    slotMapping: [20]
+  },
+  {
+    taskNumber: 21,
+    taskName: 'Handling Schedule Disruption & Flexibility',
+    skillArea: 'Cognitive Flexibility',
+    cognitiveBlueprint:
+      'A planned room, machine, or schedule item is disrupted/unavailable. The student chooses the adaptive backup course of action. ' +
+      'Tests workplace adaptability, resilience, and problem management under change.',
+    variationStrategy:
+      'Vary disrupted resources (room undergoing repairs, software server offline, bus delay). ' +
+      'Present 3 options: designated contingency/backup plan, total abandonment/leaving, and obstinate refusal to move.',
+    slotMapping: [21]
+  },
+  {
+    taskNumber: 22,
+    taskName: 'Waiting for Shared Resources',
+    skillArea: 'Workplace Social Functioning',
+    cognitiveBlueprint:
+      'A colleague is using a shared resource (printer, tool station, coffee machine). The student chooses the appropriate waiting behavior. ' +
+      'Tests patience, turn-taking, and peer respect in professional environments.',
+    variationStrategy:
+      'Vary shared items (3D printer, scanner, paper cutter, shared charging dock). ' +
+      'Present 3 options: polite waiting/doing another minor task, forceful interruption/cancelling peer job, and destructive anger.',
+    slotMapping: [22]
+  },
+  {
+    taskNumber: 23,
+    taskName: 'Execute Direct Supervisor Request',
+    skillArea: 'Following Instructions',
+    cognitiveBlueprint:
+      'A supervisor gives an explicit task instruction with specific details. The student chooses the action that faithfully carries it out. ' +
+      'Tests authority recognition, instructional fidelity, and task compliance.',
+    variationStrategy:
+      'Vary supervisor requests (moving specific files to Completed, organizing binders by date, notifying team). ' +
+      'Present 3 options: exact compliant action, incomplete or delayed action, and contradicting action.',
+    slotMapping: [23]
+  },
+  {
+    taskNumber: 24,
+    taskName: 'End-to-End Digital Workflow Execution',
+    skillArea: 'Task Completion',
+    cognitiveBlueprint:
+      'Display a multi-step digital procedure (e.g., Open File -> Rename -> Save -> Upload). The student identifies the final step or missing link. ' +
+      'Tests end-to-end digital competency and thoroughness.',
+    variationStrategy:
+      'Vary workflows (submitting homework, archiving code repo, exporting PDF graphic). ' +
+      'Present 3 options: correct concluding action (saving/submitting), discarding without saving, and deleting assets.',
+    slotMapping: [24]
+  },
+  {
+    taskNumber: 25,
+    taskName: 'On-the-Fly Workplace Bug/Troubleshooting',
+    skillArea: 'Problem Solving',
+    cognitiveBlueprint:
+      'A simple operational error is observed in real-time (e.g., file saved in the wrong folder, wrong recipient in draft). ' +
+      'The student determines the clean on-the-fly corrective action. ' +
+      'Tests real-time troubleshooting and operational repair.',
+    variationStrategy:
+      'Vary minor operational bugs (misnamed folder, accidentally unshared link, wrong paper tray). ' +
+      'Present 3 options: simple relocation/adjustment, panic and erasing entire project, and ignoring the known defect.',
+    slotMapping: [25]
+  }
+];
+
+// ---------------------------------------------------------------------------
 // Student context passed to generateActivity() for adaptive AI generation
 // ---------------------------------------------------------------------------
 export interface StudentMetricsContext {
@@ -1258,15 +1873,19 @@ export class ActivityGenerator {
   public async generateActivity(
     slot: number,
     studentMetrics?: StudentMetricsContext,
-    assessmentType: 'cognitive_ability' | 'all' = 'cognitive_ability'
+    assessmentType: 'cognitive_ability' | 'functional_skills' | 'all' = 'cognitive_ability'
   ): Promise<ActivityItem> {
     const base = assessmentType === 'cognitive_ability'
       ? (COGNITIVE_ASSESSMENT_BASELINES.find(b => b.slot === slot) || COGNITIVE_ASSESSMENT_BASELINES[0])
+      : assessmentType === 'functional_skills'
+      ? (FUNCTIONAL_ASSESSMENT_BASELINES.find(b => b.slot === slot) || FUNCTIONAL_ASSESSMENT_BASELINES[0])
       : (QUESTION_BASELINES.find(b => b.slot === slot) || QUESTION_BASELINES[0]);
 
     // ── Step 1: Build guaranteed fallback from slot config ──────────────────
     const fallbackPayload = assessmentType === 'cognitive_ability'
       ? (COGNITIVE_25_TASK_CONFIGS[slot] || this.buildProceduralPayload(base))
+      : assessmentType === 'functional_skills'
+      ? (FUNCTIONAL_25_TASK_CONFIGS[slot] || this.buildProceduralPayload(base))
       : this.buildProceduralPayload(base);
 
     const fallbackItem: ActivityItem = {
@@ -1314,13 +1933,18 @@ export class ActivityGenerator {
           : ''
       ].filter(Boolean).join('\n') : '';
 
-      // ── Inject Assessment 1 PDF blueprint if this slot is mapped ───────────
-      const taskNumber = assessmentType === 'cognitive_ability'
-        ? slot
-        : ASSESSMENT1_SLOT_TO_TASK[slot];
-      const blueprint  = taskNumber != null
-        ? ASSESSMENT1_TASK_BLUEPRINTS.find(b => b.taskNumber === taskNumber)
-        : undefined;
+      // ── Inject PDF blueprint if this slot is mapped ───────────
+      let blueprint: { taskNumber: number; taskName: string; skillArea: string; cognitiveBlueprint: string; variationStrategy: string } | undefined;
+      if (assessmentType === 'cognitive_ability') {
+        blueprint = ASSESSMENT1_TASK_BLUEPRINTS.find(b => b.taskNumber === slot);
+      } else if (assessmentType === 'functional_skills') {
+        blueprint = ASSESSMENT2_TASK_BLUEPRINTS.find(b => b.taskNumber === slot);
+      } else {
+        const taskNumber = ASSESSMENT1_SLOT_TO_TASK[slot];
+        blueprint = taskNumber != null
+          ? ASSESSMENT1_TASK_BLUEPRINTS.find(b => b.taskNumber === taskNumber)
+          : undefined;
+      }
 
       // A lightweight student seed drives surface-content variation between students.
       // Different students get different emoji sets, numbers, and scenarios even for
@@ -1330,15 +1954,19 @@ export class ActivityGenerator {
         : `[Student seed: anon-${Date.now() % 9973}]`;
 
       // ── Build the prompt ────────────────────────────────────────────────────
+      const blueprintHeader = assessmentType === 'functional_skills'
+        ? '  ASSESSMENT 2 — FUNCTIONAL TASK BLUEPRINT (FROM PDF)'
+        : '  ASSESSMENT 1 — COGNITIVE TASK BLUEPRINT (FROM PDF)';
+
       const blueprintSection = blueprint ? [
         '',
         '═══════════════════════════════════════════════════════════',
-        '  ASSESSMENT 1 — COGNITIVE TASK BLUEPRINT (FROM PDF)',
+        blueprintHeader,
         '═══════════════════════════════════════════════════════════',
         `Task ${blueprint.taskNumber}: ${blueprint.taskName}`,
         `Skill Area: ${blueprint.skillArea}`,
         '',
-        'COGNITIVE CONCEPT TO TEST (LOCKED — do NOT change this):',
+        'FUNCTIONAL/COGNITIVE CONCEPT TO TEST (LOCKED — do NOT change this):',
         blueprint.cognitiveBlueprint,
         '',
         'SURFACE CONTENT VARIATION INSTRUCTIONS (randomize these):',
@@ -1346,14 +1974,18 @@ export class ActivityGenerator {
         '',
         studentSeed,
         '═══════════════════════════════════════════════════════════',
-        'CRITICAL: The generated question MUST test the exact cognitive concept above.',
+        'CRITICAL: The generated question MUST test the exact concept above.',
         'The scenario, symbols, numbers, and theme MUST be different from the default.',
-        'Every student must receive a UNIQUE surface instance of this cognitive task.',
+        'Every student must receive a UNIQUE surface instance of this task.',
         '═══════════════════════════════════════════════════════════',
       ].join('\n') : '';
 
-      const totalSlotsCount = assessmentType === 'cognitive_ability' ? 25 : 50;
-      const examTitle = assessmentType === 'cognitive_ability' ? 'Assessment 1 — Cognitive Assessment' : 'Full Assessment';
+      const totalSlotsCount = (assessmentType === 'cognitive_ability' || assessmentType === 'functional_skills') ? 25 : 50;
+      const examTitle = assessmentType === 'cognitive_ability'
+        ? 'Assessment 1 — Cognitive Assessment'
+        : assessmentType === 'functional_skills'
+        ? 'Assessment 2 — Functional Assessment'
+        : 'Full Assessment';
 
       const prompt = [
         'You are an inclusive education assessment designer for SEN students (Grade 8 to University, ages 13-21).',
@@ -1370,7 +2002,7 @@ export class ActivityGenerator {
         'RULES (follow strictly):',
         '1. Write a clear, engaging question for SEN students',
         blueprint
-          ? '1a. APPLY the Assessment 1 cognitive blueprint above — the concept is fixed, only the surface content changes'
+          ? `1a. APPLY the ${assessmentType === 'functional_skills' ? 'Assessment 2 functional' : 'Assessment 1 cognitive'} blueprint above — the concept is fixed, only the surface content changes`
           : '',
         '2. CRITICAL VISUAL RULES FOR SHAPES AND SYMBOLS:',
         '   - NEVER write the text names of shapes next to shapes (do NOT write "Square ⬛", "Triangle 🔺", "Circle 🔴", or "⭐ Star"). Use ONLY the symbols/emojis themselves.',

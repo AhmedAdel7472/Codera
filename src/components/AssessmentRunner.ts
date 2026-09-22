@@ -12,6 +12,7 @@ import {
   ActivityItem,
   QUESTION_BASELINES,
   COGNITIVE_ASSESSMENT_BASELINES,
+  FUNCTIONAL_ASSESSMENT_BASELINES,
   QuestionBaseline,
   StudentMetricsContext,
   cleanShapeText
@@ -52,7 +53,7 @@ export interface BreakEvent {
 export interface SavedAssessmentSession {
   studentName: string;
   currentQuestionIndex: number;
-  assessmentType?: 'cognitive_ability' | 'all';
+  assessmentType?: 'cognitive_ability' | 'functional_skills' | 'all';
   cachedActivities: (ActivityItem | null)[];
   userAnswers: StoredUserAnswer[];
   questionTimeRecords: QuestionTimeRecord[];
@@ -78,8 +79,8 @@ export class AssessmentRunner {
   private analyzer: QualitativeAnalyzer;
   private studentName: string = 'Alex Rivers';
 
-  // Configurable Exam Mode: 'cognitive_ability' (25 Tasks from PDF) or 'all' (Legacy 50 Qs)
-  private assessmentType: 'cognitive_ability' | 'all' = 'cognitive_ability';
+  // Configurable Exam Mode: 'cognitive_ability' (25 Tasks from PDF), 'functional_skills' (25 Tasks from PDF), or 'all' (Legacy 50 Qs)
+  private assessmentType: 'cognitive_ability' | 'functional_skills' | 'all' = 'cognitive_ability';
   private totalQuestions: number = 25;
   private activeBaselines: QuestionBaseline[] = COGNITIVE_ASSESSMENT_BASELINES;
 
@@ -172,11 +173,14 @@ export class AssessmentRunner {
     this.initUserAnswers();
   }
 
-  public setAssessmentType(type: 'cognitive_ability' | 'all') {
+  public setAssessmentType(type: 'cognitive_ability' | 'functional_skills' | 'all') {
     this.assessmentType = type;
     if (type === 'cognitive_ability') {
       this.totalQuestions = 25;
       this.activeBaselines = COGNITIVE_ASSESSMENT_BASELINES;
+    } else if (type === 'functional_skills') {
+      this.totalQuestions = 25;
+      this.activeBaselines = FUNCTIONAL_ASSESSMENT_BASELINES;
     } else {
       this.totalQuestions = TOTAL_BASE_QUESTIONS;
       this.activeBaselines = QUESTION_BASELINES;
@@ -198,7 +202,7 @@ export class AssessmentRunner {
       if (!data) return null;
 
       const parsed: SavedAssessmentSession = JSON.parse(data);
-      if (parsed && Array.isArray(parsed.userAnswers) && parsed.userAnswers.length === TOTAL_BASE_QUESTIONS) {
+      if (parsed && Array.isArray(parsed.userAnswers) && (parsed.userAnswers.length === TOTAL_BASE_QUESTIONS || parsed.userAnswers.length === 25)) {
         return parsed;
       }
       return null;
@@ -332,7 +336,7 @@ export class AssessmentRunner {
   public async startSession(
     studentName: string = 'Alex Rivers',
     restoreIfAvailable: boolean = true,
-    assessmentType: 'cognitive_ability' | 'all' = 'cognitive_ability'
+    assessmentType: 'cognitive_ability' | 'functional_skills' | 'all' = 'cognitive_ability'
   ) {
     this.studentName = studentName;
     const saved = restoreIfAvailable ? AssessmentRunner.getSavedSession() : null;
@@ -963,20 +967,27 @@ export class AssessmentRunner {
         </div>
 
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.75rem;">
-          ${(this.assessmentType === 'cognitive_ability' ? [
+          ${((this.assessmentType === 'cognitive_ability' ? [
             { id: 'cog_wm', name: 'Working Memory', icon: '🧩', range: [0, 2], total: 3 },
             { id: 'cog_fr', name: 'Fluid Reasoning', icon: '💡', range: [3, 5], total: 3 },
             { id: 'cog_vs', name: 'Visual-Spatial', icon: '📐', range: [7, 10], total: 4 },
             { id: 'cog_att', name: 'Attention & Speed', icon: '⚡', range: [11, 15], total: 5 },
             { id: 'cog_flex', name: 'Flexibility', icon: '🔄', range: [6, 17], total: 3 },
             { id: 'cog_plan', name: 'Planning & Decisions', icon: '🗺️', range: [18, 24], total: 7 }
+          ] : this.assessmentType === 'functional_skills' ? [
+            { id: 'func_org', name: 'Workplace Org', icon: '🗂️', range: [0, 3], total: 4 },
+            { id: 'func_dir', name: 'Instructions', icon: '📋', range: [4, 7], total: 4 },
+            { id: 'func_err', name: 'Quality & Routine', icon: '🔍', range: [8, 11], total: 4 },
+            { id: 'func_com', name: 'Communication', icon: '🙋', range: [12, 13], total: 2 },
+            { id: 'func_sch', name: 'Schedule & Time', icon: '⏰', range: [14, 17], total: 4 },
+            { id: 'func_wfl', name: 'Safety & Workflow', icon: '🛠️', range: [18, 24], total: 7 }
           ] : [
             { id: 'cognitive', name: 'Cognitive Logic', icon: '🧠', range: [0, 11], total: 12 },
             { id: 'functional', name: 'Robot Missions', icon: '🤖', range: [12, 23], total: 12 },
             { id: 'communication', name: 'Communication', icon: '💬', range: [24, 33], total: 10 },
             { id: 'behavioral', name: 'Behavioral Prep', icon: '🌟', range: [34, 41], total: 8 },
             { id: 'motor', name: 'Tech & Motors', icon: '🦾', range: [42, 49], total: 8 }
-          ]).map(d => {
+          ])).map(d => {
             const isCurrentDomain = this.currentQuestionIndex >= d.range[0] && this.currentQuestionIndex <= d.range[1];
             const isCompletedDomain = this.currentQuestionIndex > d.range[1];
             const answeredInDomain = this.userAnswers.filter((a, idx) => idx >= d.range[0] && idx <= d.range[1] && (idx < this.currentQuestionIndex || (a && (a.isSolved || a.timedOut)))).length;
@@ -1025,7 +1036,7 @@ export class AssessmentRunner {
         <div class="activity-header">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap:wrap; gap:0.5rem;">
             <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-              <span class="activity-domain-badge">${this.assessmentType === 'cognitive_ability' ? 'Cognitive Assessment' : domainConfig.name}</span>
+              <span class="activity-domain-badge">${this.assessmentType === 'cognitive_ability' ? 'Cognitive Assessment' : this.assessmentType === 'functional_skills' ? 'Functional Assessment' : domainConfig.name}</span>
               <span style="font-size:0.82rem; font-weight:800; color:#64748b; background:#f1f5f9; padding:0.35rem 0.75rem; border-radius:10px;">
                 Task ${this.currentQuestionIndex + 1} of ${this.totalQuestions} • ${baseline.subSkill}
               </span>
@@ -1579,6 +1590,8 @@ export class AssessmentRunner {
 
     const examTitleText = this.assessmentType === 'cognitive_ability'
       ? 'all 25 Cognitive Assessment tasks'
+      : this.assessmentType === 'functional_skills'
+      ? 'all 25 Functional Assessment tasks'
       : 'all 50 questions';
 
     this.container.innerHTML = `
@@ -1663,6 +1676,8 @@ export class AssessmentRunner {
     const rawTotalScore = ScoringEngine.calculateTotalScore(domainScores);
     const totalScore = this.assessmentType === 'cognitive_ability'
       ? (domainScores.cognitive_ability?.raw_accuracy_pct || (rawTotalScore / 25) * 100)
+      : this.assessmentType === 'functional_skills'
+      ? (domainScores.functional_skills?.raw_accuracy_pct || (rawTotalScore / 25) * 100)
       : rawTotalScore;
     const placement = PlacementEngine.evaluatePlacement(totalScore, domainScores, itemTelemetries, '2.0');
 

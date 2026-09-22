@@ -55,7 +55,7 @@ export function startChildTest(restore: boolean = false) {
 
 export function startDedicatedAssessment(
   studentName?: string,
-  assessmentType: 'cognitive_ability' | 'all' = 'cognitive_ability',
+  assessmentType: 'cognitive_ability' | 'functional_skills' | 'all' = 'cognitive_ability',
   restoreIfAvailable: boolean = false
 ) {
   const childTestPage = document.getElementById('childTestPage');
@@ -95,7 +95,7 @@ export function startDedicatedAssessment(
 export function initAssessment(
   studentName?: string,
   restoreIfAvailable: boolean = false,
-  assessmentType: 'cognitive_ability' | 'all' = 'cognitive_ability'
+  assessmentType: 'cognitive_ability' | 'functional_skills' | 'all' = 'cognitive_ability'
 ) {
   startDedicatedAssessment(studentName, assessmentType, restoreIfAvailable);
 }
@@ -154,6 +154,7 @@ export function openProPortal() {
 (window as any).openSkillSelector = openSkillSelector;
 (window as any).startDedicatedAssessment = startDedicatedAssessment;
 (window as any).startCognitiveAssessment = (name?: string) => startDedicatedAssessment(name, 'cognitive_ability', false);
+(window as any).startFunctionalAssessment = (name?: string) => startDedicatedAssessment(name, 'functional_skills', false);
 (window as any).openRoleJourney = openRoleJourney;
 (window as any).closeRoleJourney = closeRoleJourney;
 (window as any).openRoleJourneyModule = openRoleJourney;
