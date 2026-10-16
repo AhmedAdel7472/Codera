@@ -3,7 +3,7 @@
 // Allows students and parents to select and launch individual skill exams.
 // ---------------------------------------------------------------------------
 
-export type SelectedAssessmentType = 'cognitive_ability' | 'functional_skills' | 'all';
+export type SelectedAssessmentType = 'cognitive_ability' | 'functional_skills' | 'motor_skills' | 'all';
 
 export class SkillSelectorModal {
   private modalEl: HTMLElement | null = null;
@@ -291,6 +291,89 @@ export class SkillSelectorModal {
             </div>
           </div>
 
+          <!-- Assessment 3: Motor & Hand Tracking Assessment (Evaluation.docx) (READY) -->
+          <div style="
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+            border: 2px solid rgba(245, 158, 11, 0.5);
+            border-radius: 18px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.2);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+          ">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 0.85rem;">
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="
+                  width: 52px;
+                  height: 52px;
+                  border-radius: 14px;
+                  background: linear-gradient(135deg, #f59e0b, #d97706);
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-size: 1.8rem;
+                  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+                ">
+                  🖐️
+                </div>
+                <div>
+                  <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 800; color: #ffffff;">
+                      Assessment 3: تقييم المهارات الحركية وتتبع اليدين
+                    </h3>
+                    <span style="background: #10b981; color: #064e3b; font-weight: 800; font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 9999px; text-transform: uppercase;">
+                      Ready Now
+                    </span>
+                  </div>
+                  <p style="margin: 0.25rem 0 0 0; color: #fcd34d; font-size: 0.88rem; font-weight: 600;">
+                    25 مهمة قياسية أمام الكاميرا • ~10–12 دقيقة • جاهزية الماوس والكيبورد
+                  </p>
+                </div>
+              </div>
+
+              <!-- CTA Button -->
+              <button id="start-motor-exam-btn" style="
+                background: linear-gradient(135deg, #f59e0b, #d97706);
+                color: #ffffff;
+                font-weight: 700;
+                font-size: 0.95rem;
+                padding: 0.75rem 1.6rem;
+                border-radius: 12px;
+                border: none;
+                cursor: pointer;
+                box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                transition: all 0.2s ease;
+              ">
+                <span>Start Motor Exam</span>
+                <span style="font-size: 1.1rem;">📷</span>
+              </button>
+            </div>
+
+            <p style="color: #cbd5e1; font-size: 0.88rem; line-height: 1.5; margin: 0.5rem 0 0.85rem 0;">
+              تقييم تفاعلي مباشر أمام كاميرا الجهاز بالذكاء الاصطناعي (MediaPipe Hand Tracking). يقيس اتزان الوضعية، مرونة المعصم، عزل حركة الأصابع، وسرعة التنسيق البصري الحركي (Hand-Eye Coordination).
+            </p>
+
+            <!-- Skill Tags -->
+            <div style="display: flex; flex-wrap: wrap; gap: 0.45rem;">
+              <span style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); padding: 0.22rem 0.55rem; border-radius: 8px; font-size: 0.75rem; color: #e2e8f0;">
+                🧍 المهام 1–3: الوضعية وثبات الذراع
+              </span>
+              <span style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); padding: 0.22rem 0.55rem; border-radius: 8px; font-size: 0.75rem; color: #e2e8f0;">
+                🔄 المهام 4–7: مرونة المعصم في 4 أوضاع
+              </span>
+              <span style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); padding: 0.22rem 0.55rem; border-radius: 8px; font-size: 0.75rem; color: #e2e8f0;">
+                🖐️ المهام 8–15: عزل الأصابع والقبضة القرصية
+              </span>
+              <span style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); padding: 0.22rem 0.55rem; border-radius: 8px; font-size: 0.75rem; color: #e2e8f0;">
+                🎯 المهام 16–25: Hand-Eye ومحاكاة الماوس والكيبورد
+              </span>
+            </div>
+          </div>
+
           <!-- Other Skills (Coming Soon) -->
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0.85rem;">
 
@@ -321,21 +404,8 @@ export class SkillSelectorModal {
                 Sustained engagement, frustration tolerance, and adaptability metrics.
               </p>
             </div>
-
-            <!-- Fine Motor & Technology -->
-            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 1.1rem; opacity: 0.75;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                  <span style="font-size: 1.4rem;">🎯</span>
-                  <h4 style="margin: 0; font-size: 1rem; font-weight: 700; color: #f1f5f9;">Fine Motor & Tech</h4>
-                </div>
-                <span style="background: rgba(255,255,255,0.1); color: #94a3b8; font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 6px;">Coming Soon</span>
-              </div>
-              <p style="margin: 0; color: #94a3b8; font-size: 0.82rem; line-height: 1.4;">
-                Target precision tracking, touch interaction, and hardware navigation.
-              </p>
-            </div>
           </div>
+
         </div>
 
         <!-- Footer / Option to take Combined Exam -->
@@ -376,6 +446,11 @@ export class SkillSelectorModal {
     overlay.querySelector('#start-functional-exam-btn')?.addEventListener('click', () => {
       this.close();
       this.onSelectExam('functional_skills', this.currentStudentName);
+    });
+
+    overlay.querySelector('#start-motor-exam-btn')?.addEventListener('click', () => {
+      this.close();
+      this.onSelectExam('motor_skills', this.currentStudentName);
     });
 
     overlay.querySelector('#start-full-exam-btn')?.addEventListener('click', () => {

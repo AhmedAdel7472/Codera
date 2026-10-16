@@ -22,6 +22,7 @@ import { PlacementEngine, PlacementResult } from '../engine/placementEngine';
 import { QualitativeAnalyzer } from '../ai/qualitativeAnalyzer';
 import { renderReportDashboard } from './ReportDashboard';
 import { CodingChallenge } from './CodingChallenge';
+import { apiService } from '../services/apiService';
 import confetti from 'canvas-confetti';
 
 export interface StoredUserAnswer {
@@ -1732,17 +1733,15 @@ export class AssessmentRunner {
       domain_time_summary: domainTimeSummary
     };
 
-    // Generate AI Qualitative Summary
-    const reportSummary = await this.analyzer.generateReportSummary(session, placement);
-    session.qualitative_summary = reportSummary;
-
-    // Save session to registry for Parent Portal retrieval
+    // Generate AI Qualitative Summary via API (secure server endpoint) or local fallback
     try {
-      const raw = localStorage.getItem('codera_all_sessions') || localStorage.getItem('cognix_all_sessions') || '[]';
-      const sessionsArr: StudentSessionTelemetry[] = JSON.parse(raw);
-      sessionsArr.unshift(session);
-      localStorage.setItem('codera_all_sessions', JSON.stringify(sessionsArr));
-    } catch(e) {}
+      session.qualitative_summary = await apiService.requestAIQualitativeSummary(session, placement);
+    } catch {
+      session.qualitative_summary = await this.analyzer.generateReportSummary(session, placement);
+    }
+
+    // Save session to backend registry (with automatic local backup)
+    await apiService.saveAssessmentSession(session);
 
     // Gated Student Experience: Render Screening Video & Booking Screen (NO SCORES FOR STUDENT)
     this.renderChildScreeningAndBookingScreen(session);

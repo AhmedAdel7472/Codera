@@ -1,3 +1,5 @@
+import { apiService } from '../services/apiService';
+
 export interface ParentProfileData {
   id: string;
   studentFullName: string;
@@ -583,17 +585,8 @@ export class ParentRegistrationModal {
       registeredAt: new Date().toISOString()
     };
 
-    // Save to local storage
-    localStorage.setItem('codera_parent_profile', JSON.stringify(profileData));
-    localStorage.setItem('codera_student_profile', JSON.stringify(profileData));
-
-    // Append to registry list for CEO and Parent dashboard
-    try {
-      const existing = localStorage.getItem('codera_student_registry');
-      const registry: ParentProfileData[] = existing ? JSON.parse(existing) : [];
-      registry.unshift(profileData);
-      localStorage.setItem('codera_student_registry', JSON.stringify(registry));
-    } catch (e) {}
+    // Save via apiService (persists to backend and local storage backup)
+    apiService.saveStudentProfile(profileData);
 
     this.close();
 

@@ -7,10 +7,12 @@ import { mountCodeRaOnboardingModal } from './components/onboarding/mountOnboard
 import { openRoleJourney, closeRoleJourney } from './components/roleJourney/mountRoleJourney';
 
 import { SkillSelectorModal, SelectedAssessmentType } from './components/SkillSelectorModal';
+import { MotorAssessmentRunner } from './motor/MotorAssessmentRunner';
 
 export { mountCodeRaOnboardingModal, openRoleJourney, closeRoleJourney };
 
 let currentRunner: AssessmentRunner | null = null;
+let currentMotorRunner: MotorAssessmentRunner | null = null;
 let parentRegistrationModalInstance: ParentRegistrationModal | null = null;
 let skillSelectorModalInstance: SkillSelectorModal | null = null;
 
@@ -55,7 +57,7 @@ export function startChildTest(restore: boolean = false) {
 
 export function startDedicatedAssessment(
   studentName?: string,
-  assessmentType: 'cognitive_ability' | 'functional_skills' | 'all' = 'cognitive_ability',
+  assessmentType: 'cognitive_ability' | 'functional_skills' | 'motor_skills' | 'all' = 'cognitive_ability',
   restoreIfAvailable: boolean = false
 ) {
   const childTestPage = document.getElementById('childTestPage');
@@ -84,18 +86,27 @@ export function startDedicatedAssessment(
 
   const appContainer = document.getElementById('app');
   if (appContainer) {
+    if (assessmentType === 'motor_skills') {
+      if (currentRunner) {
+        currentRunner.stopTimer();
+      }
+      currentMotorRunner = new MotorAssessmentRunner(appContainer);
+      currentMotorRunner.startSession(name);
+      return;
+    }
+
     if (!restoreIfAvailable) {
       AssessmentRunner.clearSavedSession();
     }
     currentRunner = new AssessmentRunner(appContainer);
-    currentRunner.startSession(name, restoreIfAvailable, assessmentType);
+    currentRunner.startSession(name, restoreIfAvailable, assessmentType as any);
   }
 }
 
 export function initAssessment(
   studentName?: string,
   restoreIfAvailable: boolean = false,
-  assessmentType: 'cognitive_ability' | 'functional_skills' | 'all' = 'cognitive_ability'
+  assessmentType: 'cognitive_ability' | 'functional_skills' | 'motor_skills' | 'all' = 'cognitive_ability'
 ) {
   startDedicatedAssessment(studentName, assessmentType, restoreIfAvailable);
 }
@@ -155,9 +166,14 @@ export function openProPortal() {
 (window as any).startDedicatedAssessment = startDedicatedAssessment;
 (window as any).startCognitiveAssessment = (name?: string) => startDedicatedAssessment(name, 'cognitive_ability', false);
 (window as any).startFunctionalAssessment = (name?: string) => startDedicatedAssessment(name, 'functional_skills', false);
+(window as any).startMotorAssessment = (name?: string) => startDedicatedAssessment(name, 'motor_skills', false);
 (window as any).openRoleJourney = openRoleJourney;
 (window as any).closeRoleJourney = closeRoleJourney;
 (window as any).openRoleJourneyModule = openRoleJourney;
+
+export function startMotorAssessment(name?: string) {
+  startDedicatedAssessment(name, 'motor_skills', false);
+}
 
 export function openInstitutionModal(orgType: string = '') {
   const modalOverlay = document.getElementById('modalOverlay');

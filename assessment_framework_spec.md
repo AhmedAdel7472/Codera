@@ -29,7 +29,7 @@ By establishing a **standardized scoring model** prior to AI generation and adap
 | **5. Fine Motor & Technology Skills** | 15% | 15 Pts | **3 Questions** (5 pts/item) | 3–4 Mins |
 | **Total Framework Standard** | **100%** | **100 Pts** | **20 Questions** | **25–30 Mins** |
 
----
+--- 
 
 ## Competency Domain Specifications
 
@@ -105,3 +105,42 @@ To guarantee accurate placement, if a student achieves a high total score but de
 3. **Communication Support Flag:** Triggered if Communication Level score $< 7.0$ / $20$ ($<35\%$).
 4. **Behavioral Resilience Flag:** Triggered if Behavioral Readiness score $< 5.25$ / $15$ ($<35\%$).
 5. **Fine Motor Support Flag:** Triggered if Fine Motor score $< 5.25$ / $15$ ($<35\%$).
+
+
+
+
+---
+
+## Assessment 3: Standalone Camera-Based Motor & Hand Tracking Assessment (`Evaluation.docx`)
+
+### Overview & Operational Parameters
+The **Motor & Hand Tracking Assessment** is a specialized, computer-vision driven physical readiness evaluation designed to measure the fine motor skills, wrist mobility, finger isolation, and visual-motor coordination essential for computer interaction (mouse and keyboard mastery) and physical computing (robotics assembly).
+
+- **Evaluation Technology:** On-Device MediaPipe Computer Vision (HandLandmarker - 21 3D Landmarks)
+- **Target Duration:** 10–12 Minutes
+- **Total Standardized Tasks:** **25 Tasks**
+- **Hardware Requirement:** Standard Webcam or Mobile Front Camera (Operating at 30–50 cm distance)
+- **Scoring Standard:** 25 Tasks $\times$ 4 Points (Normalized to 100-Point Scale)
+
+### 4-Part Evaluation Taxonomy & Structure
+
+| Section | Domain Focus | Standard Items | Key Telemetry Signals | Target Readiness |
+| :--- | :--- | :---: | :--- | :--- |
+| **Part 1: Base Posture & Arm** | الوضعية الأساسية للتقييم – اليد كاملة | **3 Tasks** (Tasks 1–3) | Distance calibration (30–50 cm), arm extension, stability & tremor | Ergonomic posture, sustained arm control |
+| **Part 2: Wrist Mobility** | تقييم حركة المعصم والرسغ | **4 Tasks** (Tasks 4–7) | Pitch/Yaw angular range of motion, speed, 4-direction coordination | Smooth mouse wrist sweep & steering |
+| **Part 3: Finger Fine Motor** | حركة الأصابع والمهارات الحركية الدقيقة | **8 Tasks** (Tasks 8–15) | Extension/flexion ratios, finger isolation, pinch distance, tripod grip | Independent finger actuation, click mechanics |
+| **Part 4: Hand–Eye Coordination** | التنسيق البصري الحركي | **10 Tasks** (Tasks 16–25) | Pointing error distance, tracking lag, click trigger latency, typing sequencing (A-S-D-F) | Precision mouse clicking, key targeting, keyboard sequencing |
+
+### Mouse & Keyboard Readiness Diagnostic Model
+The motor evaluation computes two dedicated readiness indices:
+1. **Mouse Readiness Index (0–100%):** Weighted synthesis of wrist stability, pinch grip precision (Task 12), cursor pointing (Task 16), and air-click simulation (Tasks 20–21).
+   - $\ge 80\%$: **Advanced (متقدم)** — Fully prepared for drag-and-drop block coding and 3D modeling.
+   - $60–79\%$: **Proficient (مؤهل)** — Recommended for child-ergonomic mouse.
+   - $< 60\%$: **Targeted Support Needed (يحتاج دعم تدريبي)** — Recommended initial touch navigation and wrist exercises.
+2. **Keyboard Readiness Index (0–100%):** Evaluates independent finger isolation (Task 10), thumb opposition (Task 11), key location targeting (Task 22), and multi-finger keystroke sequencing (Task 23).
+   - $\ge 80\%$: **Advanced (متقدم)** — Ready for syntax typing and dual-hand keyboarding.
+   - $< 60\%$: **Targeted Support Needed** — Block-based visual languages prioritized.
+
+---
+
+There should be an attention span model to check the reactions of the student based on the task and the time taken to complete and general observation report.
