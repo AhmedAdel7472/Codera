@@ -610,6 +610,28 @@ export class MotorAssessmentRunner {
         }
       });
     }
+
+    // Hand Pose Guide Lightbox modal listeners
+    const guideCard = document.getElementById('motor-guide-card');
+    const pipGuide = document.getElementById('motor-pip-guide');
+    const lightboxModal = document.getElementById('motor-lightbox-modal');
+    const lightboxClose = document.getElementById('motor-lightbox-close');
+
+    const openLightbox = () => {
+      if (lightboxModal) lightboxModal.style.display = 'flex';
+    };
+    const closeLightbox = () => {
+      if (lightboxModal) lightboxModal.style.display = 'none';
+    };
+
+    if (guideCard) guideCard.addEventListener('click', openLightbox);
+    if (pipGuide) pipGuide.addEventListener('click', openLightbox);
+    if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+    if (lightboxModal) {
+      lightboxModal.addEventListener('click', (e) => {
+        if (e.target === lightboxModal) closeLightbox();
+      });
+    }
   }
 
   /**
@@ -644,6 +666,44 @@ export class MotorAssessmentRunner {
     }
     if (instructionText) {
       instructionText.textContent = task.requiredActionAr;
+    }
+
+    // Populate Guide Hand Pose Photos & Tips
+    const guideImg = document.getElementById('motor-guide-img') as HTMLImageElement;
+    const pipGuideImg = document.getElementById('motor-pip-guide-img') as HTMLImageElement;
+    const guideTip = document.getElementById('motor-guide-tip');
+    const lightboxImg = document.getElementById('motor-lightbox-img') as HTMLImageElement;
+    const lightboxTitle = document.getElementById('motor-lightbox-title');
+    const lightboxTip = document.getElementById('motor-lightbox-tip');
+
+    if (task.guideImageUrl) {
+      const srcUrl = task.guideImageUrl;
+      const setImageWithFallback = (imgEl: HTMLImageElement | null) => {
+        if (!imgEl) return;
+        imgEl.src = srcUrl;
+        imgEl.onerror = () => {
+          // If leading slash fails in subpath or relative base, switch prefix
+          if (srcUrl.startsWith('/')) {
+            imgEl.src = '.' + srcUrl;
+          } else {
+            imgEl.src = '/' + srcUrl;
+          }
+        };
+      };
+
+      setImageWithFallback(guideImg);
+      setImageWithFallback(pipGuideImg);
+      setImageWithFallback(lightboxImg);
+    }
+
+    if (guideTip) {
+      guideTip.textContent = task.guideTipAr || task.observationCriterionAr || '';
+    }
+    if (lightboxTitle) {
+      lightboxTitle.textContent = `${task.slot}. ${task.titleAr}`;
+    }
+    if (lightboxTip) {
+      lightboxTip.textContent = task.guideTipAr || task.requiredActionAr || '';
     }
 
     // Reset interactive target games for Section 4
